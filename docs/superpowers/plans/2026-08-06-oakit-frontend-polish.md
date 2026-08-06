@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Polish the four generated demo sites into four recognizably different, accessible brand experiences while preserving the single-file renderer and the `demo-music` brand rename to 「那莫 好聽」.
+**Goal:** Polish the four generated demo sites into four recognizably different, accessible brand experiences while preserving the single-file renderer and the `demo-music` brand rename to 「那莫好聽」.
 
 **Architecture:** Keep `src/site/render.ts` as the shared HTML/CSS shell and `src/site/variants.ts` as the content presenter boundary. Add visual tokens, responsive spacing, focus/motion rules, and variant-specific treatments inside the generated inline stylesheet; do not add a framework, CDN, font, image, or runtime dependency.
 
@@ -15,7 +15,7 @@
 - Keep existing HTML escaping, HTTP(S)-only URL validation, CSS color allowlist, and default-tenant fallback.
 - All interactive targets remain at least 44px and visibly focusable.
 - Respect `prefers-reduced-motion`; never introduce autoplay or distracting motion.
-- Preserve the `demo-music` path while rendering the brand name `那莫 好聽`.
+- Preserve the `demo-music` path while rendering the brand name `那莫好聽`.
 
 ---
 
@@ -48,7 +48,7 @@
 - [ ] Refine restaurant styling around a compact menu-board rhythm, clear category labels, and warm service CTA.
 - [ ] Refine interior styling around editorial case-study columns, quiet borders, and generous negative space.
 - [ ] Refine pet styling around soft rounded care cards, clear one-pet-at-a-time promise, and friendly process steps.
-- [ ] Refine music styling around a restrained score-line motif, strong course hierarchy, and a prominent trial-lesson CTA; keep the name `那莫 好聽`.
+- [ ] Refine music styling around a restrained score-line motif, strong course hierarchy, and a prominent trial-lesson CTA; keep the name `那莫好聽`.
 - [ ] Confirm each variant remains one-column on mobile and intentionally multi-column only where content supports it on desktop.
 - [ ] Run the site render tests and scan generated HTML for external resources.
 
@@ -60,7 +60,7 @@
 
 **Interfaces:**
 - Keeps `demo-music` as the tenant ID and URL path.
-- Exposes `brand.name = "那莫 好聽"` to website, knowledge, and generated metadata.
+- Exposes `brand.name = "那莫好聽"` to website, knowledge, and generated metadata.
 
 - [ ] Assert the renamed tenant still loads as the music variant and all existing knowledge/ruleReply tests pass.
 - [ ] Run `npm run build` and verify all four generated HTML files contain the intended brand and visual CSS.
