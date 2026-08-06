@@ -59,6 +59,21 @@ describe('site content knowledge', () => {
     expect(loadTenant('demo-music').site?.showcase?.map((item) => item.title)).toContain('團班類別');
   });
 
+  it('團體班涵蓋兒童、成人與樂齡，且維持三人小班', () => {
+    const tenant = loadTenant('demo-music');
+    const groupService = tenant.services.find((service) => service.name.startsWith('團班類別'));
+
+    expect(groupService?.desc).toBe('團體班也有兒童班、成人班、樂齡班。3人即開班，最多3人，維持小班規模，不用擔心品質下降');
+    expect(tenant.faq.find((item) => item.q === '團體班怎麼開班？')?.a).toContain('兒童班、成人班、樂齡班');
+  });
+
+  it('那莫好聽使用最新品牌標語與首頁說明', () => {
+    const tenant = loadTenant('demo-music');
+
+    expect(tenant.brand.tagline).toBe('那麼好玩、那麼有趣');
+    expect(tenant.site?.heroNote).toBe('不論初學或進階、不論古典或流行、不論學齡或樂齡');
+  });
+
   it('開店日補充說明同時進入 knowledge 與營業時間規則回覆', () => {
     const tenant = loadTenant('demo-bistro');
     const knowledge = buildKnowledge(tenant);
