@@ -78,6 +78,31 @@ describe('renderSite variants', () => {
     expect(html).toMatch(/summary\{[^}]*min-height:44px/);
   });
 
+  it('音樂版有雲端成發導覽與沒有作品時的空狀態', () => {
+    const html = renderSite(makeTenant('music'));
+
+    expect(html).toContain('href="#student-showcase">雲端成發</a>');
+    expect(html).toContain('<section id="student-showcase"');
+    expect(html).toContain('學生作品整理中');
+  });
+
+  it('雲端成發只渲染安全的作品連結', () => {
+    const tenant = makeTenant('music');
+    tenant.site = {
+      ...tenant.site!,
+      studentShowcase: [
+        { title: '安全作品', description: '作品說明', url: 'https://example.com/student-work' },
+        { title: '不安全作品', description: '不應產生連結', url: 'javascript:alert(1)' },
+      ],
+    } as typeof tenant.site;
+
+    const html = renderSite(tenant);
+
+    expect(html).toContain('href="https://example.com/student-work"');
+    expect(html).not.toContain('javascript:');
+    expect(html).toContain('不安全作品');
+  });
+
   it('網站先隱藏營業時間區塊，客服資料仍由 tenant 保留', () => {
     const tenant = makeTenant('restaurant');
     tenant.hours = [

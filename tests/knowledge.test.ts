@@ -16,6 +16,29 @@ describe('site content knowledge', () => {
     expect(reply).toContain('NT$');
   });
 
+  it('那莫好聽只保留目前提供的課程與新價格', () => {
+    const tenant = loadTenant('demo-music');
+    const knowledge = buildKnowledge(tenant);
+
+    expect(knowledge).toContain('鋼琴一對一｜流行與古典');
+    expect(knowledge).toContain('NT$3,600／4 堂（每堂 NT$900）');
+    expect(knowledge).toContain('成人團體班｜流行與古典');
+    expect(knowledge).toContain('NT$450／人／堂');
+    expect(knowledge).not.toContain('吉他');
+    expect(knowledge).not.toContain('樂團');
+    expect(knowledge).not.toContain('歌唱');
+  });
+
+  it('有學生作品時會將雲端成發資料加入知識庫', () => {
+    const tenant = loadTenant('demo-music');
+    tenant.site = {
+      ...tenant.site!,
+      studentShowcase: [{ title: '小小演奏家', description: '完成第一首古典曲目。' }],
+    } as typeof tenant.site;
+
+    expect(buildKnowledge(tenant)).toContain('小小演奏家：完成第一首古典曲目。');
+  });
+
   it('開店日補充說明同時進入 knowledge 與營業時間規則回覆', () => {
     const tenant = loadTenant('demo-bistro');
     const knowledge = buildKnowledge(tenant);
