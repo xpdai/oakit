@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>小步寵物美容｜只接預約，一次一隻，不關籠</title>
+<meta name="description" content="只接預約，一次一隻，不關籠　我們是一間只服務單一客人的寵物美容工作室。每個時段只接一隻，洗完直接回家，不會讓牠在籠子裡等一整天。美容師有八年經驗，特別擅長怕生、怕吹風機、上過年紀的孩子。">
+<meta property="og:title" content="小步寵物美容">
+<meta property="og:description" content="只接預約，一次一隻，不關籠">
+<style>
+:root{--accent:#1f6f5c;--bg:#faf9f6;--ink:#1c1b19;--line:rgba(0,0,0,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.75 'PingFang TC','Noto Sans TC',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{padding:64px 0 24px;text-align:center}
+h1{font-size:32px;letter-spacing:2px;line-height:1.3}.eyebrow{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:2px}.tagline{margin-top:10px;color:var(--accent);font-weight:600}.hero-note{margin-top:10px;font-size:15px}
+nav{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;padding:16px 0 24px;font-size:14px}nav a{display:inline-flex;align-items:center;min-height:44px;padding:10px 5px;text-decoration:none}
+.notice{margin:24px 0;padding:14px 18px;border-left:4px solid var(--accent);background:rgba(0,0,0,.04);border-radius:0 8px 8px 0;font-size:14.5px}.notice p+p{margin-top:6px}
+section{padding:36px 0;border-top:1px solid var(--line)}h2,h3{font-size:13px;letter-spacing:3px;color:var(--accent);margin-bottom:20px;font-weight:800}.about{font-size:17px;line-height:1.9}
+.svc,.showcase-item{padding:18px 0;border-bottom:1px solid var(--line)}.svc:last-child,.showcase-item:last-child{border-bottom:none}.svc h3,.showcase-item h4,.process-step h4{font-size:17px;margin-bottom:4px;color:inherit;letter-spacing:0}.svc p,.showcase-item p,.process-step p{color:var(--ink);opacity:.72;font-size:15px}
+.meta{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}.meta span{font-size:13px;padding:3px 10px;border:1px solid var(--line);border-radius:999px}pre.hours{font:inherit;white-space:pre-wrap}
+.variant{margin:20px 0;padding:32px;border-top:0}.variant-block+.variant-block{margin-top:32px}.highlight-list{display:grid;gap:12px}.highlight{padding:16px;border:1px solid var(--line);border-radius:10px}.highlight-label,.showcase-category,.process-number{color:var(--accent)!important;font-size:13px!important;font-weight:700;letter-spacing:1px}.highlight-value{font-size:20px!important;font-weight:700;color:inherit!important}.showcase-meta{margin-top:8px;font-size:13px!important}.process-step{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}.process-step:last-child{border-bottom:none}.process-number{flex:0 0 32px}
+.variant-restaurant{border:2px solid var(--accent);border-radius:6px;box-shadow:8px 8px 0 rgba(0,0,0,.07)}.variant-restaurant .highlight{border:0;border-top:4px solid var(--accent);border-radius:0;background:rgba(0,0,0,.035)}.variant-restaurant .showcase{display:grid;gap:0}.variant-restaurant .showcase h3{grid-column:1/-1}.variant-restaurant .showcase-item{padding:18px;border-top:1px solid var(--line);border-bottom:0}.variant-restaurant .showcase-category{display:inline-block;padding:1px 8px;border:1px solid var(--accent);border-radius:999px}
+.variant-interior{padding:32px;border:1px solid var(--ink);border-left:10px solid var(--ink);border-radius:0}.variant-interior h3{padding-bottom:12px;border-bottom:1px solid var(--ink)}.variant-interior .showcase{display:grid;gap:0}.variant-interior .showcase h3{grid-column:1/-1}.variant-interior .showcase-item{padding:20px;border:0;border-left:1px solid var(--line)}.variant-interior .showcase-item:nth-of-type(2){border-left:0}.variant-interior .process-number{font:700 22px/1 Georgia,serif}.variant-interior .process-step{align-items:flex-start}
+.variant-pet{padding:32px;border:0;border-radius:34px;background:rgba(0,0,0,.045)}.variant-pet .highlight{border:2px solid var(--accent);border-radius:24px 24px 8px 24px;background:var(--bg)}.variant-pet .highlight:nth-child(even){border-radius:24px 24px 24px 8px}.variant-pet .showcase-item{padding:18px 20px;margin-top:12px;border:0;border-radius:18px;background:var(--bg)}.variant-pet .process-step{margin-top:10px;padding:16px 18px;border:0;border-radius:18px;background:var(--bg)}.variant-pet .process-number{display:grid;place-items:center;flex-basis:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--bg)!important}
+.variant-music{padding:32px;border-top:5px solid var(--accent);border-bottom:5px solid var(--accent);background:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,rgba(0,0,0,.075) 28px,transparent 29px)}.variant-music .highlight{border:0;border-radius:0;background:var(--bg);box-shadow:4px 4px 0 var(--accent)}.variant-music .showcase{display:grid;gap:14px}.variant-music .showcase h3{grid-column:1/-1}.variant-music .showcase-item{padding:18px;border:1px solid var(--accent);border-left:6px solid var(--accent);background:var(--bg)}.variant-music .process-step{padding:18px;background:var(--bg);border-bottom:1px solid var(--accent)}.variant-music .process-number{font:700 20px/1 Georgia,serif}
+body[data-variant=restaurant] h1{font-family:'Songti TC','STSong',serif;font-size:38px}body[data-variant=interior] h1{font-weight:500;letter-spacing:.16em}body[data-variant=pet] h1{font-weight:800;letter-spacing:.08em}body[data-variant=music] h1{font-family:Georgia,'Songti TC',serif;font-style:italic;letter-spacing:.08em}
+details{padding:8px 0;border-bottom:1px solid var(--line)}details:last-child{border-bottom:none}summary{display:flex;align-items:center;min-height:44px;cursor:pointer;font-weight:600;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:'＋ ';flex:0 0 28px;color:var(--accent)}details[open] summary::before{content:'－ '}details p{margin:4px 0 10px 28px;color:var(--ink);opacity:.72;font-size:15px}
+.row{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}dt{flex:0 0 64px;font-size:14px;color:var(--ink);opacity:.68}dd{flex:1}a{color:var(--accent)}a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:3px}.cta{display:block;margin:32px 0 8px;padding:18px;background:var(--accent);color:var(--bg);text-align:center;border-radius:12px;font-weight:700;text-decoration:none;letter-spacing:1px}
+footer{padding:40px 0 56px;text-align:center;font-size:13px;color:var(--ink);opacity:.68}
+@media (min-width:768px){.wrap{padding:0 36px}header{padding-top:88px}h1{font-size:42px}.highlight-list{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-restaurant .showcase,.variant-interior .showcase{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-pet .showcase{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.variant-pet .showcase h3{grid-column:1/-1}.variant-music .highlight-list{grid-template-columns:repeat(4,minmax(0,1fr))}.variant-music .showcase{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-interior .process{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}.variant-interior .process h3{grid-column:1/-1}}
+@media (max-width:767px){.wrap{padding:0 18px}.variant{margin:12px 0;padding:24px 18px}.highlight-list,.variant-restaurant .showcase,.variant-interior .showcase,.variant-pet .showcase,.variant-music .showcase,.variant-interior .process{grid-template-columns:1fr}.variant-interior{border-left-width:6px}.variant-interior .showcase-item{border-left:0;border-top:1px solid var(--line)}.variant-music .highlight{box-shadow:3px 3px 0 var(--accent)}}
+</style>
+</head>
+<body data-variant="pet">
+<div class="wrap">
+  <header>
+    <p class="eyebrow">一對一寵物美容</p>
+    <h1>小步寵物美容</h1>
+    <p class="tagline">只接預約，一次一隻，不關籠</p>
+    <p class="hero-note">每個時段只照顧一個孩子，洗完吹乾就回家，不讓牠在籠子裡等待。</p>
+    <div class="notice"><p>農曆年前預約已滿，最近可預約時段為年後。</p></div>
+    <a class="cta" href="https://line.me/R/ti/p/@example" target="_blank" rel="noopener">加 LINE 詢問 / 預約</a>
+  </header>
+  <nav aria-label="頁面導覽">
+    <a href="#about">關於</a><a href="#services">服務</a><a href="#hours">時間</a><a href="#faq">常見問題</a><a href="#contact">聯絡</a>
+  </nav>
+
+  <section id="about"><h2>關 於</h2><p class="about">我們是一間只服務單一客人的寵物美容工作室。每個時段只接一隻，洗完直接回家，不會讓牠在籠子裡等一整天。美容師有八年經驗，特別擅長怕生、怕吹風機、上過年紀的孩子。</p></section>
+  <section class="variant variant-pet" data-section="care"><div class="variant-block highlights"><h3>精 選 特 色</h3><div class="highlight-list"><article class="highlight">
+        <p class="highlight-label">預約制</p>
+        <p class="highlight-value">一次一隻</p>
+        <p>每個時段只服務一個孩子，留出足夠時間慢慢熟悉。</p>
+      </article><article class="highlight">
+        <p class="highlight-label">安心</p>
+        <p class="highlight-value">不關籠</p>
+        <p>洗完吹乾就結束，不讓孩子在籠子裡等待。</p>
+      </article><article class="highlight">
+        <p class="highlight-label">照護</p>
+        <p class="highlight-value">怕生與高齡犬照護</p>
+        <p>依孩子的狀態調整節奏，必要時安排休息或分次完成。</p>
+      </article></div></div><div class="variant-block showcase"><h3>精 選 展 示</h3><article class="showcase-item">
+        <p class="showcase-category">日常清潔</p>
+        <h4>基礎洗澡</h4>
+        <p>洗澡、吹乾與基礎整理，讓孩子舒服回家。</p>
+        <p class="showcase-meta">約 1.5 小時</p>
+      </article><article class="showcase-item">
+        <p class="showcase-category">造型修剪</p>
+        <h4>全身美容</h4>
+        <p>依毛況與生活需求討論造型，保留孩子自在活動的樣子。</p>
+        <p class="showcase-meta">約 2.5 小時</p>
+      </article><article class="showcase-item">
+        <p class="showcase-category">溫和照護</p>
+        <h4>高齡犬洗澡</h4>
+        <p>全程放慢、隨時休息，讓年長孩子也能安心完成清潔。</p>
+        <p class="showcase-meta">約 2 小時</p>
+      </article></div></section>
+  <section id="services"><h2>服 務 與 價 格</h2><article class="svc">
+      <h3>基礎洗澡</h3>
+      <p>洗澡、吹乾、剪指甲、清耳、擠肛門腺、修腳底毛。</p>
+      <div class="meta"><span>NT$800 起</span><span>1.5 小時</span></div>
+    </article><article class="svc">
+      <h3>全身美容</h3>
+      <p>基礎洗澡全部內容，加上全身造型修剪。可以帶參考照片來討論。</p>
+      <div class="meta"><span>NT$1,400 起</span><span>2.5 小時</span></div>
+    </article><article class="svc">
+      <h3>高齡犬洗澡</h3>
+      <p>針對 10 歲以上或有慢性病的孩子，全程放慢、隨時中斷休息。</p>
+      <div class="meta"><span>NT$1,000 起</span><span>2 小時</span></div>
+    </article><article class="svc">
+      <h3>深層護膚浴</h3>
+      <p>皮膚敏感、易癢、有黴菌困擾的孩子適用，需先評估。</p>
+      <div class="meta"><span>加購 NT$400</span><span>加 30 分鐘</span></div>
+    </article></section>
+  <section id="hours"><h2>營 業 時 間</h2><pre class="hours">週二至週五 11:00–20:00
+週六、週日 10:00–18:00
+週一 公休</pre></section>
+  <section id="faq"><h2>常 見 問 題</h2><details><summary>需要先預約嗎？</summary><p>要，我們不接現場。每個時段只服務一隻，所以請至少提前兩三天用 LINE 跟我們約。</p></details><details><summary>第一次來要帶什麼？</summary><p>帶疫苗紀錄就好。如果孩子有在吃藥或有皮膚狀況，先跟我們說一聲。</p></details><details><summary>我可以在旁邊陪嗎？</summary><p>可以，但多數孩子在主人不在時反而比較放鬆，我們會全程拍照傳給你。</p></details><details><summary>會關籠嗎？</summary><p>不會。洗完吹乾就結束，請準時來接，不會有等待時間。</p></details><details><summary>很兇或很怕的狗接嗎？</summary><p>接，但請先跟我們說明狀況，我們會安排比較長的時段，必要時分兩次完成。</p></details></section>
+  <section id="contact"><h2>聯 絡 我 們</h2><dl><div class="row"><dt>地址</dt><dd><a href="https://maps.google.com/?q=%E5%8F%B0%E5%8C%97%E5%B8%82%E5%A4%A7%E5%AE%89%E5%8D%80" target="_blank" rel="noopener">台北市大安區某某路 100 號 2 樓</a></dd></div><div class="row"><dt>電話</dt><dd><a href="tel:02-2345-6789">02-2345-6789</a></dd></div></dl><a class="cta" href="https://line.me/R/ti/p/@example" target="_blank" rel="noopener">加 LINE 詢問 / 預約</a></section>
+
+  <footer>小步寵物美容</footer>
+</div>
+</body>
+</html>

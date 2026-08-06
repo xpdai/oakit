@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>暮火食堂｜把下班後的好心情，放進一碗熱飯裡</title>
+<meta name="description" content="把下班後的好心情，放進一碗熱飯裡　暮火食堂是一間在巷口等晚歸的人回來吃飯的小食堂。我們以炭火料理、現煮米飯與當季蔬菜，準備一桌不需要盛裝也能慢慢享用的晚餐。">
+<meta property="og:title" content="暮火食堂">
+<meta property="og:description" content="把下班後的好心情，放進一碗熱飯裡">
+<style>
+:root{--accent:#a94728;--bg:#fff7ed;--ink:#2a1d18;--line:rgba(0,0,0,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:16px/1.75 'PingFang TC','Noto Sans TC',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{padding:64px 0 24px;text-align:center}
+h1{font-size:32px;letter-spacing:2px;line-height:1.3}.eyebrow{color:var(--accent);font-size:13px;font-weight:700;letter-spacing:2px}.tagline{margin-top:10px;color:var(--accent);font-weight:600}.hero-note{margin-top:10px;font-size:15px}
+nav{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;padding:16px 0 24px;font-size:14px}nav a{display:inline-flex;align-items:center;min-height:44px;padding:10px 5px;text-decoration:none}
+.notice{margin:24px 0;padding:14px 18px;border-left:4px solid var(--accent);background:rgba(0,0,0,.04);border-radius:0 8px 8px 0;font-size:14.5px}.notice p+p{margin-top:6px}
+section{padding:36px 0;border-top:1px solid var(--line)}h2,h3{font-size:13px;letter-spacing:3px;color:var(--accent);margin-bottom:20px;font-weight:800}.about{font-size:17px;line-height:1.9}
+.svc,.showcase-item{padding:18px 0;border-bottom:1px solid var(--line)}.svc:last-child,.showcase-item:last-child{border-bottom:none}.svc h3,.showcase-item h4,.process-step h4{font-size:17px;margin-bottom:4px;color:inherit;letter-spacing:0}.svc p,.showcase-item p,.process-step p{color:var(--ink);opacity:.72;font-size:15px}
+.meta{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}.meta span{font-size:13px;padding:3px 10px;border:1px solid var(--line);border-radius:999px}pre.hours{font:inherit;white-space:pre-wrap}
+.variant{margin:20px 0;padding:32px;border-top:0}.variant-block+.variant-block{margin-top:32px}.highlight-list{display:grid;gap:12px}.highlight{padding:16px;border:1px solid var(--line);border-radius:10px}.highlight-label,.showcase-category,.process-number{color:var(--accent)!important;font-size:13px!important;font-weight:700;letter-spacing:1px}.highlight-value{font-size:20px!important;font-weight:700;color:inherit!important}.showcase-meta{margin-top:8px;font-size:13px!important}.process-step{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}.process-step:last-child{border-bottom:none}.process-number{flex:0 0 32px}
+.variant-restaurant{border:2px solid var(--accent);border-radius:6px;box-shadow:8px 8px 0 rgba(0,0,0,.07)}.variant-restaurant .highlight{border:0;border-top:4px solid var(--accent);border-radius:0;background:rgba(0,0,0,.035)}.variant-restaurant .showcase{display:grid;gap:0}.variant-restaurant .showcase h3{grid-column:1/-1}.variant-restaurant .showcase-item{padding:18px;border-top:1px solid var(--line);border-bottom:0}.variant-restaurant .showcase-category{display:inline-block;padding:1px 8px;border:1px solid var(--accent);border-radius:999px}
+.variant-interior{padding:32px;border:1px solid var(--ink);border-left:10px solid var(--ink);border-radius:0}.variant-interior h3{padding-bottom:12px;border-bottom:1px solid var(--ink)}.variant-interior .showcase{display:grid;gap:0}.variant-interior .showcase h3{grid-column:1/-1}.variant-interior .showcase-item{padding:20px;border:0;border-left:1px solid var(--line)}.variant-interior .showcase-item:nth-of-type(2){border-left:0}.variant-interior .process-number{font:700 22px/1 Georgia,serif}.variant-interior .process-step{align-items:flex-start}
+.variant-pet{padding:32px;border:0;border-radius:34px;background:rgba(0,0,0,.045)}.variant-pet .highlight{border:2px solid var(--accent);border-radius:24px 24px 8px 24px;background:var(--bg)}.variant-pet .highlight:nth-child(even){border-radius:24px 24px 24px 8px}.variant-pet .showcase-item{padding:18px 20px;margin-top:12px;border:0;border-radius:18px;background:var(--bg)}.variant-pet .process-step{margin-top:10px;padding:16px 18px;border:0;border-radius:18px;background:var(--bg)}.variant-pet .process-number{display:grid;place-items:center;flex-basis:38px;height:38px;border-radius:50%;background:var(--accent);color:var(--bg)!important}
+.variant-music{padding:32px;border-top:5px solid var(--accent);border-bottom:5px solid var(--accent);background:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,rgba(0,0,0,.075) 28px,transparent 29px)}.variant-music .highlight{border:0;border-radius:0;background:var(--bg);box-shadow:4px 4px 0 var(--accent)}.variant-music .showcase{display:grid;gap:14px}.variant-music .showcase h3{grid-column:1/-1}.variant-music .showcase-item{padding:18px;border:1px solid var(--accent);border-left:6px solid var(--accent);background:var(--bg)}.variant-music .process-step{padding:18px;background:var(--bg);border-bottom:1px solid var(--accent)}.variant-music .process-number{font:700 20px/1 Georgia,serif}
+body[data-variant=restaurant] h1{font-family:'Songti TC','STSong',serif;font-size:38px}body[data-variant=interior] h1{font-weight:500;letter-spacing:.16em}body[data-variant=pet] h1{font-weight:800;letter-spacing:.08em}body[data-variant=music] h1{font-family:Georgia,'Songti TC',serif;font-style:italic;letter-spacing:.08em}
+details{padding:8px 0;border-bottom:1px solid var(--line)}details:last-child{border-bottom:none}summary{display:flex;align-items:center;min-height:44px;cursor:pointer;font-weight:600;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:'＋ ';flex:0 0 28px;color:var(--accent)}details[open] summary::before{content:'－ '}details p{margin:4px 0 10px 28px;color:var(--ink);opacity:.72;font-size:15px}
+.row{display:flex;gap:16px;padding:10px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}dt{flex:0 0 64px;font-size:14px;color:var(--ink);opacity:.68}dd{flex:1}a{color:var(--accent)}a:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:3px}.cta{display:block;margin:32px 0 8px;padding:18px;background:var(--accent);color:var(--bg);text-align:center;border-radius:12px;font-weight:700;text-decoration:none;letter-spacing:1px}
+footer{padding:40px 0 56px;text-align:center;font-size:13px;color:var(--ink);opacity:.68}
+@media (min-width:768px){.wrap{padding:0 36px}header{padding-top:88px}h1{font-size:42px}.highlight-list{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-restaurant .showcase,.variant-interior .showcase{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-pet .showcase{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.variant-pet .showcase h3{grid-column:1/-1}.variant-music .highlight-list{grid-template-columns:repeat(4,minmax(0,1fr))}.variant-music .showcase{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-interior .process{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}.variant-interior .process h3{grid-column:1/-1}}
+@media (max-width:767px){.wrap{padding:0 18px}.variant{margin:12px 0;padding:24px 18px}.highlight-list,.variant-restaurant .showcase,.variant-interior .showcase,.variant-pet .showcase,.variant-music .showcase,.variant-interior .process{grid-template-columns:1fr}.variant-interior{border-left-width:6px}.variant-interior .showcase-item{border-left:0;border-top:1px solid var(--line)}.variant-music .highlight{box-shadow:3px 3px 0 var(--accent)}}
+</style>
+</head>
+<body data-variant="restaurant">
+<div class="wrap">
+  <header>
+    <p class="eyebrow">台北・日常食堂</p>
+    <h1>暮火食堂</h1>
+    <p class="tagline">把下班後的好心情，放進一碗熱飯裡</p>
+    <p class="hero-note">以炭火、米飯與當季蔬菜，做一桌不需要盛裝也能好好吃飯的晚餐。</p>
+    
+    <a class="cta" href="#contact">聯絡／預約</a>
+  </header>
+  <nav aria-label="頁面導覽">
+    <a href="#about">關於</a><a href="#services">服務</a><a href="#hours">時間</a><a href="#faq">常見問題</a><a href="#contact">聯絡</a>
+  </nav>
+
+  <section id="about"><h2>關 於</h2><p class="about">暮火食堂是一間在巷口等晚歸的人回來吃飯的小食堂。我們以炭火料理、現煮米飯與當季蔬菜，準備一桌不需要盛裝也能慢慢享用的晚餐。</p></section>
+  <section class="variant variant-restaurant" data-section="menu"><div class="variant-block highlights"><h3>精 選 特 色</h3><div class="highlight-list"><article class="highlight">
+        <p class="highlight-label">午間</p>
+        <p class="highlight-value">午間定食</p>
+        <p>用一份熱飯與當日小菜，好好吃完午休。</p>
+      </article><article class="highlight">
+        <p class="highlight-label">晚間</p>
+        <p class="highlight-value">晚間炭火料理</p>
+        <p>炭火慢烤的主菜，適合下班後慢慢吃。</p>
+      </article><article class="highlight">
+        <p class="highlight-label">每日</p>
+        <p class="highlight-value">每日一款季節小菜</p>
+        <p>依市場食材更換，留給每一次來訪一點新鮮感。</p>
+      </article></div></div><div class="variant-block showcase"><h3>精 選 展 示</h3><article class="showcase-item">
+        <p class="showcase-category">招牌定食</p>
+        <h4>炭火雞腿飯</h4>
+        <p>雞腿以炭火烤出焦香，搭配現煮白飯與當日小菜。</p>
+        <p class="showcase-meta">午、晚間供應</p>
+      </article><article class="showcase-item">
+        <p class="showcase-category">晚間主菜</p>
+        <h4>味噌奶油鮭魚</h4>
+        <p>鹹甜白味噌與奶油包住鮭魚香氣，佐當季烤蔬菜。</p>
+        <p class="showcase-meta">每日限量</p>
+      </article><article class="showcase-item">
+        <p class="showcase-category">當日配菜</p>
+        <h4>季節小菜盤</h4>
+        <p>以當季蔬菜、漬物與豆腐做成三款清爽小菜。</p>
+        <p class="showcase-meta">內容依市場食材調整</p>
+      </article></div></section>
+  <section id="services"><h2>服 務 與 價 格</h2><article class="svc">
+      <h3>炭火雞腿定食</h3>
+      <p>炭烤去骨雞腿、白飯、味噌湯與三款當日小菜。</p>
+      <div class="meta"><span>NT$320</span></div>
+    </article><article class="svc">
+      <h3>味噌奶油鮭魚</h3>
+      <p>香煎鮭魚佐白味噌奶油醬，搭配當季烤蔬菜與白飯。</p>
+      <div class="meta"><span>NT$360</span></div>
+    </article><article class="svc">
+      <h3>包場晚餐</h3>
+      <p>適合 12 至 20 人的晚餐聚會，可依預算安排共享菜色。</p>
+      <div class="meta"><span>每人 NT$1,200 起，請先洽詢</span></div>
+    </article></section>
+  <section id="hours"><h2>營 業 時 間</h2><pre class="hours">週二至週五 11:30–14:30（午間定食供應至 14:00）
+週二至週日 17:30–21:30（晚間最後點餐 20:45）
+週一 公休</pre></section>
+  <section id="faq"><h2>常 見 問 題</h2><details><summary>可以訂位嗎？</summary><p>可以，晚間座位建議至少提前一天以 LINE 或電話預約；午間保留少量現場座位。</p></details><details><summary>有素食選擇嗎？</summary><p>有。每日會準備一款蔬食定食與季節小菜，蛋奶素需求請在訂位時告訴我們。</p></details><details><summary>可以外帶嗎？</summary><p>炭火雞腿定食、味噌奶油鮭魚與季節小菜皆可外帶，建議先電話預訂取餐時間。</p></details><details><summary>可以包場嗎？</summary><p>可以。12 至 20 人可安排晚間包場，菜單與預算會依聚會型態一起討論。</p></details></section>
+  <section id="contact"><h2>聯 絡 我 們</h2><dl><div class="row"><dt>地址</dt><dd>台北市中山區禾光街 18 號 1 樓</dd></div><div class="row"><dt>電話</dt><dd><a href="tel:02-2512-4068">02-2512-4068</a></dd></div></dl><a class="cta" href="#contact">聯絡／預約</a></section>
+
+  <footer>暮火食堂</footer>
+</div>
+</body>
+</html>

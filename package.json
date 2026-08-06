@@ -1,0 +1,28 @@
+{
+  "name": "oakit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "官網 + LINE 官方帳號一次生成。一份租戶設定，同時產出網站與 LINE 的圖文選單、自動回覆知識庫。",
+  "type": "module",
+  "scripts": {
+    "build": "tsx src/cli.ts build",
+    "richmenu": "tsx src/cli.ts richmenu",
+    "serve": "tsx src/cli.ts serve",
+    "ask": "tsx src/cli.ts ask",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.115.0",
+    "@line/bot-sdk": "^9.9.0",
+    "express": "^5.1.0",
+    "sharp": "^0.34.4"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
