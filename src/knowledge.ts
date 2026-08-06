@@ -56,6 +56,9 @@ export function buildKnowledge(t: Tenant): string {
     for (const item of t.site.showcase ?? []) {
       lines.push(`- ${item.title}${item.category ? `｜${item.category}` : ''}${item.meta ? `｜${item.meta}` : ''}：${item.description}`);
     }
+    for (const item of t.site.studentShowcase ?? []) {
+      lines.push(`- ${item.title}${item.category ? `｜${item.category}` : ''}${item.meta ? `｜${item.meta}` : ''}：${item.description}`);
+    }
     for (const step of t.site.process ?? []) {
       lines.push(`${step.step}. ${step.title}：${step.description}`);
     }
