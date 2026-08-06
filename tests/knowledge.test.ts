@@ -20,7 +20,7 @@ describe('site content knowledge', () => {
     const tenant = loadTenant('demo-music');
     const knowledge = buildKnowledge(tenant);
 
-    expect(knowledge).toContain('鋼琴一對一｜流行與古典');
+    expect(knowledge).toContain('鋼琴一對一｜流行與古典｜18歲以下');
     expect(knowledge).toContain('NT$3,600／4 堂（每堂 NT$900）');
     expect(knowledge).toContain('團班類別｜流行與古典');
     expect(knowledge).toContain('NT$450／人／堂');
@@ -63,7 +63,7 @@ describe('site content knowledge', () => {
     const tenant = loadTenant('demo-music');
     const groupService = tenant.services.find((service) => service.name.startsWith('團班類別'));
 
-    expect(groupService?.desc).toBe('團體班也有兒童班、成人班、樂齡班。3人即開班，最多3人，維持小班規模，不用擔心品質下降');
+    expect(groupService?.desc).toBe('團體班有兒童班、成人班、樂齡班。3人即開班，最多3人，維持小班規模，不用擔心品質下降');
     expect(tenant.faq.find((item) => item.q === '團體班怎麼開班？')?.a).toContain('兒童班、成人班、樂齡班');
   });
 
