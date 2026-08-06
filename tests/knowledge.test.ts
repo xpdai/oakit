@@ -22,7 +22,7 @@ describe('site content knowledge', () => {
 
     expect(knowledge).toContain('鋼琴一對一｜流行與古典');
     expect(knowledge).toContain('NT$3,600／4 堂（每堂 NT$900）');
-    expect(knowledge).toContain('成人團體班｜流行與古典');
+    expect(knowledge).toContain('團班類別｜流行與古典');
     expect(knowledge).toContain('NT$450／人／堂');
     expect(tenant.services.map((service) => service.name).join('\n')).not.toContain('吉他');
     expect(tenant.services.map((service) => service.name).join('\n')).not.toContain('歌唱');
@@ -43,17 +43,20 @@ describe('site content knowledge', () => {
     const highlights = loadTenant('demo-music').site?.highlights ?? [];
 
     expect(highlights).toEqual([
-      expect.objectContaining({ label: '個別', value: '鋼琴一對一' }),
-      expect.objectContaining({ label: '兒童', value: '啟蒙小團班' }),
-      expect.objectContaining({ label: '成人', value: '精進團班' }),
-      expect.objectContaining({ label: '樂齡', value: '歡樂團班' }),
+      expect.objectContaining({ label: '個別（18歲以下）', value: '鋼琴一對一' }),
+      expect.objectContaining({ label: '兒童（5~10歲）', value: '啟蒙小團班' }),
+      expect.objectContaining({ label: '成人（18歲含以上）', value: '精進團班' }),
+      expect.objectContaining({ label: '樂齡（65歲含以上）', value: '歡樂團班' }),
     ]);
     expect(highlights.map((item) => item.description)).toEqual([
-      '從讀譜到喜歡的曲子，每次課都依你的步調前進。',
-      '讓5~10小孩與好友一同學習',
+      '打好基礎、提升程度每一次都比上一次更厲害',
+      '讓小孩與好友一同學習',
       '相伴學習、互相鼓勵',
-      '65歲以上人生戰士揪伴回憶心中的美好旋律',
+      '人生戰士揪伴回憶心中的美好旋律',
     ]);
+    expect(highlights.map((item) => item.description).join('\n')).not.toContain('5~10');
+    expect(highlights.map((item) => item.description).join('\n')).not.toContain('65歲');
+    expect(loadTenant('demo-music').site?.showcase?.map((item) => item.title)).toContain('團班類別');
   });
 
   it('開店日補充說明同時進入 knowledge 與營業時間規則回覆', () => {
