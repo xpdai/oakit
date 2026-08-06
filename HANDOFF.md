@@ -34,7 +34,7 @@
 - 多租戶 webhook（`/webhook/:tenantId`，含簽章驗證）
 - CLI：`build` / `richmenu` / `ask` / `serve`
 - 四個虛構 Demo 網站：`demo-bistro`（暮火食堂）、`demo-interior`（隅光製所）、
-  `demo-pet`（小步寵物美容）、`demo-music`（拾音音樂教室）
+  `demo-pet`（小步寵物美容）、`demo-music`（那莫 好聽）
 - `oakit`（**用產品做產品的銷售頁**）
 
 驗證過：四個虛構 Demo 的 tenant 仍是官網、圖文選單和 LINE 知識庫的共同來源；

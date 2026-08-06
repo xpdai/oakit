@@ -74,6 +74,8 @@ export interface Tenant {
     tagline: string;
     /** 較長的介紹，官網與 AI 客服都會用到 */
     about: string;
+    /** 品牌 Logo；官網會將本機素材內嵌成單檔 HTML */
+    logo?: { src: string; alt?: string };
   };
   contact: {
     phone?: string;

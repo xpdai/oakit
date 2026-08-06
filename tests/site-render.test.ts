@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { renderSite } from '../src/site/render.js';
-import type { BusinessType, Tenant } from '../src/tenant.js';
+import { loadTenant, type BusinessType, type Tenant } from '../src/tenant.js';
 
 const makeTenant = (variant?: BusinessType): Tenant => ({
   id: 'render-test',
@@ -55,12 +55,30 @@ describe('renderSite variants', () => {
     expect(html).toMatch(/@media \(max-width:767px\)[^{]*\{[\s\S]*grid-template-columns:1fr/);
   });
 
+  it('共用 shell 保留語意 main、可見 focus 與 reduced-motion 支援', () => {
+    const html = renderSite(makeTenant('music'));
+
+    expect(html).toContain('<main>');
+    expect(html).toContain('</main>');
+    expect(html).toContain('class="site-nav"');
+    expect(html).toContain('a:focus-visible,summary:focus-visible,.cta:focus-visible');
+    expect(html).toContain('@media (prefers-reduced-motion:reduce)');
+  });
+
+  it('那莫 好聽會將品牌 Logo 內嵌在單檔官網', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
+    expect(html).toContain('class="brand-logo"');
+    expect(html).toContain('src="data:image/jpeg;base64,');
+    expect(html).toContain('alt="那莫 好聽 Logo');
+  });
+
   it('FAQ summary 至少有 44px 互動高度', () => {
     const html = renderSite(makeTenant('pet'));
     expect(html).toMatch(/summary\{[^}]*min-height:44px/);
   });
 
-  it('網站營業時間保留開店日的補充說明', () => {
+  it('網站先隱藏營業時間區塊，客服資料仍由 tenant 保留', () => {
     const tenant = makeTenant('restaurant');
     tenant.hours = [
       { days: '週二至週五', open: '11:30', close: '14:30', note: '午間定食供應至 14:00' },
@@ -69,8 +87,9 @@ describe('renderSite variants', () => {
 
     const html = renderSite(tenant);
 
-    expect(html).toContain('週二至週五 11:30–14:30（午間定食供應至 14:00）');
-    expect(html).toContain('週一 公休');
+    expect(html).not.toContain('id="hours"');
+    expect(html).not.toContain('營 業 時 間');
+    expect(html).not.toContain('href="#hours"');
   });
 
   it('沒有 site 時使用 default，不丟失既有內容', () => {
