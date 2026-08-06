@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>那莫好聽｜從第一個音開始，找到自己的節奏</title>
-<meta name="description" content="從第一個音開始，找到自己的節奏　那莫好聽相信學音樂不必急著跟上誰的速度。從第一次摸琴、重新拿起吉他，到想唱回喜歡的歌，我們陪你用適合自己的方式，把聲音慢慢變成生活的一部分。">
+<meta name="description" content="從第一個音開始，找到自己的節奏　那莫好聽相信學音樂不必急著跟上誰的速度。從第一次接觸鋼琴開始，依照流行或古典方向安排學習，陪你用適合自己的方式，把每一次練習慢慢變成自己的演奏。">
 <meta property="og:title" content="那莫好聽">
 <meta property="og:description" content="從第一個音開始，找到自己的節奏">
 <style>
@@ -21,6 +21,7 @@ main>section{padding:64px 0;border-top:1px solid var(--line)}h2,h3{font-size:13p
 .svc,.showcase-item{padding:22px 0;border-bottom:1px solid var(--line)}.svc:last-child,.showcase-item:last-child{border-bottom:none}.svc h3,.showcase-item h4,.process-step h4{font-size:18px;margin-bottom:5px;color:inherit;letter-spacing:0}.svc p,.showcase-item p,.process-step p{color:var(--ink);opacity:.76;font-size:15px}.svc{transition:padding 160ms ease}.svc:hover{padding-left:10px}
 .meta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}.meta span{font-size:13px;padding:4px 11px;border:1px solid var(--line);border-radius:999px}
 .variant{margin:24px 0;padding:38px;border-top:0}.variant-block+.variant-block{margin-top:42px}.highlight-list{display:grid;gap:16px}.highlight{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}.highlight-label,.showcase-category,.process-number{color:var(--accent)!important;font-size:13px!important;font-weight:800;letter-spacing:.12em}.highlight-value{font-size:21px!important;font-weight:800;color:inherit!important}.showcase-meta{margin-top:9px;font-size:13px!important}.process-step{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid var(--line)}.process-step:last-child{border-bottom:none}.process-number{flex:0 0 34px}
+.student-showcase{padding:64px 0;border-top:1px solid var(--line)}.student-showcase-intro{max-width:720px;color:var(--ink);opacity:.76;font-size:16px}.student-showcase-list{display:grid;gap:16px;margin-top:24px}.student-work{padding:24px;border:1px solid var(--accent);border-radius:16px;background:var(--surface)}.student-work h3{font-size:20px;color:inherit;letter-spacing:0;margin-bottom:6px}.student-work p{color:var(--ink);opacity:.76;font-size:15px}.student-work-category,.student-showcase-kicker{color:var(--accent)!important;font-size:13px!important;font-weight:800;letter-spacing:.12em}.student-work-meta{margin-top:9px;font-size:13px!important}.student-showcase-empty{margin-top:24px;padding:28px;border:1px dashed var(--accent);border-radius:16px;background:var(--surface)}.student-work-link{display:inline-flex;align-items:center;min-height:44px;margin-top:18px;padding:8px 14px;border:1px solid var(--accent);border-radius:999px;text-decoration:none;font-weight:800}
 .variant-restaurant{border:2px solid var(--accent);border-radius:18px;box-shadow:10px 10px 0 var(--surface);background:linear-gradient(135deg,var(--surface),transparent 58%)}.variant-restaurant .highlight{border:0;border-top:5px solid var(--accent);border-radius:12px 12px 4px 4px;background:var(--bg)}.variant-restaurant .showcase{display:grid;gap:0}.variant-restaurant .showcase h3{grid-column:1/-1}.variant-restaurant .showcase-item{padding:22px;border-top:1px solid var(--line);border-bottom:0}.variant-restaurant .showcase-category{display:inline-block;padding:2px 10px;border:1px solid var(--accent);border-radius:999px}
 .variant-interior{padding:42px 44px;border:1px solid var(--ink);border-left:8px solid var(--ink);border-radius:0;background:linear-gradient(90deg,var(--surface),transparent 28%)}.variant-interior h3{padding-bottom:14px;border-bottom:1px solid var(--ink)}.variant-interior .showcase{display:grid;gap:0}.variant-interior .showcase h3{grid-column:1/-1}.variant-interior .showcase-item{padding:24px;border:0;border-left:1px solid var(--line)}.variant-interior .showcase-item:nth-of-type(2){border-left:0}.variant-interior .process-number{font:700 24px/1 Georgia,serif}.variant-interior .process-step{align-items:flex-start}
 .variant-pet{padding:38px;border:0;border-radius:32px;background:var(--surface);box-shadow:var(--shadow)}.variant-pet .highlight{border:2px solid var(--accent);border-radius:26px 26px 10px 26px;background:var(--bg)}.variant-pet .highlight:nth-child(even){border-radius:26px 26px 26px 10px}.variant-pet .showcase-item{padding:20px 22px;margin-top:12px;border:0;border-radius:20px;background:var(--bg);box-shadow:0 4px 0 var(--surface)}.variant-pet .process-step{margin-top:12px;padding:18px 20px;border:0;border-radius:20px;background:var(--bg)}.variant-pet .process-number{display:grid;place-items:center;flex-basis:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--bg)!important}
@@ -29,8 +30,8 @@ body[data-variant=restaurant] h1{font-family:'Songti TC','STSong',serif}body[dat
 details{padding:8px 0;border-bottom:1px solid var(--line)}details:last-child{border-bottom:none}summary{display:flex;align-items:center;min-height:44px;padding:4px 0;cursor:pointer;font-weight:700;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:'＋ ';flex:0 0 28px;color:var(--accent)}details[open] summary::before{content:'－ '}details p{margin:4px 0 12px 28px;color:var(--ink);opacity:.76;font-size:15px}
 .row{display:flex;gap:18px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}dt{flex:0 0 64px;font-size:14px;color:var(--ink);opacity:.7}dd{flex:1}a{color:var(--accent);text-underline-offset:3px}a:focus-visible,summary:focus-visible,.cta:focus-visible{outline:3px solid var(--ink);outline-offset:4px;box-shadow:0 0 0 7px var(--bg);border-radius:4px}.cta{display:block;width:min(100%,560px);margin:30px auto 8px;padding:18px 22px;background:var(--accent);color:var(--bg);text-align:center;border-radius:14px;font-weight:800;text-decoration:none;letter-spacing:.08em;box-shadow:0 8px 0 var(--surface);transition:transform 160ms ease,box-shadow 160ms ease}.cta:hover{transform:translateY(-2px);box-shadow:0 10px 0 var(--surface)}
 footer{padding:54px 0 64px;text-align:center;font-size:13px;color:var(--ink);opacity:.68}
-@media (min-width:768px){.wrap{padding:0 36px}.hero{padding-top:104px}.site-nav{margin:0 -36px;padding-left:36px;padding-right:36px}.highlight-list{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-restaurant .showcase,.variant-interior .showcase{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-pet .showcase{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.variant-pet .showcase h3{grid-column:1/-1}.variant-music .highlight-list{grid-template-columns:repeat(4,minmax(0,1fr))}.variant-music .showcase{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-interior .process{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}.variant-interior .process h3{grid-column:1/-1}}
-@media (max-width:767px){.wrap{padding:0 18px}.hero{padding-top:56px}.site-nav{margin:0 -18px;padding-left:18px;padding-right:18px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}.site-nav a{flex:0 0 auto}.variant{margin:16px 0;padding:26px 20px}.highlight-list,.variant-restaurant .showcase,.variant-interior .showcase,.variant-pet .showcase,.variant-music .showcase,.variant-interior .process{grid-template-columns:1fr}.variant-interior{border-left-width:6px;padding:28px 22px}.variant-interior .showcase-item{border-left:0;border-top:1px solid var(--line)}.variant-music{padding:28px 20px}.variant-music::before{font-size:30px;top:18px;right:18px}.variant-pet{padding:26px 20px}.row{align-items:flex-start}}
+@media (min-width:768px){.wrap{padding:0 36px}.hero{padding-top:104px}.site-nav{margin:0 -36px;padding-left:36px;padding-right:36px}.highlight-list{grid-template-columns:repeat(3,minmax(0,1fr))}.student-showcase-list{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-restaurant .showcase,.variant-interior .showcase{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-pet .showcase{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.variant-pet .showcase h3{grid-column:1/-1}.variant-music .highlight-list{grid-template-columns:repeat(4,minmax(0,1fr))}.variant-music .showcase{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-interior .process{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}.variant-interior .process h3{grid-column:1/-1}}
+@media (max-width:767px){.wrap{padding:0 18px}.hero{padding-top:56px}.site-nav{margin:0 -18px;padding-left:18px;padding-right:18px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}.site-nav a{flex:0 0 auto}.variant{margin:16px 0;padding:26px 20px}.student-showcase{padding:48px 0}.student-showcase-list,.highlight-list,.variant-restaurant .showcase,.variant-interior .showcase,.variant-pet .showcase,.variant-music .showcase,.variant-interior .process{grid-template-columns:1fr}.variant-interior{border-left-width:6px;padding:28px 22px}.variant-interior .showcase-item{border-left:0;border-top:1px solid var(--line)}.variant-music{padding:28px 20px}.variant-music::before{font-size:30px;top:18px;right:18px}.variant-pet{padding:26px 20px}.row{align-items:flex-start}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 </style>
 </head>
@@ -41,83 +42,66 @@ footer{padding:54px 0 64px;text-align:center;font-size:13px;color:var(--ink);opa
 <p class="eyebrow">一對一與團體音樂課</p>
     <h1>那莫好聽</h1>
     <p class="tagline">從第一個音開始，找到自己的節奏</p>
-<p class="hero-note">不論是第一次摸琴，還是想重新唱回喜歡的歌，都能從適合自己的速度開始。</p>
+<p class="hero-note">流行與古典，都能從適合自己的速度開始；一對一或成人小班，陪你把曲子練成自己的演奏。</p>
 
 <a class="cta" href="#contact">聯絡／預約</a>
   </header>
   <nav class="site-nav" aria-label="頁面導覽">
-    <a href="#about">關於</a><a href="#services">服務</a><a href="#faq">常見問題</a><a href="#contact">聯絡</a>
+    <a href="#about">關於</a><a href="#services">服務</a><a href="#student-showcase">雲端成發</a><a href="#faq">常見問題</a><a href="#contact">聯絡</a>
   </nav>
 
   <main>
-    <section id="about"><h2>關 於</h2><p class="about">那莫好聽相信學音樂不必急著跟上誰的速度。從第一次摸琴、重新拿起吉他，到想唱回喜歡的歌，我們陪你用適合自己的方式，把聲音慢慢變成生活的一部分。</p></section>
+    <section id="about"><h2>關 於</h2><p class="about">那莫好聽相信學音樂不必急著跟上誰的速度。從第一次接觸鋼琴開始，依照流行或古典方向安排學習，陪你用適合自己的方式，把每一次練習慢慢變成自己的演奏。</p></section>
 <section class="variant variant-music" data-section="courses"><div class="variant-block highlights"><h3>精 選 特 色</h3><div class="highlight-list"><article class="highlight">
-        <p class="highlight-label">個別</p>
-        <p class="highlight-value">鋼琴一對一</p>
-        <p>從讀譜到喜歡的曲子，每次課都依你的步調前進。</p>
+        <p class="highlight-label">方向</p>
+        <p class="highlight-value">流行鋼琴</p>
+        <p>依照喜歡的歌曲與學習目標，安排適合自己的練習。</p>
       </article><article class="highlight">
-        <p class="highlight-label">入門</p>
-        <p class="highlight-value">吉他入門</p>
-        <p>把第一個和弦和第一首歌，練成能自在彈唱的日常。</p>
+        <p class="highlight-label">方向</p>
+        <p class="highlight-value">古典鋼琴</p>
+        <p>從基礎技巧到完整曲目，穩定累積演奏的手感。</p>
       </article><article class="highlight">
-        <p class="highlight-label">聲音</p>
-        <p class="highlight-value">歌唱課</p>
-        <p>找到舒服的發聲位置，也學著用歌說出自己的感受。</p>
-      </article><article class="highlight">
-        <p class="highlight-label">一起</p>
-        <p class="highlight-value">樂團共學</p>
-        <p>在合奏裡學會聆聽，和夥伴完成一首真正的歌。</p>
+        <p class="highlight-label">課別</p>
+        <p class="highlight-value">一對一與成人小班</p>
+        <p>依需求選擇個別課或團體班，團班最多 3 人。</p>
       </article></div></div><div class="variant-block showcase"><h3>精 選 展 示</h3><article class="showcase-item">
-        <p class="showcase-category">一對一課</p>
-        <h4>成人鋼琴</h4>
-        <p>給想重新靠近音樂的大人，從熟悉的旋律重新建立手感。</p>
-        <p class="showcase-meta">每堂 50 分鐘</p>
+        <p class="showcase-category">流行與古典</p>
+        <h4>一對一鋼琴課</h4>
+        <p>依照程度與目標安排曲目，專注在每一次練習的進步。</p>
+        <p class="showcase-meta">每堂 50 分鐘｜NT$900</p>
       </article><article class="showcase-item">
-        <p class="showcase-category">一對一課</p>
-        <h4>木吉他入門</h4>
-        <p>從節奏與和弦開始，完成一首可以送給自己的歌。</p>
-        <p class="showcase-meta">每堂 60 分鐘</p>
-      </article><article class="showcase-item">
-        <p class="showcase-category">一對一課</p>
-        <h4>流行歌唱</h4>
-        <p>用喜歡的歌練呼吸、音準與表達，讓聲音更自在。</p>
-        <p class="showcase-meta">每堂 50 分鐘</p>
-      </article><article class="showcase-item">
-        <p class="showcase-category">團體課</p>
-        <h4>週末樂團</h4>
-        <p>在週末和夥伴排練，從第一次合奏走到小型分享演出。</p>
-        <p class="showcase-meta">每堂 90 分鐘</p>
+        <p class="showcase-category">流行與古典</p>
+        <h4>成人團體班</h4>
+        <p>3 人即開班，最多 3 人，在小班裡一起練習也維持教學品質。</p>
+        <p class="showcase-meta">NT$450／人／堂</p>
       </article></div><div class="variant-block process"><h3>服 務 流 程</h3><article class="process-step">
         <p class="process-number">01</p>
-        <div><h4>選擇方向</h4><p>聊聊想學的樂器、喜歡的歌與目前的程度。</p></div>
+        <div><h4>選擇方向</h4><p>聊聊想學的流行或古典曲目，以及目前的程度。</p></div>
       </article><article class="process-step">
         <p class="process-number">02</p>
-        <div><h4>安排試聽</h4><p>透過短課體驗老師的教學方式，確認最適合的起點。</p></div>
+        <div><h4>免費試上</h4><p>用 30 分鐘體驗課堂方式，確認適合的一對一或團體班。</p></div>
       </article><article class="process-step">
         <p class="process-number">03</p>
-        <div><h4>建立練習</h4><p>設計能放進日常的小練習，讓進步不被忙碌打斷。</p></div>
+        <div><h4>建立練習</h4><p>設計能放進日常的小練習，讓每一次彈奏都有進步。</p></div>
       </article><article class="process-step">
         <p class="process-number">04</p>
-        <div><h4>上台分享</h4><p>在輕鬆的小型場合演奏或演唱，收藏每一段成長。</p></div>
+        <div><h4>完成曲子</h4><p>把練好的曲子留下來，收藏每一段從練習到演奏的成長。</p></div>
       </article></div></section>
+<section id="student-showcase" class="student-showcase"><h2>雲 端 成 發</h2><p class="student-showcase-intro">把課堂裡練好的曲子留下來，看看其他學生從第一次彈奏到完整演出的成長幅度。</p><div class="student-showcase-empty"><p class="student-showcase-kicker">學生作品整理中</p><p>之後會在這裡分享學生在課堂上練好的一首曲子，讓你看見每一次練習累積出的成長。</p></div></section>
     <section id="services"><h2>服 務 與 價 格</h2><article class="svc">
-      <h3>鋼琴一對一</h3>
-      <p>依程度安排閱讀、演奏與喜歡曲目的練習，成人與學齡兒童皆可。</p>
-      <div class="meta"><span>NT$2,800／4 堂</span><span>每堂 50 分鐘</span></div>
+      <h3>鋼琴一對一｜流行與古典</h3>
+      <p>依照學習方向安排流行或古典曲目，從基礎到完整演奏建立自己的節奏。</p>
+      <div class="meta"><span>NT$3,600／4 堂（每堂 NT$900）</span><span>每堂 50 分鐘</span></div>
     </article><article class="svc">
-      <h3>木吉他入門</h3>
-      <p>從持琴、和弦與節奏開始，完成第一首能自彈自唱的歌。</p>
-      <div class="meta"><span>NT$2,400／4 堂</span><span>每堂 60 分鐘</span></div>
+      <h3>成人團體班｜流行與古典</h3>
+      <p>成人限定，3 人即開班，最多 3 人；維持小班人數，不用擔心教學品質下降。</p>
+      <div class="meta"><span>NT$450／人／堂</span><span>3 人即開班，最多 3 人</span></div>
     </article><article class="svc">
-      <h3>流行歌唱</h3>
-      <p>練習呼吸、咬字與歌曲表達，找到舒服而有辨識度的聲音。</p>
-      <div class="meta"><span>NT$3,000／4 堂</span><span>每堂 50 分鐘</span></div>
-    </article><article class="svc">
-      <h3>週末樂團</h3>
-      <p>和同樣在學習的夥伴排練一首歌，認識合奏、聆聽與上台的樂趣。</p>
-      <div class="meta"><span>NT$1,800／4 堂</span><span>每堂 90 分鐘</span></div>
+      <h3>免費試上課</h3>
+      <p>用 30 分鐘認識學習方向與課堂方式，再一起討論適合的課程安排。</p>
+      <div class="meta"><span>免費</span><span>約 30 分鐘</span></div>
     </article></section>
-<section id="faq"><h2>常 見 問 題</h2><details><summary>適合什麼年齡開始上課？</summary><p>鋼琴課從 5 歲起可安排；吉他、歌唱與樂團課建議 10 歲以上。成人初學者也很歡迎。</p></details><details><summary>一定要先買樂器嗎？</summary><p>試聽與前幾堂課可使用教室樂器。確認想持續學習後，老師會依預算與方向提供選購建議。</p></details><details><summary>可以先試聽嗎？</summary><p>可以。試聽課為 30 分鐘，會了解你的目標、做簡單體驗，並一起討論適合的課程安排。</p></details><details><summary>臨時請假怎麼辦？</summary><p>請於上課 24 小時前告知，可在當期課程內補課一次；未提前通知則視同使用該堂課。</p></details></section>
+<section id="faq"><h2>常 見 問 題</h2><details><summary>適合什麼年齡開始上課？</summary><p>鋼琴課會依學習者的年齡與程度安排，成人初學者也很歡迎。</p></details><details><summary>目前有哪些課程方向？</summary><p>目前提供鋼琴流行與古典方向，課別有一對一與成人限定團體班。</p></details><details><summary>可以先試上嗎？</summary><p>可以，免費試上課約 30 分鐘，會了解你的學習方向與課堂方式，再一起討論適合的安排。</p></details><details><summary>團體班怎麼開班？</summary><p>團體班限成人，3 人即開班，最多 3 人；維持小班規模，不用擔心教學品質下降。</p></details></section>
     <section id="contact"><h2>聯 絡 我 們</h2><dl><div class="row"><dt>地址</dt><dd>新北市新莊區西盛里新樹路295-3號</dd></div><div class="row"><dt>電話</dt><dd><a href="tel:0907459987">0907459987</a></dd></div></dl><a class="cta" href="#contact">聯絡／預約</a></section>
   </main>
 
