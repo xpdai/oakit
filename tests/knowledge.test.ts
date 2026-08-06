@@ -49,7 +49,7 @@ describe('site content knowledge', () => {
       expect.objectContaining({ label: '樂齡（65歲含以上）', value: '歡樂團班' }),
     ]);
     expect(highlights.map((item) => item.description)).toEqual([
-      '打好基礎、提升程度每一次都比上一次更厲害',
+      '能鞏固基礎和提升程度。每一次都比上一次厲害',
       '讓小孩與好友一同學習',
       '相伴學習、互相鼓勵',
       '人生戰士揪伴回憶心中的美好旋律',
