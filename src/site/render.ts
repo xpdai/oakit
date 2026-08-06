@@ -9,8 +9,8 @@
 import { readFileSync } from 'node:fs';
 import { isAbsolute, relative, resolve } from 'node:path';
 import { theme, type Tenant } from '../tenant.js';
-import { escapeHtml } from './html.js';
-import { getRenderVariant, renderVariantSections } from './variants.js';
+import { escapeHtml, safeExternalUrl } from './html.js';
+import { getRenderVariant, renderStudentShowcase, renderVariantSections } from './variants.js';
 
 const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 const ASSET_ROOT = new URL('../../assets/', import.meta.url);
@@ -30,17 +30,6 @@ function embedBrandLogo(logo: Tenant['brand']['logo']): string {
     return `<img class="brand-logo" src="data:${mime};base64,${data}" alt="${escapeHtml(logo.alt ?? '品牌 Logo')}">`;
   } catch {
     return '';
-  }
-}
-
-function safeExternalUrl(value?: string): string | undefined {
-  if (!value) return undefined;
-
-  try {
-    const url = new URL(value);
-    return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname ? url.href : undefined;
-  } catch {
-    return undefined;
   }
 }
 
@@ -104,8 +93,9 @@ export function renderSite(t: Tenant): string {
     : '<a class="cta" href="#contact">聯絡／預約</a>';
   const siteIntro = t.site?.eyebrow ? `<p class="eyebrow">${escapeHtml(t.site.eyebrow)}</p>` : '';
   const heroNote = t.site?.heroNote ? `<p class="hero-note">${escapeHtml(t.site.heroNote)}</p>` : '';
+  const studentShowcaseNav = variant === 'music' ? '<a href="#student-showcase">雲端成發</a>' : '';
   const navigation = `<nav class="site-nav" aria-label="頁面導覽">
-    <a href="#about">關於</a><a href="#services">服務</a>${faq ? '<a href="#faq">常見問題</a>' : ''}<a href="#contact">聯絡</a>
+    <a href="#about">關於</a><a href="#services">服務</a>${studentShowcaseNav}${faq ? '<a href="#faq">常見問題</a>' : ''}<a href="#contact">聯絡</a>
   </nav>`;
 
   return `<!doctype html>
@@ -131,6 +121,7 @@ main>section{padding:64px 0;border-top:1px solid var(--line)}h2,h3{font-size:13p
 .svc,.showcase-item{padding:22px 0;border-bottom:1px solid var(--line)}.svc:last-child,.showcase-item:last-child{border-bottom:none}.svc h3,.showcase-item h4,.process-step h4{font-size:18px;margin-bottom:5px;color:inherit;letter-spacing:0}.svc p,.showcase-item p,.process-step p{color:var(--ink);opacity:.76;font-size:15px}.svc{transition:padding 160ms ease}.svc:hover{padding-left:10px}
 .meta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}.meta span{font-size:13px;padding:4px 11px;border:1px solid var(--line);border-radius:999px}
 .variant{margin:24px 0;padding:38px;border-top:0}.variant-block+.variant-block{margin-top:42px}.highlight-list{display:grid;gap:16px}.highlight{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}.highlight-label,.showcase-category,.process-number{color:var(--accent)!important;font-size:13px!important;font-weight:800;letter-spacing:.12em}.highlight-value{font-size:21px!important;font-weight:800;color:inherit!important}.showcase-meta{margin-top:9px;font-size:13px!important}.process-step{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid var(--line)}.process-step:last-child{border-bottom:none}.process-number{flex:0 0 34px}
+.student-showcase{padding:64px 0;border-top:1px solid var(--line)}.student-showcase-intro{max-width:720px;color:var(--ink);opacity:.76;font-size:16px}.student-showcase-list{display:grid;gap:16px;margin-top:24px}.student-work{padding:24px;border:1px solid var(--accent);border-radius:16px;background:var(--surface)}.student-work h3{font-size:20px;color:inherit;letter-spacing:0;margin-bottom:6px}.student-work p{color:var(--ink);opacity:.76;font-size:15px}.student-work-category,.student-showcase-kicker{color:var(--accent)!important;font-size:13px!important;font-weight:800;letter-spacing:.12em}.student-work-meta{margin-top:9px;font-size:13px!important}.student-showcase-empty{margin-top:24px;padding:28px;border:1px dashed var(--accent);border-radius:16px;background:var(--surface)}.student-work-link{display:inline-flex;align-items:center;min-height:44px;margin-top:18px;padding:8px 14px;border:1px solid var(--accent);border-radius:999px;text-decoration:none;font-weight:800}
 .variant-restaurant{border:2px solid var(--accent);border-radius:18px;box-shadow:10px 10px 0 var(--surface);background:linear-gradient(135deg,var(--surface),transparent 58%)}.variant-restaurant .highlight{border:0;border-top:5px solid var(--accent);border-radius:12px 12px 4px 4px;background:var(--bg)}.variant-restaurant .showcase{display:grid;gap:0}.variant-restaurant .showcase h3{grid-column:1/-1}.variant-restaurant .showcase-item{padding:22px;border-top:1px solid var(--line);border-bottom:0}.variant-restaurant .showcase-category{display:inline-block;padding:2px 10px;border:1px solid var(--accent);border-radius:999px}
 .variant-interior{padding:42px 44px;border:1px solid var(--ink);border-left:8px solid var(--ink);border-radius:0;background:linear-gradient(90deg,var(--surface),transparent 28%)}.variant-interior h3{padding-bottom:14px;border-bottom:1px solid var(--ink)}.variant-interior .showcase{display:grid;gap:0}.variant-interior .showcase h3{grid-column:1/-1}.variant-interior .showcase-item{padding:24px;border:0;border-left:1px solid var(--line)}.variant-interior .showcase-item:nth-of-type(2){border-left:0}.variant-interior .process-number{font:700 24px/1 Georgia,serif}.variant-interior .process-step{align-items:flex-start}
 .variant-pet{padding:38px;border:0;border-radius:32px;background:var(--surface);box-shadow:var(--shadow)}.variant-pet .highlight{border:2px solid var(--accent);border-radius:26px 26px 10px 26px;background:var(--bg)}.variant-pet .highlight:nth-child(even){border-radius:26px 26px 26px 10px}.variant-pet .showcase-item{padding:20px 22px;margin-top:12px;border:0;border-radius:20px;background:var(--bg);box-shadow:0 4px 0 var(--surface)}.variant-pet .process-step{margin-top:12px;padding:18px 20px;border:0;border-radius:20px;background:var(--bg)}.variant-pet .process-number{display:grid;place-items:center;flex-basis:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--bg)!important}
@@ -139,8 +130,8 @@ body[data-variant=restaurant] h1{font-family:'Songti TC','STSong',serif}body[dat
 details{padding:8px 0;border-bottom:1px solid var(--line)}details:last-child{border-bottom:none}summary{display:flex;align-items:center;min-height:44px;padding:4px 0;cursor:pointer;font-weight:700;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:'＋ ';flex:0 0 28px;color:var(--accent)}details[open] summary::before{content:'－ '}details p{margin:4px 0 12px 28px;color:var(--ink);opacity:.76;font-size:15px}
 .row{display:flex;gap:18px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}dt{flex:0 0 64px;font-size:14px;color:var(--ink);opacity:.7}dd{flex:1}a{color:var(--accent);text-underline-offset:3px}a:focus-visible,summary:focus-visible,.cta:focus-visible{outline:3px solid var(--ink);outline-offset:4px;box-shadow:0 0 0 7px var(--bg);border-radius:4px}.cta{display:block;width:min(100%,560px);margin:30px auto 8px;padding:18px 22px;background:var(--accent);color:var(--bg);text-align:center;border-radius:14px;font-weight:800;text-decoration:none;letter-spacing:.08em;box-shadow:0 8px 0 var(--surface);transition:transform 160ms ease,box-shadow 160ms ease}.cta:hover{transform:translateY(-2px);box-shadow:0 10px 0 var(--surface)}
 footer{padding:54px 0 64px;text-align:center;font-size:13px;color:var(--ink);opacity:.68}
-@media (min-width:768px){.wrap{padding:0 36px}.hero{padding-top:104px}.site-nav{margin:0 -36px;padding-left:36px;padding-right:36px}.highlight-list{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-restaurant .showcase,.variant-interior .showcase{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-pet .showcase{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.variant-pet .showcase h3{grid-column:1/-1}.variant-music .highlight-list{grid-template-columns:repeat(4,minmax(0,1fr))}.variant-music .showcase{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-interior .process{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}.variant-interior .process h3{grid-column:1/-1}}
-@media (max-width:767px){.wrap{padding:0 18px}.hero{padding-top:56px}.site-nav{margin:0 -18px;padding-left:18px;padding-right:18px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}.site-nav a{flex:0 0 auto}.variant{margin:16px 0;padding:26px 20px}.highlight-list,.variant-restaurant .showcase,.variant-interior .showcase,.variant-pet .showcase,.variant-music .showcase,.variant-interior .process{grid-template-columns:1fr}.variant-interior{border-left-width:6px;padding:28px 22px}.variant-interior .showcase-item{border-left:0;border-top:1px solid var(--line)}.variant-music{padding:28px 20px}.variant-music::before{font-size:30px;top:18px;right:18px}.variant-pet{padding:26px 20px}.row{align-items:flex-start}}
+@media (min-width:768px){.wrap{padding:0 36px}.hero{padding-top:104px}.site-nav{margin:0 -36px;padding-left:36px;padding-right:36px}.highlight-list{grid-template-columns:repeat(3,minmax(0,1fr))}.student-showcase-list{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-restaurant .showcase,.variant-interior .showcase{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-pet .showcase{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.variant-pet .showcase h3{grid-column:1/-1}.variant-music .highlight-list{grid-template-columns:repeat(4,minmax(0,1fr))}.variant-music .showcase{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-interior .process{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}.variant-interior .process h3{grid-column:1/-1}}
+@media (max-width:767px){.wrap{padding:0 18px}.hero{padding-top:56px}.site-nav{margin:0 -18px;padding-left:18px;padding-right:18px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}.site-nav a{flex:0 0 auto}.variant{margin:16px 0;padding:26px 20px}.student-showcase{padding:48px 0}.student-showcase-list,.highlight-list,.variant-restaurant .showcase,.variant-interior .showcase,.variant-pet .showcase,.variant-music .showcase,.variant-interior .process{grid-template-columns:1fr}.variant-interior{border-left-width:6px;padding:28px 22px}.variant-interior .showcase-item{border-left:0;border-top:1px solid var(--line)}.variant-music{padding:28px 20px}.variant-music::before{font-size:30px;top:18px;right:18px}.variant-pet{padding:26px 20px}.row{align-items:flex-start}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 </style>
 </head>
@@ -160,6 +151,7 @@ ${cta}
   <main>
     <section id="about"><h2>關 於</h2><p class="about">${escapeHtml(t.brand.about)}</p></section>
 ${renderVariantSections(t)}
+${renderStudentShowcase(t)}
     <section id="services"><h2>服 務 與 價 格</h2>${services}</section>
 ${faq ? `<section id="faq"><h2>常 見 問 題</h2>${faq}</section>` : ''}
     <section id="contact"><h2>聯 絡 我 們</h2>${contactRows ? `<dl>${contactRows}</dl>` : ''}${cta}</section>

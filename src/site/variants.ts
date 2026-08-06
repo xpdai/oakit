@@ -1,5 +1,5 @@
 import type { BusinessType, ProcessStep, ShowcaseItem, Tenant } from '../tenant.js';
-import { escapeHtml } from './html.js';
+import { escapeHtml, safeExternalUrl } from './html.js';
 
 export function getRenderVariant(t: Tenant): BusinessType | 'default' {
   return t.site?.variant ?? 'default';
@@ -46,6 +46,28 @@ const renderProcess = (items?: ProcessStep[]): string => {
       </article>`,
     )
     .join('')}</div>`;
+};
+
+export const renderStudentShowcase = (t: Tenant): string => {
+  if (t.site?.variant !== 'music') return '';
+
+  const items = t.site.studentShowcase ?? [];
+  const content = items.length
+    ? `<div class="student-showcase-list">${items
+        .map((item) => {
+          const url = safeExternalUrl(item.url);
+          return `<article class="student-work">
+            ${item.category ? `<p class="student-work-category">${escapeHtml(item.category)}</p>` : ''}
+            <h3>${escapeHtml(item.title)}</h3>
+            <p>${escapeHtml(item.description)}</p>
+            ${item.meta ? `<p class="student-work-meta">${escapeHtml(item.meta)}</p>` : ''}
+            ${url ? `<a class="student-work-link" href="${escapeHtml(url)}" target="_blank" rel="noopener">觀看作品</a>` : ''}
+          </article>`;
+        })
+        .join('')}</div>`
+    : `<div class="student-showcase-empty"><p class="student-showcase-kicker">學生作品整理中</p><p>之後會在這裡分享學生在課堂上練好的一首曲子，讓你看見每一次練習累積出的成長。</p></div>`;
+
+  return `<section id="student-showcase" class="student-showcase"><h2>雲 端 成 發</h2><p class="student-showcase-intro">把課堂裡練好的曲子留下來，看看其他學生從第一次彈奏到完整演出的成長幅度。</p>${content}</section>`;
 };
 
 export function renderVariantSections(t: Tenant): string {

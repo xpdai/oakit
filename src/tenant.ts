@@ -18,6 +18,14 @@ export interface ShowcaseItem {
   meta?: string;
 }
 
+export interface StudentShowcaseItem {
+  title: string;
+  category?: string;
+  description: string;
+  meta?: string;
+  url?: string;
+}
+
 export interface ProcessStep {
   step: string;
   title: string;
@@ -30,6 +38,7 @@ export interface SiteContent {
   heroNote?: string;
   highlights?: Array<{ label: string; value: string; description?: string }>;
   showcase?: ShowcaseItem[];
+  studentShowcase?: StudentShowcaseItem[];
   process?: ProcessStep[];
 }
 
