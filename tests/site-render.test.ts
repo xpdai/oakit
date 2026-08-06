@@ -65,12 +65,12 @@ describe('renderSite variants', () => {
     expect(html).toContain('@media (prefers-reduced-motion:reduce)');
   });
 
-  it('那莫 好聽會將品牌 Logo 內嵌在單檔官網', () => {
+  it('那莫好聽會將品牌 Logo 內嵌在單檔官網', () => {
     const html = renderSite(loadTenant('demo-music'));
 
     expect(html).toContain('class="brand-logo"');
     expect(html).toContain('src="data:image/jpeg;base64,');
-    expect(html).toContain('alt="那莫 好聽 Logo');
+    expect(html).toContain('alt="那莫好聽 Logo');
   });
 
   it('FAQ summary 至少有 44px 互動高度', () => {

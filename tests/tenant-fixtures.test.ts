@@ -5,7 +5,7 @@ const expected = [
   { id: 'demo-bistro', name: '暮火食堂', variant: 'restaurant' },
   { id: 'demo-interior', name: '隅光製所', variant: 'interior' },
   { id: 'demo-pet', name: '小步寵物美容', variant: 'pet' },
-  { id: 'demo-music', name: '那莫 好聽', variant: 'music' },
+  { id: 'demo-music', name: '那莫好聽', variant: 'music' },
 ] as const;
 
 const channel = (hex: string, offset: number): number => Number.parseInt(hex.slice(offset, offset + 2), 16);
