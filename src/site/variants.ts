@@ -67,7 +67,7 @@ export const renderStudentShowcase = (t: Tenant): string => {
         .join('')}</div>`
     : `<div class="student-showcase-empty"><p class="student-showcase-kicker">學生作品整理中</p><p>之後會在這裡分享學生在課堂上練好的一首曲子，讓你看見每一次練習累積出的成長。</p></div>`;
 
-  return `<section id="student-showcase" class="student-showcase"><h2>雲 端 成 發</h2><p class="student-showcase-intro">把課堂裡練好的曲子留下來，看看其他學生從第一次彈奏到完整演出的成長幅度。</p>${content}</section>`;
+  return `<section id="student-showcase" class="student-showcase"><h2>雲 端 成 發</h2><p class="student-showcase-intro">記錄成長,督促自己,也激勵別人!</p>${content}</section>`;
 };
 
 export function renderVariantSections(t: Tenant): string {

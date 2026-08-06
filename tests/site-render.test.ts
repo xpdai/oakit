@@ -103,6 +103,13 @@ describe('renderSite variants', () => {
     expect(html).toContain('不安全作品');
   });
 
+  it('雲端成發使用最新成長文案', () => {
+    const html = renderSite(makeTenant('music'));
+
+    expect(html).toContain('記錄成長,督促自己,也激勵別人!');
+    expect(html).not.toContain('把課堂裡練好的曲子留下來');
+  });
+
   it('網站先隱藏營業時間區塊，客服資料仍由 tenant 保留', () => {
     const tenant = makeTenant('restaurant');
     tenant.hours = [
