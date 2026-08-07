@@ -221,5 +221,16 @@ NT$450／人／堂</p>
   }, { threshold: 0, rootMargin: '-35% 0px -55% 0px' });
   navSections.forEach((section) => navObserver.observe(section));
 })();</script>
+<script>(() => {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const reset = () => {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    window.scrollTo(0,0);
+  };
+  reset();
+  window.addEventListener('load', reset, { once: true });
+  window.addEventListener('pageshow', reset, { once: true });
+})();</script>
 </body>
 </html>
