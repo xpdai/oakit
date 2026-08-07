@@ -94,8 +94,7 @@ export const renderStudentShowcase = (t: Tenant): string => {
             ${item.category ? `<p class="student-work-category">${escapeHtml(item.category)}</p>` : ''}
             <h3>${escapeHtml(item.title)}</h3>
             <p>${escapeHtml(item.description)}</p>
-            ${item.meta ? `<p class="student-work-meta">${escapeHtml(item.meta)}</p>` : ''}
-            ${url ? `<a class="student-work-link" href="${escapeHtml(url)}" target="_blank" rel="noopener">觀看作品</a>` : ''}
+            ${item.meta ? `<p class="student-work-meta">${escapeHtml(item.meta)}</p>` : ''}${url ? `<a class="student-work-link" href="${escapeHtml(url)}" target="_blank" rel="noopener">觀看作品</a>` : ''}
           </article>`;
         })
         .join('')}</div>`
