@@ -100,9 +100,9 @@ export function renderSite(t: Tenant): string {
 
   // LINE 才是主要轉換點 —— 台灣的店家幾乎都是靠 LINE 收單，不是靠表單。
   const lineAddUrl = safeExternalUrl(t.contact.lineAddUrl);
-  const ctaLabel = musicMotionEnabled ? '免費試上 30 分鐘' : '聯絡／預約';
+  const ctaLabel = musicMotionEnabled ? '試上一堂 NT$100' : '聯絡／預約';
   const cta = lineAddUrl
-    ? `<a class="cta" href="${escapeHtml(lineAddUrl)}" target="_blank" rel="noopener">${musicMotionEnabled ? '免費試上 30 分鐘' : '加 LINE 詢問 / 預約'}</a>`
+    ? `<a class="cta" href="${escapeHtml(lineAddUrl)}" target="_blank" rel="noopener">${musicMotionEnabled ? '試上一堂 NT$100' : '加 LINE 詢問 / 預約'}</a>`
     : `<a class="cta" href="#contact">${ctaLabel}</a>`;
   const heroCta = musicMotionEnabled ? '' : cta;
   const siteIntro = t.site?.eyebrow ? `<p class="eyebrow">${escapeHtml(t.site.eyebrow)}</p>` : '';

@@ -127,11 +127,11 @@ describe('renderSite variants', () => {
     expect(petHtml).toContain('精 選 展 示');
   });
 
-  it('音樂首頁 CTA 直接說明免費試上 30 分鐘', () => {
+  it('音樂首頁 CTA 直接說明試上一堂 NT$100', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
     const defaultHtml = renderSite(makeTenant());
     const heroMarkup = musicHtml.slice(musicHtml.indexOf('<header'), musicHtml.indexOf('</header>'));
-    const musicCtas = musicHtml.match(/<a class="cta"[^>]*>免費試上 30 分鐘<\/a>/g) ?? [];
+    const musicCtas = musicHtml.match(/<a class="cta"[^>]*>試上一堂 NT\$100<\/a>/g) ?? [];
 
     expect(heroMarkup).not.toContain('class="cta"');
     expect(musicCtas).toHaveLength(1);
