@@ -130,9 +130,12 @@ describe('renderSite variants', () => {
   it('音樂首頁 CTA 直接說明免費試上 30 分鐘', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
     const defaultHtml = renderSite(makeTenant());
+    const heroMarkup = musicHtml.slice(musicHtml.indexOf('<header'), musicHtml.indexOf('</header>'));
+    const musicCtas = musicHtml.match(/<a class="cta"[^>]*>免費試上 30 分鐘<\/a>/g) ?? [];
 
-    expect(musicHtml).toContain('href="#contact">免費試上 30 分鐘</a>');
-    expect(musicHtml).not.toContain('href="#contact">聯絡／預約</a>');
+    expect(heroMarkup).not.toContain('class="cta"');
+    expect(musicCtas).toHaveLength(1);
+    expect(musicHtml).toContain('id="contact"');
     expect(defaultHtml).toContain('href="#contact">聯絡／預約</a>');
   });
 

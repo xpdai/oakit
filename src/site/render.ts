@@ -104,6 +104,7 @@ export function renderSite(t: Tenant): string {
   const cta = lineAddUrl
     ? `<a class="cta" href="${escapeHtml(lineAddUrl)}" target="_blank" rel="noopener">${musicMotionEnabled ? '免費試上 30 分鐘' : '加 LINE 詢問 / 預約'}</a>`
     : `<a class="cta" href="#contact">${ctaLabel}</a>`;
+  const heroCta = musicMotionEnabled ? '' : cta;
   const siteIntro = t.site?.eyebrow ? `<p class="eyebrow">${escapeHtml(t.site.eyebrow)}</p>` : '';
   const heroNote = t.site?.heroNote ? `<p class="hero-note">${escapeHtml(t.site.heroNote)}</p>` : '';
   const studentShowcaseNav = variant === 'music' ? '<a href="#student-showcase">雲端成發</a>' : '';
@@ -195,7 +196,7 @@ ${siteIntro}
     <p class="tagline">${escapeHtml(t.brand.tagline)}</p>
 ${heroNote}
 ${notices}
-${cta}
+${heroCta}
 ${musicAmbient}
   </header>
   ${navigation}
