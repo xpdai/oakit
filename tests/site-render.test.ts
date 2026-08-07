@@ -156,6 +156,7 @@ describe('renderSite variants', () => {
     const html = renderSite(loadTenant('demo-music'));
 
     expect(html).toContain('<span class="svc-duration">每堂 50 分鐘</span>');
+    expect(html).toContain('<span class="svc-duration">每堂 30 分鐘</span>');
     expect(html).toContain('初階 NT$900／堂\n進階 NT$1,200／堂\n高階 NT$1,500／堂');
     expect(html).toContain('每堂 50 分鐘\nNT$450／人／堂');
     expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*white-space:pre-line/);

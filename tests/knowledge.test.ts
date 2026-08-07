@@ -30,6 +30,7 @@ describe('site content knowledge', () => {
     expect(knowledge).toContain('每堂 50 分鐘');
     expect(tenant.services.find((service) => service.name.startsWith('團班類別'))?.duration).toBe('每堂 50 分鐘');
     expect(tenant.site?.showcase?.find((item) => item.title === '團班類別')?.meta).toContain('每堂 50 分鐘');
+    expect(tenant.services.find((service) => service.name === '試上一堂課')?.duration).toBe('每堂 30 分鐘');
     expect(tenant.services.map((service) => service.name).join('\n')).not.toContain('吉他');
     expect(tenant.services.map((service) => service.name).join('\n')).not.toContain('歌唱');
     expect(tenant.services.map((service) => service.name).join('\n')).not.toContain('樂團');
