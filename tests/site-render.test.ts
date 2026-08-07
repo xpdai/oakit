@@ -152,6 +152,16 @@ describe('renderSite variants', () => {
     expect(html).toContain('body[data-variant=music] .svc-price{');
   });
 
+  it('音樂版團班顯示 50 分鐘，級別價格以換行呈現', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
+    expect(html).toContain('<span class="svc-duration">每堂 50 分鐘</span>');
+    expect(html).toContain('初階 NT$900／堂\n進階 NT$1,200／堂\n高階 NT$1,500／堂');
+    expect(html).toContain('每堂 50 分鐘\nNT$450／人／堂');
+    expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*white-space:pre-line/);
+    expect(html).toContain('.variant-music .showcase-meta{white-space:pre-line');
+  });
+
   it('音樂版 sticky 導覽會依目前區段標記 active', () => {
     const html = renderSite(makeTenant('music'));
 

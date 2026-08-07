@@ -21,12 +21,15 @@ describe('site content knowledge', () => {
     const knowledge = buildKnowledge(tenant);
 
     expect(knowledge).toContain('鋼琴一對一｜流行與古典｜18歲以下');
-    expect(knowledge).toContain('初階 NT$900／堂｜進階 NT$1,200／堂｜高階 NT$1,500／堂');
+    expect(knowledge).toContain('初階 NT$900／堂\n進階 NT$1,200／堂\n高階 NT$1,500／堂');
     expect(knowledge).toContain('試上一堂課');
     expect(knowledge).toContain('NT$100／堂');
     expect(knowledge).not.toContain('免費試上');
     expect(knowledge).toContain('團班類別｜流行與古典');
     expect(knowledge).toContain('NT$450／人／堂');
+    expect(knowledge).toContain('每堂 50 分鐘');
+    expect(tenant.services.find((service) => service.name.startsWith('團班類別'))?.duration).toBe('每堂 50 分鐘');
+    expect(tenant.site?.showcase?.find((item) => item.title === '團班類別')?.meta).toContain('每堂 50 分鐘');
     expect(tenant.services.map((service) => service.name).join('\n')).not.toContain('吉他');
     expect(tenant.services.map((service) => service.name).join('\n')).not.toContain('歌唱');
     expect(tenant.services.map((service) => service.name).join('\n')).not.toContain('樂團');
