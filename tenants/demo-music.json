@@ -46,32 +46,7 @@
       { "step": "03", "title": "建立練習", "description": "設計能放進日常的小練習，讓每一次彈奏都有進步。" },
       { "step": "04", "title": "完成曲子", "description": "把練好的曲子留下來，收藏每一段從練習到演奏的成長。" }
     ],
-    "studentShowcase": [
-      {
-        "title": "暖色琴房",
-        "category": "示意素材｜非真實學生作品",
-        "description": "把每天的練習留在一個舒服的地方，從第一個音慢慢找到自己的節奏。",
-        "meta": "音樂教室氛圍示意",
-        "image": "assets/music/music-room-demo.png",
-        "imageAlt": "暖色琴房與木質鋼琴的示意照片"
-      },
-      {
-        "title": "練習中的一小段",
-        "category": "示意素材｜非真實學生作品",
-        "description": "從一小段旋律開始，練習讓手指、節奏和喜歡的曲子慢慢熟悉起來。",
-        "meta": "鋼琴練習紀錄示意",
-        "image": "assets/music/piano-practice-demo.png",
-        "imageAlt": "在木質鋼琴上練習的手部示意照片"
-      },
-      {
-        "title": "把曲子彈完的那天",
-        "category": "示意素材｜非真實學生作品",
-        "description": "記錄從第一次彈奏到完整演出的成長幅度，也把完成曲子的成就留下來。",
-        "meta": "小型演出紀錄示意",
-        "image": "assets/music/studio-performance-demo.png",
-        "imageAlt": "小型音樂教室鋼琴演奏的背影示意照片"
-      }
-    ]
+    "studentShowcase": []
   },
   "richMenu": {
     "items": [

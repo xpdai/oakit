@@ -1,28 +1,5 @@
-import { readFileSync } from 'node:fs';
-import { isAbsolute, relative, resolve } from 'node:path';
 import type { BusinessType, ProcessStep, ShowcaseItem, Tenant } from '../tenant.js';
 import { escapeHtml, safeExternalUrl } from './html.js';
-
-const MUSIC_ASSET_ROOT = new URL('../../assets/', import.meta.url);
-
-function embedMusicImage(src: string, alt: string): string {
-  if (!/^[a-z0-9._/-]+$/i.test(src) || src.includes('..')) return '';
-
-  const relativeAsset = src.replace(/^assets\//, '');
-  const assetPath = resolve(MUSIC_ASSET_ROOT.pathname, relativeAsset);
-  const rootPath = resolve(MUSIC_ASSET_ROOT.pathname);
-  const relativePath = relative(rootPath, assetPath);
-  if (!relativePath || relativePath.startsWith('..') || isAbsolute(relativePath)) return '';
-
-  const lowerAsset = relativeAsset.toLowerCase();
-  const mime = lowerAsset.endsWith('.png') ? 'image/png' : lowerAsset.endsWith('.webp') ? 'image/webp' : 'image/jpeg';
-  try {
-    const data = readFileSync(assetPath).toString('base64');
-    return `<button class="student-work-media" type="button" data-lightbox-trigger aria-label="放大查看示意作品"><img class="student-work-image" src="data:${mime};base64,${data}" alt="${escapeHtml(alt)}" loading="lazy"></button>`;
-  } catch {
-    return '';
-  }
-}
 
 export function getRenderVariant(t: Tenant): BusinessType | 'default' {
   return t.site?.variant ?? 'default';
@@ -36,34 +13,35 @@ export const renderMusicNoteBurst = (label: string): string => {
   return `<div class="music-note-burst" data-note-burst="${escapeHtml(label)}" aria-hidden="true">${notes}</div>`;
 };
 
+const renderFlipCard = (className: string, front: string, back: string): string =>
+  `<article class="${className} flip-card" tabindex="0" role="button" aria-expanded="false"><div class="flip-card-inner"><div class="flip-card-face flip-card-front">${front}</div><div class="flip-card-face flip-card-back">${back}</div></div></article>`;
+
 const renderHighlights = (t: Tenant): string => {
   const highlights = t.site?.highlights;
   if (!highlights?.length) return '';
   const title = t.site?.variant === 'music' ? '年齡分班' : '精 選 特 色';
 
   return `<div class="variant-block highlights"><h3>${title}</h3><div class="highlight-list">${highlights
-    .map(
-      (item) => `<article class="highlight">
-        <p class="highlight-label">${escapeHtml(item.label)}</p>
-        <p class="highlight-value">${escapeHtml(item.value)}</p>
-        ${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}
-      </article>`,
-    )
+    .map((item) => {
+      const front = `<p class="highlight-label">${escapeHtml(item.label)}</p><p class="highlight-value">${escapeHtml(item.value)}</p>`;
+      const back = item.description ? `<p>${escapeHtml(item.description)}</p>` : '<p>課程簡介準備中</p>';
+      return t.site?.variant === 'music'
+        ? renderFlipCard('highlight', front, back)
+        : `<article class="highlight">${front}${item.description ? `<p>${escapeHtml(item.description)}</p>` : ''}</article>`;
+    })
     .join('')}</div></div>`;
 };
 
-const renderShowcase = (items?: ShowcaseItem[], title = '精 選 展 示'): string => {
+const renderShowcase = (items?: ShowcaseItem[], title = '精 選 展 示', options?: { flip?: boolean; hideMeta?: boolean }): string => {
   if (!items?.length) return '';
 
   return `<div class="variant-block showcase"><h3>${title}</h3>${items
-    .map(
-      (item) => `<article class="showcase-item">
-        ${item.category ? `<p class="showcase-category">${escapeHtml(item.category)}</p>` : ''}
-        <h4>${escapeHtml(item.title)}</h4>
-        <p>${escapeHtml(item.description)}</p>
-        ${item.meta ? `<p class="showcase-meta">${escapeHtml(item.meta)}</p>` : ''}
-      </article>`,
-    )
+    .map((item) => {
+      const front = `${item.category ? `<p class="showcase-category">${escapeHtml(item.category)}</p>` : ''}<h4>${escapeHtml(item.title)}</h4>`;
+      const back = `<p>${escapeHtml(item.description)}</p>`;
+      if (options?.flip) return renderFlipCard('showcase-item', front, back);
+      return `<article class="showcase-item">${front}${back}${!options?.hideMeta && item.meta ? `<p class="showcase-meta">${escapeHtml(item.meta)}</p>` : ''}</article>`;
+    })
     .join('')}</div>`;
 };
 
@@ -88,9 +66,7 @@ export const renderStudentShowcase = (t: Tenant): string => {
     ? `<div class="student-showcase-list">${items
         .map((item) => {
           const url = safeExternalUrl(item.url);
-          const image = item.image ? embedMusicImage(item.image, item.imageAlt ?? item.title) : '';
           return `<article class="student-work">
-            ${image}
             ${item.category ? `<p class="student-work-category">${escapeHtml(item.category)}</p>` : ''}
             <h3>${escapeHtml(item.title)}</h3>
             <p>${escapeHtml(item.description)}</p>
@@ -100,7 +76,7 @@ export const renderStudentShowcase = (t: Tenant): string => {
         .join('')}</div>`
     : `<div class="student-showcase-empty"><p class="student-showcase-kicker">第一首作品準備中</p><div class="student-work-placeholder" aria-hidden="true"><span class="student-work-placeholder-note">♪</span><div class="student-work-placeholder-copy"><strong>學生演奏紀錄</strong><small>完成第一首曲子後，將在這裡留下成長足跡</small></div></div><p>每一段練習都會留下足跡，之後在這裡看見從第一次彈奏到完整演出的成長幅度。</p></div>`;
 
-  return `<section id="student-showcase" class="student-showcase music-motion-section"><h2>雲 端 成 發</h2><p class="student-showcase-intro">記錄成長,督促自己,也激勵別人!</p>${renderMusicNoteBurst('showcase')}${content}<div class="music-lightbox" hidden role="dialog" aria-modal="true" aria-label="作品放大檢視"><button class="music-lightbox-close" type="button" aria-label="關閉作品放大檢視">關閉</button><img class="music-lightbox-image" alt=""></div></section>`;
+  return `<section id="student-showcase" class="student-showcase music-motion-section"><h2>雲 端 成 發</h2><p class="student-showcase-intro">記錄成長,督促自己,也激勵別人!</p>${renderMusicNoteBurst('showcase')}${content}</section>`;
 };
 
 export function renderVariantSections(t: Tenant): string {
@@ -111,7 +87,7 @@ export function renderVariantSections(t: Tenant): string {
     restaurant: [renderHighlights(t), renderShowcase(t.site?.showcase)],
     interior: [renderShowcase(t.site?.showcase), renderProcess(t.site?.process)],
     pet: [renderHighlights(t), renderShowcase(t.site?.showcase), renderProcess(t.site?.process)],
-    music: [renderHighlights(t), renderShowcase(t.site?.showcase, '課程方式'), renderProcess(t.site?.process)],
+    music: [renderHighlights(t), renderShowcase(t.site?.showcase, '課程方式', { flip: true, hideMeta: true }), renderProcess(t.site?.process)],
   }[variant].join('');
 
   if (!sections) return '';

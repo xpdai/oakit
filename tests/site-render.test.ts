@@ -86,18 +86,14 @@ describe('renderSite variants', () => {
     expect(html).toContain('第一首作品準備中');
   });
 
-  it('音樂版示意作品會輸出圖片卡與可關閉的 lightbox', () => {
+  it('音樂版移除示意作品後回到雲端成發空狀態', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
-    const petHtml = renderSite(makeTenant('pet'));
-    const petMarkup = petHtml.slice(petHtml.indexOf('</style>'));
+    const musicMarkup = musicHtml.slice(musicHtml.indexOf('</style>'));
 
-    expect(musicHtml.match(/class="student-work-media"/g)).toHaveLength(3);
-    expect(musicHtml).toContain('示意素材｜非真實學生作品');
-    expect(musicHtml).toContain('class="music-lightbox"');
-    expect(musicHtml).toContain('aria-modal="true"');
-    expect(musicHtml).toContain("event.key === 'Escape'");
-    expect(petMarkup).not.toContain('student-work-media');
-    expect(petMarkup).not.toContain('music-lightbox');
+    expect(musicHtml).toContain('第一首作品準備中');
+    expect(musicHtml).not.toContain('暖色琴房');
+    expect(musicMarkup).not.toContain('student-work-media');
+    expect(musicMarkup).not.toContain('music-lightbox');
   });
 
   it('音樂版輸出混合音符動畫，其他版型不輸出音樂腳本', () => {
@@ -141,6 +137,25 @@ describe('renderSite variants', () => {
     expect(petHtml).toContain('精 選 展 示');
   });
 
+  it('年齡分班與課程方式會翻卡，課程方式正面不列價格', () => {
+    const html = renderSite(loadTenant('demo-music'));
+    const courseSectionStart = html.indexOf('<section class="variant variant-music');
+    const courseSectionEnd = html.indexOf('<section id="student-showcase"');
+    const courseSection = html.slice(courseSectionStart, courseSectionEnd);
+
+    expect(html.match(/class="highlight flip-card"/g)).toHaveLength(4);
+    expect(html.match(/class="showcase-item flip-card"/g)).toHaveLength(2);
+    expect(html).toContain('aria-expanded="false"');
+    expect(html).toContain('rotateY(180deg)');
+    expect(html).toContain("event.key !== 'Enter'");
+    expect(html).toContain("event.key !== ' '");
+    expect(html).toContain('能鞏固基礎和提升程度。每一次都比上一次厲害');
+    expect(courseSection).not.toContain('NT$900');
+    expect(courseSection).not.toContain('NT$450');
+    expect(html).toContain('<span class="svc-price">初階 NT$900／堂');
+    expect(html).toContain('<span class="svc-price">NT$450／人／堂</span>');
+  });
+
   it('音樂首頁 CTA 直接說明試上一堂 NT$100', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
     const defaultHtml = renderSite(makeTenant());
@@ -172,7 +187,7 @@ describe('renderSite variants', () => {
     expect(html).toContain('<span class="svc-duration">每堂 50 分鐘</span>');
     expect(html).toContain('<span class="svc-duration">每堂 30 分鐘</span>');
     expect(html).toContain('初階 NT$900／堂\n進階 NT$1,200／堂\n高階 NT$1,500／堂');
-    expect(html).toContain('每堂 50 分鐘\nNT$450／人／堂');
+    expect(html.slice(html.indexOf('</style>'))).not.toContain('showcase-meta');
     expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*white-space:pre-line/);
     expect(html).toContain('.variant-music .showcase-meta{white-space:pre-line');
   });
@@ -197,10 +212,12 @@ describe('renderSite variants', () => {
   it('音樂版互動效果只輸出在音樂版，並尊重 reduced motion', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
     const defaultHtml = renderSite(makeTenant());
+    const musicMarkup = musicHtml.slice(musicHtml.indexOf('</style>'));
     const defaultMarkup = defaultHtml.slice(defaultHtml.indexOf('</style>'));
 
     expect(musicHtml).toContain('--music-pointer-x');
-    expect(musicHtml).toContain('data-lightbox-trigger');
+    expect(musicMarkup).not.toContain('data-lightbox-trigger');
+    expect(musicMarkup).not.toContain('music-lightbox');
     expect(musicHtml).toContain("matchMedia('(prefers-reduced-motion: reduce)')");
     expect(defaultMarkup).not.toContain('--music-pointer-x');
     expect(defaultMarkup).not.toContain('data-lightbox-trigger');
