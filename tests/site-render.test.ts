@@ -206,6 +206,19 @@ describe('renderSite variants', () => {
     expect(defaultMarkup).not.toContain('data-lightbox-trigger');
   });
 
+  it('重新整理頁面時會回到最上方', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+    const defaultHtml = renderSite(makeTenant());
+
+    for (const html of [musicHtml, defaultHtml]) {
+      expect(html).toContain("history.scrollRestoration = 'manual'");
+      expect(html).toContain("window.addEventListener('load', reset");
+      expect(html).toContain("window.addEventListener('pageshow'");
+      expect(html).toContain('document.documentElement.scrollTop = 0');
+      expect(html).toContain('window.scrollTo(0,0)');
+    }
+  });
+
   it('雲端成發空狀態會呈現作品預告卡', () => {
     const html = renderSite(makeTenant('music'));
 

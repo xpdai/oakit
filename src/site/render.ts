@@ -109,6 +109,17 @@ export function renderSite(t: Tenant): string {
   const heroNote = t.site?.heroNote ? `<p class="hero-note">${escapeHtml(t.site.heroNote)}</p>` : '';
   const studentShowcaseNav = variant === 'music' ? '<a href="#student-showcase">雲端成發</a>' : '';
   const musicAmbient = musicMotionEnabled ? renderMusicAmbient() : '';
+  const reloadScrollScript = `<script>(() => {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  const reset = () => {
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    window.scrollTo(0,0);
+  };
+  reset();
+  window.addEventListener('load', reset, { once: true });
+  window.addEventListener('pageshow', reset, { once: true });
+})();</script>`;
   const musicMotionScript = musicMotionEnabled
     ? `<script>(() => {
   const sections = document.querySelectorAll('.music-motion-section');
@@ -266,6 +277,7 @@ ${faq ? `<section id="faq"><h2>常 見 問 題</h2>${faq}</section>` : ''}
   <footer>${escapeHtml(t.brand.name)}</footer>
 </div>
 ${musicMotionScript}
+${reloadScrollScript}
 </body>
 </html>`;
 }
