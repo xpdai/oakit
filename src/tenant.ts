@@ -23,6 +23,8 @@ export interface StudentShowcaseItem {
   category?: string;
   description: string;
   meta?: string;
+  image?: string;
+  imageAlt?: string;
   url?: string;
 }
 

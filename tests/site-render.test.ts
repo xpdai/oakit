@@ -86,6 +86,20 @@ describe('renderSite variants', () => {
     expect(html).toContain('第一首作品準備中');
   });
 
+  it('音樂版示意作品會輸出圖片卡與可關閉的 lightbox', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+    const petHtml = renderSite(makeTenant('pet'));
+    const petMarkup = petHtml.slice(petHtml.indexOf('</style>'));
+
+    expect(musicHtml.match(/class="student-work-media"/g)).toHaveLength(3);
+    expect(musicHtml).toContain('示意素材｜非真實學生作品');
+    expect(musicHtml).toContain('class="music-lightbox"');
+    expect(musicHtml).toContain('aria-modal="true"');
+    expect(musicHtml).toContain("event.key === 'Escape'");
+    expect(petMarkup).not.toContain('student-work-media');
+    expect(petMarkup).not.toContain('music-lightbox');
+  });
+
   it('音樂版輸出混合音符動畫，其他版型不輸出音樂腳本', () => {
     const musicHtml = renderSite(makeTenant('music'));
     const defaultHtml = renderSite(makeTenant());
@@ -178,6 +192,18 @@ describe('renderSite variants', () => {
     expect(html).toContain('classList.toggle(\'is-active\'');
     expect(html).toContain('const navObserver = new IntersectionObserver');
     expect(html).toContain("threshold: 0, rootMargin: '-35% 0px -55% 0px'");
+  });
+
+  it('音樂版互動效果只輸出在音樂版，並尊重 reduced motion', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+    const defaultHtml = renderSite(makeTenant());
+    const defaultMarkup = defaultHtml.slice(defaultHtml.indexOf('</style>'));
+
+    expect(musicHtml).toContain('--music-pointer-x');
+    expect(musicHtml).toContain('data-lightbox-trigger');
+    expect(musicHtml).toContain("matchMedia('(prefers-reduced-motion: reduce)')");
+    expect(defaultMarkup).not.toContain('--music-pointer-x');
+    expect(defaultMarkup).not.toContain('data-lightbox-trigger');
   });
 
   it('雲端成發空狀態會呈現作品預告卡', () => {
