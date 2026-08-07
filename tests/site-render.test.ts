@@ -115,6 +115,18 @@ describe('renderSite variants', () => {
     expect(html).not.toContain('.about::first-letter');
   });
 
+  it('音樂版使用年齡分班與課程方式作為區塊標題', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+    const petHtml = renderSite(makeTenant('pet'));
+
+    expect(musicHtml).toContain('<h3>年齡分班</h3>');
+    expect(musicHtml).toContain('<h3>課程方式</h3>');
+    expect(musicHtml).not.toContain('精 選 特 色');
+    expect(musicHtml).not.toContain('精 選 展 示');
+    expect(petHtml).toContain('精 選 特 色');
+    expect(petHtml).toContain('精 選 展 示');
+  });
+
   it('音樂首頁 CTA 直接說明免費試上 30 分鐘', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
     const defaultHtml = renderSite(makeTenant());

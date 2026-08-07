@@ -16,8 +16,9 @@ export const renderMusicNoteBurst = (label: string): string => {
 const renderHighlights = (t: Tenant): string => {
   const highlights = t.site?.highlights;
   if (!highlights?.length) return '';
+  const title = t.site?.variant === 'music' ? '年齡分班' : '精 選 特 色';
 
-  return `<div class="variant-block highlights"><h3>精 選 特 色</h3><div class="highlight-list">${highlights
+  return `<div class="variant-block highlights"><h3>${title}</h3><div class="highlight-list">${highlights
     .map(
       (item) => `<article class="highlight">
         <p class="highlight-label">${escapeHtml(item.label)}</p>
@@ -28,10 +29,10 @@ const renderHighlights = (t: Tenant): string => {
     .join('')}</div></div>`;
 };
 
-const renderShowcase = (items?: ShowcaseItem[]): string => {
+const renderShowcase = (items?: ShowcaseItem[], title = '精 選 展 示'): string => {
   if (!items?.length) return '';
 
-  return `<div class="variant-block showcase"><h3>精 選 展 示</h3>${items
+  return `<div class="variant-block showcase"><h3>${title}</h3>${items
     .map(
       (item) => `<article class="showcase-item">
         ${item.category ? `<p class="showcase-category">${escapeHtml(item.category)}</p>` : ''}
@@ -86,7 +87,7 @@ export function renderVariantSections(t: Tenant): string {
     restaurant: [renderHighlights(t), renderShowcase(t.site?.showcase)],
     interior: [renderShowcase(t.site?.showcase), renderProcess(t.site?.process)],
     pet: [renderHighlights(t), renderShowcase(t.site?.showcase), renderProcess(t.site?.process)],
-    music: [renderHighlights(t), renderShowcase(t.site?.showcase), renderProcess(t.site?.process)],
+    music: [renderHighlights(t), renderShowcase(t.site?.showcase, '課程方式'), renderProcess(t.site?.process)],
   }[variant].join('');
 
   if (!sections) return '';
