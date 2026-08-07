@@ -109,8 +109,8 @@ export function renderSite(t: Tenant): string {
   const heroNote = t.site?.heroNote ? `<p class="hero-note">${escapeHtml(t.site.heroNote)}</p>` : '';
   const studentShowcaseNav = variant === 'music' ? '<a href="#student-showcase">雲端成發</a>' : '';
   const musicAmbient = musicMotionEnabled ? renderMusicAmbient() : '';
+  const scrollRestorationHeadScript = `<script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>`;
   const reloadScrollScript = `<script>(() => {
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   const reset = () => {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
@@ -203,6 +203,7 @@ export function renderSite(t: Tenant): string {
 <meta name="description" content="${escapeHtml(t.brand.tagline)}　${escapeHtml(t.brand.about.slice(0, 80))}">
 <meta property="og:title" content="${escapeHtml(t.brand.name)}">
 <meta property="og:description" content="${escapeHtml(t.brand.tagline)}">
+${scrollRestorationHeadScript}
 <style>
 :root{--accent:${escapeHtml(colors.accent)};--bg:${escapeHtml(colors.bg)};--ink:${escapeHtml(colors.ink)};--line:rgba(0,0,0,.12);--surface:rgba(0,0,0,.035);--shadow:0 18px 50px rgba(0,0,0,.08)}
 *{margin:0;padding:0;box-sizing:border-box}

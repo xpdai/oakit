@@ -228,6 +228,8 @@ describe('renderSite variants', () => {
     const defaultHtml = renderSite(makeTenant());
 
     for (const html of [musicHtml, defaultHtml]) {
+      const head = html.slice(html.indexOf('<head>'), html.indexOf('<style>'));
+      expect(head).toContain("history.scrollRestoration = 'manual'");
       expect(html).toContain("history.scrollRestoration = 'manual'");
       expect(html).toContain("window.addEventListener('load', reset");
       expect(html).toContain("window.addEventListener('pageshow'");
