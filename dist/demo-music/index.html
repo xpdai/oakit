@@ -158,13 +158,23 @@ footer{padding:54px 0 64px;text-align:center;font-size:13px;color:var(--ink);opa
 })();</script>
 <script>(() => {
   const reset = () => {
+    const htmlScrollBehavior = document.documentElement.style.scrollBehavior;
+    const bodyScrollBehavior = document.body.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    document.body.style.scrollBehavior = 'auto';
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     window.scrollTo(0,0);
+    document.documentElement.style.scrollBehavior = htmlScrollBehavior;
+    document.body.style.scrollBehavior = bodyScrollBehavior;
   };
-  reset();
-  window.addEventListener('load', reset, { once: true });
-  window.addEventListener('pageshow', reset, { once: true });
+  const resetAfterBrowserRestore = () => {
+    reset();
+    window.setTimeout(reset, 300);
+  };
+  resetAfterBrowserRestore();
+  window.addEventListener('load', resetAfterBrowserRestore, { once: true });
+  window.addEventListener('pageshow', resetAfterBrowserRestore, { once: true });
 })();</script>
 </body>
 </html>

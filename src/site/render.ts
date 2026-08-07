@@ -112,13 +112,23 @@ export function renderSite(t: Tenant): string {
   const scrollRestorationHeadScript = `<script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>`;
   const reloadScrollScript = `<script>(() => {
   const reset = () => {
+    const htmlScrollBehavior = document.documentElement.style.scrollBehavior;
+    const bodyScrollBehavior = document.body.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    document.body.style.scrollBehavior = 'auto';
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     window.scrollTo(0,0);
+    document.documentElement.style.scrollBehavior = htmlScrollBehavior;
+    document.body.style.scrollBehavior = bodyScrollBehavior;
   };
-  reset();
-  window.addEventListener('load', reset, { once: true });
-  window.addEventListener('pageshow', reset, { once: true });
+  const resetAfterBrowserRestore = () => {
+    reset();
+    window.setTimeout(reset, 300);
+  };
+  resetAfterBrowserRestore();
+  window.addEventListener('load', resetAfterBrowserRestore, { once: true });
+  window.addEventListener('pageshow', resetAfterBrowserRestore, { once: true });
 })();</script>`;
   const musicMotionScript = musicMotionEnabled
     ? `<script>(() => {

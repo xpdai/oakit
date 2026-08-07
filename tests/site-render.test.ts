@@ -231,8 +231,11 @@ describe('renderSite variants', () => {
       const head = html.slice(html.indexOf('<head>'), html.indexOf('<style>'));
       expect(head).toContain("history.scrollRestoration = 'manual'");
       expect(html).toContain("history.scrollRestoration = 'manual'");
-      expect(html).toContain("window.addEventListener('load', reset");
-      expect(html).toContain("window.addEventListener('pageshow'");
+      expect(html).toContain("window.addEventListener('load', resetAfterBrowserRestore");
+      expect(html).toContain("window.addEventListener('pageshow', resetAfterBrowserRestore");
+      expect(html).toContain('window.setTimeout(reset, 300)');
+      expect(html).toContain("document.documentElement.style.scrollBehavior = 'auto'");
+      expect(html).toContain("document.body.style.scrollBehavior = 'auto'");
       expect(html).toContain('document.documentElement.scrollTop = 0');
       expect(html).toContain('window.scrollTo(0,0)');
     }
