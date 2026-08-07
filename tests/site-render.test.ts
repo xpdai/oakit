@@ -107,6 +107,14 @@ describe('renderSite variants', () => {
     expect(html).toContain('.music-hero .music-ambient span:nth-child(3){top:42%;bottom:auto;left:22%}');
   });
 
+  it('關於區塊會放大品牌名稱四個字', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
+    expect(html).toContain('<p class="about"><span class="about-brand">那莫好聽</span>相信');
+    expect(html).toContain('.about-brand{');
+    expect(html).not.toContain('.about::first-letter');
+  });
+
   it('雲端成發只渲染安全的作品連結', () => {
     const tenant = makeTenant('music');
     tenant.site = {

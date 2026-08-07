@@ -43,6 +43,13 @@ function safeColor(value: string, fallback: string): string {
   return HEX_COLOR.test(value) ? value : fallback;
 }
 
+function renderAbout(t: Tenant): string {
+  const brandName = t.brand.name;
+  if (!brandName || !t.brand.about.startsWith(brandName)) return escapeHtml(t.brand.about);
+
+  return `<span class="about-brand">${escapeHtml(brandName)}</span>${escapeHtml(t.brand.about.slice(brandName.length))}`;
+}
+
 export function renderSite(t: Tenant): string {
   const { accent, bg, ink } = theme(t);
   const colors = {
@@ -53,6 +60,7 @@ export function renderSite(t: Tenant): string {
   const variant = getRenderVariant(t);
   const brandLogo = embedBrandLogo(t.brand.logo);
   const musicMotionEnabled = variant === 'music';
+  const about = renderAbout(t);
 
   const notices = t.notices?.length
     ? `<div class="notice">${t.notices.map((notice) => `<p>${escapeHtml(notice)}</p>`).join('')}</div>`
@@ -146,7 +154,7 @@ body{min-width:320px;background:var(--bg);color:var(--ink);font:16px/1.75 'PingF
 h1{font-size:clamp(32px,5vw,52px);letter-spacing:.08em;line-height:1.2}.eyebrow{color:var(--accent);font-size:13px;font-weight:800;letter-spacing:.2em}.tagline{margin-top:14px;color:var(--accent);font-weight:700;font-size:clamp(17px,2vw,21px)}.hero-note{margin-top:10px;font-size:15px;color:var(--ink);opacity:.78}
 .site-nav{position:sticky;top:0;z-index:5;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg);font-size:14px}.site-nav a{display:inline-flex;align-items:center;min-height:44px;padding:9px 14px;color:var(--ink);text-decoration:none;border-radius:999px;transition:background 160ms ease,color 160ms ease}.site-nav a:hover{background:var(--surface);color:var(--accent)}
 .notice{margin:24px auto;padding:14px 18px;border-left:4px solid var(--accent);background:var(--surface);border-radius:0 12px 12px 0;font-size:14.5px;text-align:left}.notice p+p{margin-top:6px}
-main>section{padding:64px 0;border-top:1px solid var(--line)}h2,h3{font-size:13px;letter-spacing:.24em;color:var(--accent);margin-bottom:20px;font-weight:800}.about{max-width:780px;font-size:18px;line-height:1.95}.about::first-letter{font-size:1.5em;font-weight:800;color:var(--accent)}
+main>section{padding:64px 0;border-top:1px solid var(--line)}h2,h3{font-size:13px;letter-spacing:.24em;color:var(--accent);margin-bottom:20px;font-weight:800}.about{max-width:780px;font-size:18px;line-height:1.95}.about-brand{display:inline-block;margin-right:.12em;color:var(--accent);font-size:1.55em;font-weight:900;letter-spacing:.04em;line-height:1.1}
 .svc,.showcase-item{padding:22px 0;border-bottom:1px solid var(--line)}.svc:last-child,.showcase-item:last-child{border-bottom:none}.svc h3,.showcase-item h4,.process-step h4{font-size:18px;margin-bottom:5px;color:inherit;letter-spacing:0}.svc p,.showcase-item p,.process-step p{color:var(--ink);opacity:.76;font-size:15px}.svc{transition:padding 160ms ease}.svc:hover{padding-left:10px}
 .meta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}.meta span{font-size:13px;padding:4px 11px;border:1px solid var(--line);border-radius:999px}
 .variant{margin:24px 0;padding:38px;border-top:0}.variant-block+.variant-block{margin-top:42px}.highlight-list{display:grid;gap:16px}.highlight{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}.highlight-label,.showcase-category,.process-number{color:var(--accent)!important;font-size:13px!important;font-weight:800;letter-spacing:.12em}.highlight-value{font-size:21px!important;font-weight:800;color:inherit!important}.showcase-meta{margin-top:9px;font-size:13px!important}.process-step{display:flex;gap:18px;padding:18px 0;border-bottom:1px solid var(--line)}.process-step:last-child{border-bottom:none}.process-number{flex:0 0 34px}
@@ -180,7 +188,7 @@ ${musicAmbient}
   ${navigation}
 
   <main>
-    <section id="about"><h2>關 於</h2><p class="about">${escapeHtml(t.brand.about)}</p></section>
+    <section id="about"><h2>關 於</h2><p class="about">${about}</p></section>
 ${renderVariantSections(t)}
 ${renderStudentShowcase(t)}
     <section id="services"${musicMotionSectionClass}><h2>服 務 與 價 格</h2>${musicServicesBurst}${services}</section>
