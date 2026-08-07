@@ -5,6 +5,12 @@ export function getRenderVariant(t: Tenant): BusinessType | 'default' {
   return t.site?.variant ?? 'default';
 }
 
+export const renderMusicAmbient = (): string =>
+  '<div class="music-ambient" aria-hidden="true"><span>♪</span><span>♫</span><span>♩</span></div>';
+
+export const renderMusicNoteBurst = (label: string): string =>
+  `<div class="music-note-burst" data-note-burst="${escapeHtml(label)}" aria-hidden="true"><span>♪</span><span>♫</span></div>`;
+
 const renderHighlights = (t: Tenant): string => {
   const highlights = t.site?.highlights;
   if (!highlights?.length) return '';
@@ -67,7 +73,7 @@ export const renderStudentShowcase = (t: Tenant): string => {
         .join('')}</div>`
     : `<div class="student-showcase-empty"><p class="student-showcase-kicker">學生作品整理中</p><p>之後會在這裡分享學生在課堂上練好的一首曲子，讓你看見每一次練習累積出的成長。</p></div>`;
 
-  return `<section id="student-showcase" class="student-showcase"><h2>雲 端 成 發</h2><p class="student-showcase-intro">記錄成長,督促自己,也激勵別人!</p>${content}</section>`;
+  return `<section id="student-showcase" class="student-showcase music-motion-section"><h2>雲 端 成 發</h2><p class="student-showcase-intro">記錄成長,督促自己,也激勵別人!</p>${renderMusicNoteBurst('showcase')}${content}</section>`;
 };
 
 export function renderVariantSections(t: Tenant): string {
@@ -90,5 +96,5 @@ export function renderVariantSections(t: Tenant): string {
     music: 'courses',
   }[variant];
 
-  return `<section class="variant variant-${escapeHtml(variant)}" data-section="${escapeHtml(dataSection)}">${sections}</section>`;
+  return `<section class="variant variant-${escapeHtml(variant)}${variant === 'music' ? ' music-motion-section' : ''}" data-section="${escapeHtml(dataSection)}">${variant === 'music' ? renderMusicNoteBurst('courses') : ''}${sections}</section>`;
 }

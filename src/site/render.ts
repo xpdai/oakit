@@ -10,7 +10,13 @@ import { readFileSync } from 'node:fs';
 import { isAbsolute, relative, resolve } from 'node:path';
 import { theme, type Tenant } from '../tenant.js';
 import { escapeHtml, safeExternalUrl } from './html.js';
-import { getRenderVariant, renderStudentShowcase, renderVariantSections } from './variants.js';
+import {
+  getRenderVariant,
+  renderMusicAmbient,
+  renderMusicNoteBurst,
+  renderStudentShowcase,
+  renderVariantSections,
+} from './variants.js';
 
 const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 const ASSET_ROOT = new URL('../../assets/', import.meta.url);
@@ -46,6 +52,7 @@ export function renderSite(t: Tenant): string {
   };
   const variant = getRenderVariant(t);
   const brandLogo = embedBrandLogo(t.brand.logo);
+  const musicMotionEnabled = variant === 'music';
 
   const notices = t.notices?.length
     ? `<div class="notice">${t.notices.map((notice) => `<p>${escapeHtml(notice)}</p>`).join('')}</div>`
@@ -94,6 +101,28 @@ export function renderSite(t: Tenant): string {
   const siteIntro = t.site?.eyebrow ? `<p class="eyebrow">${escapeHtml(t.site.eyebrow)}</p>` : '';
   const heroNote = t.site?.heroNote ? `<p class="hero-note">${escapeHtml(t.site.heroNote)}</p>` : '';
   const studentShowcaseNav = variant === 'music' ? '<a href="#student-showcase">雲端成發</a>' : '';
+  const musicAmbient = musicMotionEnabled ? renderMusicAmbient() : '';
+  const musicMotionScript = musicMotionEnabled
+    ? `<script>(() => {
+  const sections = document.querySelectorAll('.music-motion-section');
+  const show = (section) => section.classList.add('is-visible');
+  if (!('IntersectionObserver' in window)) {
+    sections.forEach(show);
+    return;
+  }
+  const observer = new IntersectionObserver((entries, currentObserver) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      show(entry.target);
+      currentObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+  sections.forEach((section) => observer.observe(section));
+})();</script>`
+    : '';
+  const musicMotionSectionClass = musicMotionEnabled ? ' class="music-motion-section"' : '';
+  const musicServicesBurst = musicMotionEnabled ? renderMusicNoteBurst('services') : '';
+  const musicContactBurst = musicMotionEnabled ? renderMusicNoteBurst('contact') : '';
   const navigation = `<nav class="site-nav" aria-label="頁面導覽">
     <a href="#about">關於</a><a href="#services">服務</a>${studentShowcaseNav}${faq ? '<a href="#faq">常見問題</a>' : ''}<a href="#contact">聯絡</a>
   </nav>`;
@@ -126,18 +155,19 @@ main>section{padding:64px 0;border-top:1px solid var(--line)}h2,h3{font-size:13p
 .variant-interior{padding:42px 44px;border:1px solid var(--ink);border-left:8px solid var(--ink);border-radius:0;background:linear-gradient(90deg,var(--surface),transparent 28%)}.variant-interior h3{padding-bottom:14px;border-bottom:1px solid var(--ink)}.variant-interior .showcase{display:grid;gap:0}.variant-interior .showcase h3{grid-column:1/-1}.variant-interior .showcase-item{padding:24px;border:0;border-left:1px solid var(--line)}.variant-interior .showcase-item:nth-of-type(2){border-left:0}.variant-interior .process-number{font:700 24px/1 Georgia,serif}.variant-interior .process-step{align-items:flex-start}
 .variant-pet{padding:38px;border:0;border-radius:32px;background:var(--surface);box-shadow:var(--shadow)}.variant-pet .highlight{border:2px solid var(--accent);border-radius:26px 26px 10px 26px;background:var(--bg)}.variant-pet .highlight:nth-child(even){border-radius:26px 26px 26px 10px}.variant-pet .showcase-item{padding:20px 22px;margin-top:12px;border:0;border-radius:20px;background:var(--bg);box-shadow:0 4px 0 var(--surface)}.variant-pet .process-step{margin-top:12px;padding:18px 20px;border:0;border-radius:20px;background:var(--bg)}.variant-pet .process-number{display:grid;place-items:center;flex-basis:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--bg)!important}
 .variant-music{position:relative;overflow:hidden;padding:40px;border-top:6px solid var(--accent);border-bottom:6px solid var(--accent);background:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,rgba(90,57,39,.1) 32px,transparent 33px)}.variant-music::before{content:'♪  ♫  ♪';position:absolute;top:24px;right:28px;color:var(--accent);font:italic 40px/1 Georgia,serif;opacity:.18}.variant-music>*{position:relative}.variant-music .highlight{border:0;border-radius:4px;background:var(--bg);box-shadow:5px 5px 0 var(--accent)}.variant-music .showcase{display:grid;gap:16px}.variant-music .showcase h3{grid-column:1/-1}.variant-music .showcase-item{padding:20px;border:1px solid var(--accent);border-left:7px solid var(--accent);background:var(--bg)}.variant-music .process-step{padding:20px;background:var(--bg);border-bottom:1px solid var(--accent)}.variant-music .process-number{font:700 22px/1 Georgia,serif}
+.music-hero,.music-motion-section{position:relative;overflow:hidden}.music-hero>*:not(.music-ambient),.music-motion-section>*:not(.music-note-burst){position:relative;z-index:1}.music-ambient{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0}.music-ambient span{position:absolute;color:var(--accent);font:italic 44px/1 Georgia,serif;opacity:.48;animation:music-float 7s ease-in-out infinite;will-change:transform,opacity}.music-ambient span:nth-child(1){top:13%;left:9%;animation-delay:-1.4s}.music-ambient span:nth-child(2){top:25%;right:12%;font-size:58px;animation-delay:-4.1s}.music-ambient span:nth-child(3){bottom:13%;left:22%;font-size:32px;animation-delay:-2.7s}.music-note-burst{position:absolute;inset:0;pointer-events:none;overflow:hidden;opacity:0;transform:translateY(18px);transition:opacity 420ms ease,transform 420ms ease;z-index:0}.music-motion-section.is-visible .music-note-burst{opacity:1;transform:none}.music-note-burst span{position:absolute;color:var(--accent);font:italic 36px/1 Georgia,serif;animation:music-note-pop 900ms cubic-bezier(.2,.8,.2,1) both;will-change:transform,opacity}.music-note-burst span:first-child{right:8%;top:18%;transform:rotate(12deg)}.music-note-burst span:last-child{right:18%;bottom:15%;font-size:28px;animation-delay:120ms;transform:rotate(-10deg)}@keyframes music-float{0%,100%{transform:translate3d(0,0,0) rotate(-8deg)}50%{transform:translate3d(0,-18px,0) rotate(9deg)}}@keyframes music-note-pop{0%{opacity:0;transform:translate3d(-12px,14px,0) scale(.68) rotate(-12deg)}100%{opacity:.72;transform:translate3d(0,0,0) scale(1) rotate(8deg)}}
 body[data-variant=restaurant] h1{font-family:'Songti TC','STSong',serif}body[data-variant=interior] h1{font-weight:500;letter-spacing:.16em}body[data-variant=pet] h1{font-weight:800;letter-spacing:.08em}body[data-variant=music] h1{font-family:Georgia,'Songti TC',serif;font-style:italic;letter-spacing:.08em}body[data-variant=interior] .hero{text-align:left}body[data-variant=restaurant] .hero{text-align:left}
 details{padding:8px 0;border-bottom:1px solid var(--line)}details:last-child{border-bottom:none}summary{display:flex;align-items:center;min-height:44px;padding:4px 0;cursor:pointer;font-weight:700;list-style:none}summary::-webkit-details-marker{display:none}summary::before{content:'＋ ';flex:0 0 28px;color:var(--accent)}details[open] summary::before{content:'－ '}details p{margin:4px 0 12px 28px;color:var(--ink);opacity:.76;font-size:15px}
 .row{display:flex;gap:18px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:none}dt{flex:0 0 64px;font-size:14px;color:var(--ink);opacity:.7}dd{flex:1}a{color:var(--accent);text-underline-offset:3px}a:focus-visible,summary:focus-visible,.cta:focus-visible{outline:3px solid var(--ink);outline-offset:4px;box-shadow:0 0 0 7px var(--bg);border-radius:4px}.cta{display:block;width:min(100%,560px);margin:30px auto 8px;padding:18px 22px;background:var(--accent);color:var(--bg);text-align:center;border-radius:14px;font-weight:800;text-decoration:none;letter-spacing:.08em;box-shadow:0 8px 0 var(--surface);transition:transform 160ms ease,box-shadow 160ms ease}.cta:hover{transform:translateY(-2px);box-shadow:0 10px 0 var(--surface)}
 footer{padding:54px 0 64px;text-align:center;font-size:13px;color:var(--ink);opacity:.68}
 @media (min-width:768px){.wrap{padding:0 36px}.hero{padding-top:104px}.site-nav{margin:0 -36px;padding-left:36px;padding-right:36px}.highlight-list{grid-template-columns:repeat(3,minmax(0,1fr))}.student-showcase-list{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-restaurant .showcase,.variant-interior .showcase{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-pet .showcase{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.variant-pet .showcase h3{grid-column:1/-1}.variant-music .highlight-list{grid-template-columns:repeat(4,minmax(0,1fr))}.variant-music .showcase{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-interior .process{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}.variant-interior .process h3{grid-column:1/-1}}
 @media (max-width:767px){.wrap{padding:0 18px}.hero{padding-top:56px}.site-nav{margin:0 -18px;padding-left:18px;padding-right:18px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}.site-nav a{flex:0 0 auto}.variant{margin:16px 0;padding:26px 20px}.student-showcase{padding:48px 0}.student-showcase-list,.highlight-list,.variant-restaurant .showcase,.variant-interior .showcase,.variant-pet .showcase,.variant-music .showcase,.variant-interior .process{grid-template-columns:1fr}.variant-interior{border-left-width:6px;padding:28px 22px}.variant-interior .showcase-item{border-left:0;border-top:1px solid var(--line)}.variant-music{padding:28px 20px}.variant-music::before{font-size:30px;top:18px;right:18px}.variant-pet{padding:26px 20px}.row{align-items:flex-start}}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.music-ambient span,.music-note-burst,.music-note-burst span{animation:none!important;transition:none!important;transform:none!important}.music-ambient span{opacity:.48}.music-motion-section .music-note-burst{opacity:1}.music-note-burst span{opacity:.72}}
 </style>
 </head>
 <body data-variant="${escapeHtml(variant)}">
 <div class="wrap">
-  <header class="hero">
+  <header class="hero${musicMotionEnabled ? ' music-hero' : ''}">
 ${brandLogo}
 ${siteIntro}
     <h1>${escapeHtml(t.brand.name)}</h1>
@@ -145,6 +175,7 @@ ${siteIntro}
 ${heroNote}
 ${notices}
 ${cta}
+${musicAmbient}
   </header>
   ${navigation}
 
@@ -152,13 +183,14 @@ ${cta}
     <section id="about"><h2>關 於</h2><p class="about">${escapeHtml(t.brand.about)}</p></section>
 ${renderVariantSections(t)}
 ${renderStudentShowcase(t)}
-    <section id="services"><h2>服 務 與 價 格</h2>${services}</section>
+    <section id="services"${musicMotionSectionClass}><h2>服 務 與 價 格</h2>${musicServicesBurst}${services}</section>
 ${faq ? `<section id="faq"><h2>常 見 問 題</h2>${faq}</section>` : ''}
-    <section id="contact"><h2>聯 絡 我 們</h2>${contactRows ? `<dl>${contactRows}</dl>` : ''}${cta}</section>
+    <section id="contact"${musicMotionSectionClass}><h2>聯 絡 我 們</h2>${musicContactBurst}${contactRows ? `<dl>${contactRows}</dl>` : ''}${cta}</section>
   </main>
 
   <footer>${escapeHtml(t.brand.name)}</footer>
 </div>
+${musicMotionScript}
 </body>
 </html>`;
 }

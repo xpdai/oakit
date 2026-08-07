@@ -86,6 +86,21 @@ describe('renderSite variants', () => {
     expect(html).toContain('學生作品整理中');
   });
 
+  it('音樂版輸出混合音符動畫，其他版型不輸出音樂腳本', () => {
+    const musicHtml = renderSite(makeTenant('music'));
+    const defaultHtml = renderSite(makeTenant());
+
+    expect(musicHtml).toContain('class="music-ambient"');
+    expect(musicHtml).toContain('class="music-note-burst"');
+    expect(musicHtml).toContain('IntersectionObserver');
+    expect(musicHtml).toContain('prefers-reduced-motion:reduce');
+    expect(musicHtml).toContain('aria-hidden="true"');
+    expect(musicHtml).not.toContain('<audio');
+    expect(defaultHtml).not.toContain('<div class="music-ambient"');
+    expect(defaultHtml).not.toContain('data-note-burst=');
+    expect(defaultHtml).not.toContain('IntersectionObserver');
+  });
+
   it('雲端成發只渲染安全的作品連結', () => {
     const tenant = makeTenant('music');
     tenant.site = {
