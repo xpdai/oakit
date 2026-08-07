@@ -162,6 +162,14 @@ describe('renderSite variants', () => {
     expect(html).toContain('.variant-music .showcase-meta{white-space:pre-line');
   });
 
+  it('音樂版價格不使用深色橢圓背景', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
+    expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*background:transparent/);
+    expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*border-radius:0/);
+    expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*padding:0/);
+  });
+
   it('音樂版 sticky 導覽會依目前區段標記 active', () => {
     const html = renderSite(makeTenant('music'));
 
