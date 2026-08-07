@@ -83,7 +83,7 @@ describe('renderSite variants', () => {
 
     expect(html).toContain('href="#student-showcase">雲端成發</a>');
     expect(html).toContain('<section id="student-showcase"');
-    expect(html).toContain('學生作品整理中');
+    expect(html).toContain('第一首作品準備中');
   });
 
   it('音樂版輸出混合音符動畫，其他版型不輸出音樂腳本', () => {
@@ -97,7 +97,7 @@ describe('renderSite variants', () => {
     expect(musicHtml).toContain('aria-hidden="true"');
     expect(musicHtml).not.toContain('<audio');
     expect(defaultHtml).not.toContain('<div class="music-ambient"');
-    expect(defaultHtml).not.toContain('data-note-burst=');
+    expect(defaultHtml).not.toContain('data-note-burst="');
     expect(defaultHtml).not.toContain('IntersectionObserver');
   });
 
@@ -113,6 +113,54 @@ describe('renderSite variants', () => {
     expect(html).toContain('<p class="about"><span class="about-brand">那莫好聽</span>相信');
     expect(html).toContain('.about-brand{');
     expect(html).not.toContain('.about::first-letter');
+  });
+
+  it('音樂首頁 CTA 直接說明免費試上 30 分鐘', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+    const defaultHtml = renderSite(makeTenant());
+
+    expect(musicHtml).toContain('href="#contact">免費試上 30 分鐘</a>');
+    expect(musicHtml).not.toContain('href="#contact">聯絡／預約</a>');
+    expect(defaultHtml).toContain('href="#contact">聯絡／預約</a>');
+  });
+
+  it('音樂課程將價格與堂數時長分成不同資訊層級', () => {
+    const tenant = makeTenant('music');
+    tenant.services = [
+      { name: '鋼琴一對一', desc: '課程說明', price: 'NT$3,600／4 堂', duration: '每堂 50 分鐘' },
+    ];
+
+    const html = renderSite(tenant);
+
+    expect(html).toContain('<span class="svc-price">NT$3,600／4 堂</span>');
+    expect(html).toContain('<span class="svc-duration">每堂 50 分鐘</span>');
+    expect(html).toContain('body[data-variant=music] .svc-price{');
+  });
+
+  it('音樂版 sticky 導覽會依目前區段標記 active', () => {
+    const html = renderSite(makeTenant('music'));
+
+    expect(html).toContain('.site-nav a.is-active{');
+    expect(html).toContain('classList.toggle(\'is-active\'');
+    expect(html).toContain('const navObserver = new IntersectionObserver');
+    expect(html).toContain("threshold: 0, rootMargin: '-35% 0px -55% 0px'");
+  });
+
+  it('雲端成發空狀態會呈現作品預告卡', () => {
+    const html = renderSite(makeTenant('music'));
+
+    expect(html).toContain('第一首作品準備中');
+    expect(html).toContain('class="student-work-placeholder"');
+    expect(html).toContain('aria-hidden="true"');
+    expect(html).not.toContain('學生作品整理中');
+  });
+
+  it('聯絡區音符收斂成單一小音符，其他分區保留不同節奏設定', () => {
+    const html = renderSite(makeTenant('music'));
+
+    expect(html).toContain('data-note-burst="contact" aria-hidden="true"><span>♪</span></div>');
+    expect(html).toContain('.music-note-burst[data-note-burst=showcase]');
+    expect(html).toContain('.music-note-burst[data-note-burst=contact]');
   });
 
   it('雲端成發只渲染安全的作品連結', () => {
