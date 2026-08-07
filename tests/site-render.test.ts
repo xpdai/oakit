@@ -101,6 +101,13 @@ describe('renderSite variants', () => {
     expect(defaultHtml).not.toContain('IntersectionObserver');
   });
 
+  it('聯絡區音符避開聯絡預約按鈕', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
+    expect(html).toContain('#contact .music-note-burst span:last-child');
+    expect(html).toContain('bottom:auto');
+  });
+
   it('雲端成發只渲染安全的作品連結', () => {
     const tenant = makeTenant('music');
     tenant.site = {
