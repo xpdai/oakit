@@ -132,6 +132,15 @@ describe('renderSite variants', () => {
     expect(html).toContain('第一首作品準備中');
   });
 
+  it('音樂首頁服務區塊會排在雲端成發之前', () => {
+    const html = renderSite(makeTenant('music'));
+    const servicesIndex = html.indexOf('<section id="services"');
+    const showcaseIndex = html.indexOf('<section id="student-showcase"');
+    expect(servicesIndex).toBeGreaterThan(-1);
+    expect(showcaseIndex).toBeGreaterThan(-1);
+    expect(servicesIndex).toBeLessThan(showcaseIndex);
+  });
+
   it('音樂版移除示意作品後回到雲端成發空狀態', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
     const musicMarkup = musicHtml.slice(musicHtml.indexOf('</style>'));
@@ -186,7 +195,7 @@ describe('renderSite variants', () => {
   it('年齡分班與課程方式會翻卡，課程方式正面不列價格', () => {
     const html = renderSite(loadTenant('demo-music'));
     const courseSectionStart = html.indexOf('<section class="variant variant-music');
-    const courseSectionEnd = html.indexOf('<section id="student-showcase"');
+    const courseSectionEnd = html.indexOf('<section id="services"');
     const courseSection = html.slice(courseSectionStart, courseSectionEnd);
 
     expect(html.match(/class="highlight flip-card"/g)).toHaveLength(4);

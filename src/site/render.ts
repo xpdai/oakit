@@ -245,6 +245,7 @@ export function renderSite(t: Tenant): string {
   const musicMotionSectionClass = musicMotionEnabled ? ' class="music-motion-section"' : '';
   const musicServicesBurst = musicMotionEnabled ? renderMusicNoteBurst('services') : '';
   const musicContactBurst = musicMotionEnabled ? renderMusicNoteBurst('contact') : '';
+  const servicesSection = `<section id="services"${musicMotionSectionClass}><h2>服 務 與 價 格</h2>${musicServicesBurst}${services}</section>`;
   const navigation = `<nav class="site-nav" aria-label="頁面導覽">
     <a href="#about">關於</a><a href="#services">服務</a>${studentShowcaseNav}${faq ? '<a href="#faq">常見問題</a>' : ''}<a href="#contact">聯絡</a>
   </nav>`;
@@ -308,8 +309,9 @@ ${musicAmbient}
   <main>
     <section id="about"><h2>關 於</h2><p class="about">${about}</p></section>
 ${renderVariantSections(t)}
+${musicMotionEnabled ? servicesSection : ''}
 ${renderStudentShowcase(t)}
-    <section id="services"${musicMotionSectionClass}><h2>服 務 與 價 格</h2>${musicServicesBurst}${services}</section>
+${musicMotionEnabled ? '' : servicesSection}
 ${faq ? `<section id="faq"><h2>常 見 問 題</h2>${faq}</section>` : ''}
     <section id="contact"${musicMotionSectionClass}><h2>聯 絡 我 們</h2>${musicContactBurst}${contactRows ? `<dl>${contactRows}</dl>` : ''}${contactNote}${cta}</section>
   </main>
