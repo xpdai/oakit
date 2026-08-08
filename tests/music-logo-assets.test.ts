@@ -140,6 +140,30 @@ const tealComponentBounds = async (file: string): Promise<Bounds[]> => {
   return components.sort((a, b) => a.minX - b.minX);
 };
 
+const innerRingOpaquePixels = async (file: string) => {
+  const { data, width, height } = await readRawAsset(file);
+  let opaque = 0;
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      if (Math.hypot(x - 379, y - 363) > 200) continue;
+      if (data[pixelOffset(x, y, width) + 3] > 20) opaque += 1;
+    }
+  }
+  return opaque;
+};
+
+const noteBodyOverlapCount = async (notesFile: string, componentFile: string) => {
+  const notes = await readRawAsset(notesFile);
+  const component = await readRawAsset(componentFile);
+  expect(component).toMatchObject({ width: notes.width, height: notes.height });
+  let overlap = 0;
+  for (let index = 0; index < notes.width * notes.height; index += 1) {
+    const offset = index * 4;
+    if (isColoredBody(notes.data, offset) && component.data[offset + 3] > 20) overlap += 1;
+  }
+  return overlap;
+};
+
 const outlineMaskDiff = async (file: string) => {
   const { data, width, height } = await readRawAsset(file);
   const body = coloredBodyMask(data, width, height);
@@ -198,10 +222,18 @@ describe('music logo assets', () => {
 
   it('places the three teal note bodies at the reference bounds', async () => {
     expect(await tealComponentBounds(asset('notes.png'))).toEqual([
-      { minX: 199, maxX: 248, minY: 313, maxY: 379 },
-      { minX: 566, maxX: 630, minY: 137, maxY: 218 },
-      { minX: 633, maxX: 694, minY: 195, maxY: 278 },
+      { minX: 62, maxX: 111, minY: 166, maxY: 233 },
+      { minX: 565, maxX: 629, minY: 44, maxY: 125 },
+      { minX: 666, maxX: 727, minY: 176, maxY: 259 },
     ]);
+  });
+
+  it('clears every opaque pixel from the ring interior', async () => {
+    expect(await innerRingOpaquePixels(asset('ring.png'))).toBe(0);
+  });
+
+  it('keeps note bodies separate from every ring pixel', async () => {
+    expect(await noteBodyOverlapCount(asset('notes.png'), asset('ring.png'))).toBe(0);
   });
 
   it.each(assetNames)('%s contains a six-pixel warm white outline around its colored body', async (name) => {

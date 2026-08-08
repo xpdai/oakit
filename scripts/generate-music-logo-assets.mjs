@@ -4,10 +4,11 @@ import sharp from 'sharp';
 
 const SIZE = 758;
 const OUTLINE = { radius: 6, rgb: [255, 247, 232] };
+const INNER_RING = { centerX: 379, centerY: 363, radius: 204 };
 const NOTE_TARGETS = [
-  { left: 199, top: 313, width: 50, height: 67 },
-  { left: 566, top: 137, width: 65, height: 82 },
-  { left: 633, top: 195, width: 62, height: 84 },
+  { left: 62, top: 166, width: 50, height: 68 },
+  { left: 565, top: 44, width: 65, height: 82 },
+  { left: 666, top: 176, width: 62, height: 84 },
 ];
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
@@ -70,6 +71,18 @@ export async function addOutline(input, radius = OUTLINE.radius, color = OUTLINE
   const dilated = dilateAlpha(data, info.width, info.height, radius);
   const outlined = paintOutlineUnderOriginal(data, dilated, info, color);
   return sharp(outlined, { raw: { width: info.width, height: info.height, channels: 4 } }).png().toBuffer();
+}
+
+export async function clearRingInterior(input) {
+  const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  for (let y = 0; y < info.height; y += 1) {
+    for (let x = 0; x < info.width; x += 1) {
+      if (Math.hypot(x - INNER_RING.centerX, y - INNER_RING.centerY) < INNER_RING.radius) {
+        data[(y * info.width + x) * 4 + 3] = 0;
+      }
+    }
+  }
+  return sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } }).png().toBuffer();
 }
 
 function alphaComponents(data, width, height) {
@@ -146,14 +159,15 @@ export async function buildCombined(layers) {
 }
 
 export async function generateMusicLogoAssets() {
-  const [forestLeft, forestRight, bird, notes] = await Promise.all([
+  const [forestLeft, forestRight, bird, notes, ring] = await Promise.all([
     addOutline(sourcePath('forest-left.png')),
     addOutline(sourcePath('forest-right.png')),
     addOutline(sourcePath('bird.png')),
     placeNotes(sourcePath('notes.png')),
+    clearRingInterior(sourcePath('ring.png')),
   ]);
   const combined = await buildCombined({
-    ring: assetPath('ring.png'),
+    ring,
     microphone: assetPath('microphone.png'),
     bird,
     forestLeft,
@@ -166,6 +180,7 @@ export async function generateMusicLogoAssets() {
     sharp(forestRight).toFile(assetPath('forest-right.png')),
     sharp(bird).toFile(assetPath('bird.png')),
     sharp(notes).toFile(assetPath('notes.png')),
+    sharp(ring).toFile(assetPath('ring.png')),
     sharp(combined).toFile(assetPath('combined.png')),
   ]);
 }
