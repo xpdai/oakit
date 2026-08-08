@@ -10,6 +10,11 @@ const NOTE_TARGETS = [
   { left: 565, top: 44, width: 65, height: 82 },
   { left: 666, top: 176, width: 62, height: 84 },
 ];
+const COMPOSITION = {
+  forestLeft: { scale: 0.75, left: -130, top: 13 },
+  forestRight: { scale: 0.7, left: 124, top: 70 },
+  bird: { scale: 1.05, left: 70, top: 28 },
+};
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const assetsDirectory = path.resolve(scriptDirectory, '../assets/music-logo');
@@ -153,8 +158,30 @@ export async function placeNotes(input) {
 }
 
 export async function buildCombined(layers) {
-  const orderedLayers = [layers.forestRight, layers.ring, layers.microphone, layers.bird, layers.forestLeft, layers.notes]
-    .map((input) => ({ input, left: 0, top: 0 }));
+  const resizeAndPlace = async (input, transform) => {
+    const scaledSize = Math.round(SIZE * transform.scale);
+    const resized = sharp(input).resize(scaledSize, scaledSize);
+    const normalized = scaledSize > SIZE
+      ? await resized.extract({
+        left: Math.floor((scaledSize - SIZE) / 2),
+        top: Math.floor((scaledSize - SIZE) / 2),
+        width: SIZE,
+        height: SIZE,
+      }).png().toBuffer()
+      : await resized.png().toBuffer();
+    const offset = scaledSize > SIZE ? 0 : Math.round((SIZE - scaledSize) / 2);
+    return { input: normalized, left: offset + transform.left, top: offset + transform.top };
+  };
+
+  const [forestRight, bird, forestLeft] = await Promise.all([
+    resizeAndPlace(layers.forestRight, COMPOSITION.forestRight),
+    resizeAndPlace(layers.bird, COMPOSITION.bird),
+    resizeAndPlace(layers.forestLeft, COMPOSITION.forestLeft),
+  ]);
+  const orderedLayers = [forestRight, layers.ring, layers.microphone, bird, forestLeft, layers.notes]
+    .map((layer) => (typeof layer === 'object' && !Buffer.isBuffer(layer) && 'input' in layer
+      ? layer
+      : { input: layer, left: 0, top: 0 }));
   return sharp({
     create: { width: SIZE, height: SIZE, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
   }).composite(orderedLayers).png().toBuffer();

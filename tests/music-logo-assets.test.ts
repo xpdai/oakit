@@ -13,6 +13,11 @@ type RawAsset = { data: Buffer; width: number; height: number };
 
 const assetNames = ['forest-left.png', 'forest-right.png', 'bird.png', 'notes.png'] as const;
 const warmWhite = [255, 247, 232] as const;
+const composition = {
+  forestLeft: { scale: 0.75, left: -130, top: 13 },
+  forestRight: { scale: 0.7, left: 124, top: 70 },
+  bird: { scale: 1.05, left: 70, top: 28 },
+} as const;
 
 const readRawAsset = async (file: string): Promise<RawAsset> => {
   const { data, info } = await sharp(file).raw().toBuffer({ resolveWithObject: true });
@@ -56,16 +61,29 @@ const changedVisibleSourcePixels = async (name: string) => {
   return changed;
 };
 
+const resizedLayer = async (name: string, transform: { scale: number; left: number; top: number }) => {
+  const size = Math.round(758 * transform.scale);
+  const resized = sharp(asset(name)).resize(size, size);
+  const input = size > 758
+    ? await resized.extract({ left: Math.floor((size - 758) / 2), top: Math.floor((size - 758) / 2), width: 758, height: 758 }).png().toBuffer()
+    : await resized.png().toBuffer();
+  return {
+    input,
+    left: size > 758 ? transform.left : Math.round((758 - size) / 2 + transform.left),
+    top: size > 758 ? transform.top : Math.round((758 - size) / 2 + transform.top),
+  };
+};
+
 const expectedCombined = async () => sharp({
   create: { width: 758, height: 758, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
 }).composite([
-  'forest-right.png',
-  'ring.png',
-  'microphone.png',
-  'bird.png',
-  'forest-left.png',
-  'notes.png',
-].map((name) => ({ input: asset(name), left: 0, top: 0 }))).raw().toBuffer();
+  await resizedLayer('forest-right.png', composition.forestRight),
+  { input: asset('ring.png'), left: 0, top: 0 },
+  { input: asset('microphone.png'), left: 0, top: 0 },
+  await resizedLayer('bird.png', composition.bird),
+  await resizedLayer('forest-left.png', composition.forestLeft),
+  { input: asset('notes.png'), left: 0, top: 0 },
+]).raw().toBuffer();
 
 const maskBounds = (mask: Uint8Array, width: number, height: number): Bounds & { count: number } => {
   let minX = width;
@@ -251,6 +269,22 @@ describe('music logo assets', () => {
   it('composites the complete right branch behind the ring', async () => {
     const { data } = await readRawAsset(asset('combined.png'));
     expect(data).toEqual(await expectedCombined());
+  });
+
+  it('uses the reference bounds for the uniformly transformed branches and bird', async () => {
+    const left = await resizedLayer('forest-left.png', composition.forestLeft);
+    const right = await resizedLayer('forest-right.png', composition.forestRight);
+    const bird = await resizedLayer('bird.png', composition.bird);
+    const bounds = async ({ input, left: x, top: y }: Awaited<ReturnType<typeof resizedLayer>>) => {
+      const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+      const mask = coloredBodyMask(data, info.width, info.height);
+      const result = maskBounds(mask, info.width, info.height);
+      return { minX: result.minX + x, maxX: result.maxX + x, minY: result.minY + y, maxY: result.maxY + y };
+    };
+
+    expect(await bounds(left)).toEqual({ minX: 41, maxX: 225, minY: 184, maxY: 585 });
+    expect(await bounds(right)).toEqual({ minX: 539, maxX: 705, minY: 308, maxY: 614 });
+    expect(await bounds(bird)).toEqual({ minX: 537, maxX: 714, minY: 309, maxY: 449 });
   });
 
   it('places the three teal note bodies at the reference bounds', async () => {
