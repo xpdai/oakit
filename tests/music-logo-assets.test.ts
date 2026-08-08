@@ -4,6 +4,7 @@ import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 
 const asset = (name: string) => path.resolve('assets/music-logo', name);
+const source = (name: string) => path.resolve('assets/music-logo/source', name);
 
 type Pixel = { x: number; y: number };
 type Bounds = { minX: number; maxX: number; minY: number; maxY: number };
@@ -21,7 +22,7 @@ const pixelOffset = (x: number, y: number, width: number) => (y * width + x) * 4
 
 const isColoredBody = (data: Buffer, offset: number) => {
   const isWarmWhite = data[offset] === warmWhite[0] && data[offset + 1] === warmWhite[1] && data[offset + 2] === warmWhite[2];
-  return data[offset + 3] > 20 && !isWarmWhite;
+  return data[offset + 3] > 0 && !isWarmWhite;
 };
 
 const coloredBodyMask = (data: Buffer, width: number, height: number) => {
@@ -35,6 +36,35 @@ const coloredBodyMask = (data: Buffer, width: number, height: number) => {
 };
 
 const maskDigest = (mask: Uint8Array) => crypto.createHash('sha256').update(mask).digest('hex');
+
+const changedVisibleSourcePixels = async (name: string) => {
+  const original = await readRawAsset(source(name));
+  const generated = await readRawAsset(asset(name));
+  expect(generated).toMatchObject({ width: original.width, height: original.height });
+  let changed = 0;
+  for (let index = 0; index < original.width * original.height; index += 1) {
+    const offset = index * 4;
+    if (original.data[offset + 3] === 0) continue;
+    for (let channel = 0; channel < 4; channel += 1) {
+      if (original.data[offset + channel] !== generated.data[offset + channel]) {
+        changed += 1;
+        break;
+      }
+    }
+  }
+  return changed;
+};
+
+const expectedCombined = async () => sharp({
+  create: { width: 758, height: 758, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+}).composite([
+  'forest-right.png',
+  'ring.png',
+  'microphone.png',
+  'bird.png',
+  'forest-left.png',
+  'notes.png',
+].map((name) => ({ input: asset(name), left: 0, top: 0 }))).raw().toBuffer();
 
 const maskBounds = (mask: Uint8Array, width: number, height: number): Bounds & { count: number } => {
   let minX = width;
@@ -119,7 +149,7 @@ const outlineMaskDiff = async (file: string) => {
     for (let x = 0; x < width; x += 1) {
       const index = y * width + x;
       const offset = pixelOffset(x, y, width);
-      if (data[offset + 3] > 20 && data[offset] === warmWhite[0] && data[offset + 1] === warmWhite[1] && data[offset + 2] === warmWhite[2]) outline[index] = 1;
+      if (data[offset + 3] > 0 && data[offset] === warmWhite[0] && data[offset + 1] === warmWhite[1] && data[offset + 2] === warmWhite[2]) outline[index] = 1;
       if (body[index] === 1) {
         for (let dy = -6; dy <= 6; dy += 1) {
           for (let dx = -6; dx <= 6; dx += 1) {
@@ -153,8 +183,17 @@ describe('music logo assets', () => {
   it('keeps the independent right branch complete', async () => {
     const { data, width, height } = await readRawAsset(asset('forest-right.png'));
     const body = coloredBodyMask(data, width, height);
-    expect(maskBounds(body, width, height)).toEqual({ minX: 439, maxX: 658, minY: 187, maxY: 605, count: 27178 });
-    expect(maskDigest(body)).toBe('d251a1760d08d768b8f118257319744f90e77257f7851d7ca15e0455465acfdd');
+    expect(maskBounds(body, width, height)).toEqual({ minX: 437, maxX: 661, minY: 184, maxY: 607, count: 29675 });
+    expect(maskDigest(body)).toBe('85b07b447cddc152ffbb11b772d0bb9945c35d784f592196e81c4587b85abc9d');
+  });
+
+  it.each(['forest-left.png', 'forest-right.png', 'bird.png'])('%s preserves every visible source pixel', async (name) => {
+    expect(await changedVisibleSourcePixels(name)).toBe(0);
+  });
+
+  it('composites the complete right branch behind the ring', async () => {
+    const { data } = await readRawAsset(asset('combined.png'));
+    expect(data).toEqual(await expectedCombined());
   });
 
   it('places the three teal note bodies at the reference bounds', async () => {

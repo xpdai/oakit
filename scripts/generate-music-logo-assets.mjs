@@ -28,7 +28,7 @@ function dilateAlpha(data, width, height, radius) {
         const sampleX = x + offset;
         if (sampleX >= 0 && sampleX < width) {
           const alpha = data[(y * width + sampleX) * 4 + 3];
-          maximum = Math.max(maximum, alpha > 20 ? alpha : 0);
+          maximum = Math.max(maximum, alpha);
         }
       }
       horizontal[y * width + x] = maximum;
@@ -53,7 +53,7 @@ function paintOutlineUnderOriginal(data, dilated, info, color) {
   const outlined = Buffer.alloc(data.length);
   for (let index = 0; index < info.width * info.height; index += 1) {
     const offset = index * 4;
-    if (data[offset + 3] > 20) {
+    if (data[offset + 3] > 0) {
       data.copy(outlined, offset, offset, offset + 4);
     } else if (dilated[index] > 0) {
       outlined[offset] = color[0];
@@ -137,16 +137,8 @@ export async function placeNotes(input) {
   return addOutline(placed);
 }
 
-async function cropRightBranchForCombined(input) {
-  const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  for (let y = 0; y < 410; y += 1) {
-    for (let x = 0; x < info.width; x += 1) data[(y * info.width + x) * 4 + 3] = 0;
-  }
-  return sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } }).png().toBuffer();
-}
-
 export async function buildCombined(layers) {
-  const orderedLayers = [layers.ring, layers.microphone, layers.bird, layers.forestLeft, layers.forestRight, layers.notes]
+  const orderedLayers = [layers.forestRight, layers.ring, layers.microphone, layers.bird, layers.forestLeft, layers.notes]
     .map((input) => ({ input, left: 0, top: 0 }));
   return sharp({
     create: { width: SIZE, height: SIZE, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
@@ -160,13 +152,12 @@ export async function generateMusicLogoAssets() {
     addOutline(sourcePath('bird.png')),
     placeNotes(sourcePath('notes.png')),
   ]);
-  const croppedRight = await addOutline(await cropRightBranchForCombined(sourcePath('forest-right.png')));
   const combined = await buildCombined({
     ring: assetPath('ring.png'),
     microphone: assetPath('microphone.png'),
     bird,
     forestLeft,
-    forestRight: croppedRight,
+    forestRight,
     notes,
   });
 
