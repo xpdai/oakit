@@ -4,14 +4,14 @@
 
 **Goal:** 保留完整右樹枝獨立素材，校正三顆音符至原圖座標，並替樹枝、音符與小鳥加入一致的暖白外框。
 
-**Architecture:** 將未加工 PNG 放在 `assets/music-logo/source/`，由單一 Sharp 生成腳本輸出網站實際使用的透明 PNG 與 `combined.png`。右樹枝只在建立 `combined.png` 的記憶體合成階段套用遮罩，輸出的 `forest-right.png` 永遠保持完整；素材測試直接檢查透明像素、音符色塊邊界與暖白外框。
+**Architecture:** 將未加工 PNG 放在 `assets/music-logo/source/`，由單一 Sharp 生成腳本輸出網站實際使用的透明 PNG 與 `combined.png`。完整右樹枝在合成時放在圓環後方，由圓環本身遮住上半部，不建立裁切版；素材測試直接檢查透明像素、音符色塊邊界與暖白外框。
 
 **Tech Stack:** Node.js ESM、Sharp、TypeScript、Vitest、既有靜態網站生成器。
 
 ## Global Constraints
 
 - 所有素材使用 758 × 758 透明 PNG。
-- `forest-right.png` 必須保留完整樹枝，不能預先裁掉上半部。
+- `forest-right.png` 與 `combined.png` 都必須保留完整樹枝，不能預先或合成時裁掉上半部；完成圖由圓環圖層遮擋上半部。
 - `forest-left.png`、`forest-right.png`、`bird.png`、`notes.png` 使用 6px、`#fff7e8` 暖白外框。
 - 音符色塊邊界依序為 `199–248 / 313–379`、`566–630 / 137–218`、`633–694 / 195–278`。
 - 音符維持最高圖層；完成畫面只顯示 `combined.png`。
@@ -29,7 +29,7 @@
 - Test: `assets/music-logo/notes.png`
 
 **Interfaces:**
-- Consumes: Sharp 讀取 PNG 的 `ensureAlpha().raw()` 輸出。
+- Consumes: Sharp 讀取 PNG metadata 與原始 RGBA buffer。
 - Produces: 素材完整度、暖白外框與音符座標的自動驗證。
 
 - [ ] **Step 1: 寫出目前會失敗的素材測試**
@@ -65,7 +65,7 @@ it.each(['forest-left.png', 'forest-right.png', 'bird.png', 'notes.png'])('%s co
 });
 ```
 
-`tealComponentBounds()` 以 4 向連通元件分析藍綠色實體像素，按 `minX` 排序後回傳三組邊界；`countExactColor()` 只計算 alpha 大於 20 且 RGB 完全符合目標色的像素。
+`tealComponentBounds()` 以 4 向連通元件分析藍綠色實體像素，按 `minX` 排序後回傳三組邊界；colored-body mask 保留所有 alpha 大於 0 的原色像素，外框測試只把 RGB 完全符合目標色的像素視為白框。
 
 - [ ] **Step 2: 執行測試並確認正確失敗**
 
@@ -88,6 +88,7 @@ git commit -m "test: define music logo asset alignment"
 - Create: `assets/music-logo/source/forest-right.png`
 - Create: `assets/music-logo/source/bird.png`
 - Create: `assets/music-logo/source/notes.png`
+- Modify: `tests/music-logo-assets.test.ts`
 - Modify: `assets/music-logo/forest-left.png`
 - Modify: `assets/music-logo/forest-right.png`
 - Modify: `assets/music-logo/bird.png`
@@ -131,7 +132,7 @@ const NOTE_TARGETS = [
 
 - [ ] **Step 4: 生成完整獨立元件與裁切後完成圖**
 
-`forest-left.png`、`forest-right.png`、`bird.png` 直接由完整來源加框。建立 `combined.png` 時在記憶體複製右枝並將來源座標 `y < 410` 的 alpha 設為 0，再依既有比例與位移合成：圓環、麥克風、小鳥、左枝、暫時裁切的右枝、音符；音符最後合成。
+`forest-left.png`、`forest-right.png`、`bird.png` 直接由完整來源加框，並保留來源所有可見 alpha 像素。建立 `combined.png` 時依序合成：完整右枝、圓環、麥克風、小鳥、左枝與音符；右枝不套遮罩，圓環負責遮住上半部，音符最後合成。同步將素材測試的 colored-body 定義改為保留所有 alpha 大於 0 的原色像素。
 
 - [ ] **Step 5: 執行生成器與素材測試**
 
@@ -144,7 +145,7 @@ Expected: PASS；右枝完整、四種素材含暖白外框、三顆音符邊界
 - [ ] **Step 6: 提交素材生成流程**
 
 ```bash
-git add scripts/generate-music-logo-assets.mjs assets/music-logo/source assets/music-logo/forest-left.png assets/music-logo/forest-right.png assets/music-logo/bird.png assets/music-logo/notes.png assets/music-logo/combined.png
+git add scripts/generate-music-logo-assets.mjs tests/music-logo-assets.test.ts assets/music-logo/source assets/music-logo/forest-left.png assets/music-logo/forest-right.png assets/music-logo/bird.png assets/music-logo/notes.png assets/music-logo/combined.png
 git commit -m "feat: align outlined music logo assets"
 ```
 
@@ -156,7 +157,7 @@ git commit -m "feat: align outlined music logo assets"
 - Modify: `dist/demo-music/index.html`
 
 **Interfaces:**
-- Consumes: 已校正座標的 `notes.png`。
+- Consumes: 已校正座標的 `notes.png` 與完整右枝置於圓環後方的合成素材。
 - Produces: 音符最終 transform 為 `translateY(0) scale(1)`，不再把整組縮成 92%。
 
 - [ ] **Step 1: 先增加會失敗的 render 測試**
@@ -165,6 +166,7 @@ git commit -m "feat: align outlined music logo assets"
 expect(musicHtml).toContain('@keyframes music-logo-notes');
 expect(musicHtml).toContain('transform:translateY(0) scale(1)');
 expect(musicHtml).not.toContain('transform:translateY(0) scale(.92)');
+expect(musicHtml).toContain('.music-logo-layer-forest-right{z-index:0;');
 ```
 
 - [ ] **Step 2: 確認測試因舊縮放值失敗**
@@ -175,7 +177,7 @@ Expected: FAIL，因為目前完成影格仍使用 `scale(.92)`。
 
 - [ ] **Step 3: 修改音符動畫完成影格**
 
-在 `src/site/render.ts` 的 `@keyframes music-logo-notes` 保留入場 `scale(.78)`，只把 100% 完成狀態改為 `transform:translateY(0) scale(1)`；維持 `z-index:8`。
+在 `src/site/render.ts` 的 `@keyframes music-logo-notes` 保留入場 `scale(.78)`，只把 100% 完成狀態改為 `transform:translateY(0) scale(1)`；維持 `z-index:8`，並將完整右枝的動畫圖層設為 `z-index:0`，讓圓環覆蓋其上半部。
 
 - [ ] **Step 4: 驗證並重建網站**
 
