@@ -376,3 +376,51 @@ Expected: 全部通過，只有 `dist/demo-music/index.html` 需要同步時保�
 git add src/site/render.ts tests/site-render.test.ts dist/demo-music/index.html
 git commit -m "fix: keep final music logo scale"
 ```
+
+### Task 8: 依原始參考圖校正 Logo 元件比例與位置
+
+**Files:**
+- Modify: `scripts/generate-music-logo-assets.mjs`
+- Modify: `src/site/render.ts`
+- Modify: `tests/music-logo-assets.test.ts`
+- Modify: `tests/site-render.test.ts`
+- Verify: `assets/music-logo/combined.png`, `dist/demo-music/index.html`
+
+**Interfaces:**
+- Consumes: `assets/na-mo-logo.jpg` 作為構圖參考，以及目前獨立 Logo 元件。
+- Produces: 左右樹枝、小鳥、圓圈、麥克風與音符維持原始相對比例與位置；動畫收尾與最後合成圖一致。
+
+- [ ] **Step 1: 先增加會失敗的構圖回歸測試**
+
+測試合成圖的主要元件 alpha bounds 與目前參考圖的相對位置：左枝在圓圈外、右枝在圓圈後方且尾巴露出，小鳥位於圓圈右側；同時測試最後圖層不再額外套用與原圖不一致的整體放大。
+
+- [ ] **Step 2: 依參考圖重建合成位置**
+
+在生成器中以既有 758 × 758 畫布對樹枝與小鳥做等比例縮放及平移，不拉伸、不裁切；合成順序維持完整右樹枝 → 圓圈 → 麥克風 → 小鳥 → 左樹枝 → 音符。圓圈、麥克風、小鳥與音符各自維持原始比例。
+
+- [ ] **Step 3: 讓動畫完成狀態對齊合成圖**
+
+同步調整 CSS 動畫最後的 translate/scale，使各獨立圖層在淡出前與 `combined.png` 的相對位置一致；移除造成圓圈或整體 Logo 跳動的額外 `scale(1.05)`。
+
+- [ ] **Step 4: 驗證、建置與部署**
+
+Run: `node scripts/generate-music-logo-assets.mjs`
+
+Run: `npx vitest run tests/music-logo-assets.test.ts tests/site-render.test.ts`
+
+Run: `npm test`
+
+Run: `npm run typecheck`
+
+Run: `npm run build`
+
+Run: `git diff --check`
+
+Expected: 素材、render、完整測試與部署均通過；手機頁面根節點不橫向溢出，其他 demo 的 dist 差異還原。
+
+- [ ] **Step 5: 提交構圖校正**
+
+```bash
+git add scripts/generate-music-logo-assets.mjs src/site/render.ts tests/music-logo-assets.test.ts tests/site-render.test.ts assets/music-logo/combined.png dist/demo-music/index.html
+git commit -m "fix: align music logo composition"
+```
