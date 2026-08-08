@@ -68,7 +68,7 @@ describe('renderSite variants', () => {
   it('那莫好聽會將品牌 Logo 內嵌在單檔官網', () => {
     const html = renderSite(loadTenant('demo-music'));
 
-    expect(html).toContain('class="brand-logo"');
+    expect(html).toContain('class="music-logo-final"');
     expect(html).toContain('src="data:image/jpeg;base64,');
     expect(html).toContain('alt="那莫好聽 Logo');
   });
@@ -86,6 +86,10 @@ describe('renderSite variants', () => {
     expect(musicHtml).toContain('@keyframes music-logo-forest-right');
     expect(musicHtml).toContain('@keyframes music-logo-bird-flight');
     expect(musicHtml).toContain('@keyframes music-logo-microphone-arrive');
+    expect(musicHtml).toContain('class="music-logo-final-frame"');
+    expect(musicHtml).toContain('class="music-logo-final"');
+    expect(musicHtml).toContain('src="data:image/jpeg;base64,');
+    expect(musicHtml).toContain('@keyframes music-logo-final');
     expect(musicHtml).not.toContain('music-logo-slices');
     expect(musicHtml).not.toContain('clip-path:');
     expect(musicHtml).not.toContain('<svg');

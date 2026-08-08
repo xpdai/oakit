@@ -40,11 +40,11 @@ function embedAsset(relativeAsset: string, className: string, alt: string): stri
   }
 }
 
-function embedBrandLogo(logo: Tenant['brand']['logo']): string {
+function embedBrandLogo(logo: Tenant['brand']['logo'], className = 'brand-logo'): string {
   if (!logo || !/^[a-z0-9._/-]+$/i.test(logo.src) || logo.src.includes('..')) return '';
 
   const relativeAsset = logo.src.replace(/^assets\//, '');
-  return embedAsset(relativeAsset, 'brand-logo', logo.alt ?? '品牌 Logo');
+  return embedAsset(relativeAsset, className, logo.alt ?? '品牌 Logo');
 }
 
 const MUSIC_LOGO_ASSETS = {
@@ -91,7 +91,8 @@ export function renderSite(t: Tenant): string {
   const brandLogo = embedBrandLogo(t.brand.logo);
   const musicMotionEnabled = variant === 'music';
   const musicLogoLayers = musicMotionEnabled ? embedMusicLogoLayers() : null;
-  const heroLogo = musicLogoLayers ? renderMusicLogoAnimation(musicLogoLayers, brandLogo) : brandLogo;
+  const musicFinalLogo = musicMotionEnabled ? embedBrandLogo(t.brand.logo, 'music-logo-final') : '';
+  const heroLogo = musicLogoLayers && musicFinalLogo ? renderMusicLogoAnimation(musicLogoLayers, musicFinalLogo) : brandLogo;
   const about = renderAbout(t);
 
   const notices = t.notices?.length
@@ -143,7 +144,7 @@ export function renderSite(t: Tenant): string {
   const studentShowcaseNav = variant === 'music' ? '<a href="#student-showcase">雲端成發</a>' : '';
   const musicAmbient = musicMotionEnabled ? renderMusicAmbient() : '';
   const musicLogoCss = musicMotionEnabled
-    ? `.music-logo-animation{position:relative;display:block;width:min(190px,45vw);aspect-ratio:1;margin:0 auto 24px}.music-logo-composite{position:absolute;inset:0}.music-logo-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform-origin:center;pointer-events:none}.music-logo-layer-ring{animation:music-logo-ring 1.1s ease-out .05s both}.music-logo-layer-forest-left{animation:music-logo-forest-left 1.3s cubic-bezier(.2,.8,.2,1) both}.music-logo-layer-forest-right{animation:music-logo-forest-right 1.3s cubic-bezier(.2,.8,.2,1) both}.music-logo-layer-bird{animation:music-logo-bird-flight 2.9s cubic-bezier(.2,.75,.25,1) .7s both}.music-logo-layer-microphone{animation:music-logo-microphone-arrive 2s cubic-bezier(.2,.85,.25,1) 1.8s both}.music-logo-layer-notes{animation:music-logo-notes 1s ease-out 3.2s both}@keyframes music-logo-ring{0%{opacity:0;transform:scale(.78) rotate(-5deg)}100%{opacity:1;transform:scale(.96) rotate(0)}}@keyframes music-logo-forest-left{0%{opacity:0;transform:translate(-120px,18px) scale(.48) rotate(-12deg)}22%{opacity:1}100%{opacity:1;transform:translate(-58px,0) scale(.64) rotate(-3deg)}}@keyframes music-logo-forest-right{0%{opacity:0;transform:translate(120px,18px) scale(.48) rotate(12deg)}22%{opacity:1}100%{opacity:1;transform:translate(58px,0) scale(.64) rotate(3deg)}}@keyframes music-logo-bird-flight{0%{opacity:0;transform:translate(-140px,44px) rotate(-10deg) scale(.62)}22%{opacity:1}52%{transform:translate(-32px,-10px) rotate(6deg) scale(.92)}78%{transform:translate(14px,2px) rotate(-2deg) scale(1.05)}100%{opacity:1;transform:translate(0,0) rotate(0) scale(1.05)}}@keyframes music-logo-microphone-arrive{0%,42%{opacity:0;transform:translate(0,18px) scale(.15)}72%{opacity:1;transform:translate(0,3px) scale(.95)}100%{opacity:1;transform:translate(0,0) scale(.95)}}@keyframes music-logo-notes{0%{opacity:0;transform:translateY(14px) scale(.78)}100%{opacity:.88;transform:translateY(0) scale(.92)}}`
+    ? `.music-logo-animation{position:relative;display:block;width:min(190px,45vw);aspect-ratio:1;margin:0 auto 24px}.music-logo-composite{position:absolute;inset:0}.music-logo-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform-origin:center;pointer-events:none}.music-logo-layer-ring{animation:music-logo-ring 1.1s ease-out .05s both}.music-logo-layer-forest-left{animation:music-logo-forest-left 1.3s cubic-bezier(.2,.8,.2,1) both}.music-logo-layer-forest-right{animation:music-logo-forest-right 1.3s cubic-bezier(.2,.8,.2,1) both}.music-logo-layer-bird{animation:music-logo-bird-flight 2.9s cubic-bezier(.2,.75,.25,1) .7s both}.music-logo-layer-microphone{animation:music-logo-microphone-arrive 2s cubic-bezier(.2,.85,.25,1) 1.8s both}.music-logo-layer-notes{animation:music-logo-notes 1s ease-out 3.2s both}.music-logo-final-frame{position:absolute;inset:0;z-index:2;opacity:0;pointer-events:none;animation:music-logo-final 620ms ease-out 4.15s both}.music-logo-final{display:block;width:100%;height:100%;margin:0;object-fit:cover;border:0;border-radius:0;box-shadow:none}@keyframes music-logo-ring{0%{opacity:0;transform:scale(.78) rotate(-5deg)}100%{opacity:1;transform:scale(.96) rotate(0)}}@keyframes music-logo-forest-left{0%{opacity:0;transform:translate(-120px,18px) scale(.48) rotate(-12deg)}22%{opacity:1}100%{opacity:1;transform:translate(-58px,0) scale(.64) rotate(-3deg)}}@keyframes music-logo-forest-right{0%{opacity:0;transform:translate(120px,18px) scale(.48) rotate(12deg)}22%{opacity:1}100%{opacity:1;transform:translate(58px,0) scale(.64) rotate(3deg)}}@keyframes music-logo-bird-flight{0%{opacity:0;transform:translate(-140px,44px) rotate(-10deg) scale(.62)}22%{opacity:1}52%{transform:translate(-32px,-10px) rotate(6deg) scale(.92)}78%{transform:translate(14px,2px) rotate(-2deg) scale(1.05)}100%{opacity:1;transform:translate(0,0) rotate(0) scale(1.05)}}@keyframes music-logo-microphone-arrive{0%,42%{opacity:0;transform:translate(0,18px) scale(.15)}72%{opacity:1;transform:translate(0,3px) scale(.95)}100%{opacity:1;transform:translate(0,0) scale(.95)}}@keyframes music-logo-notes{0%{opacity:0;transform:translateY(14px) scale(.78)}100%{opacity:.88;transform:translateY(0) scale(.92)}}@keyframes music-logo-final{0%{opacity:0}100%{opacity:1}}`
     : '';
   const musicMobileLayoutCss = musicMotionEnabled
     ? '@media (max-width:767px){#services .svc{position:relative;z-index:1;background:var(--bg);padding-left:14px;padding-right:14px;border-radius:12px}#services .music-note-burst[data-note-burst=services] span:first-child{top:5%;right:4%;bottom:auto;font-size:26px}#services .music-note-burst[data-note-burst=services] span:last-child{top:13%;right:11%;bottom:auto;font-size:20px}}'
@@ -283,7 +284,7 @@ footer{padding:54px 0 64px;text-align:center;font-size:13px;color:var(--ink);opa
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.music-ambient span,.music-note-burst,.music-note-burst span{animation:none!important;transition:none!important;transform:none!important}.music-ambient span{opacity:.48}.music-motion-section .music-note-burst{opacity:1}.music-note-burst span{opacity:.72}}
 .flip-card{position:relative;min-height:180px;perspective:1000px;cursor:pointer}.flip-card:focus-visible{outline:3px solid var(--ink);outline-offset:5px}.flip-card-inner{position:relative;min-height:180px;height:100%;transform-style:preserve-3d;transition:transform 520ms cubic-bezier(.2,.7,.2,1)}.flip-card.is-flipped .flip-card-inner{transform:rotateY(180deg)}.flip-card-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;backface-visibility:hidden;padding:20px}.flip-card-back{transform:rotateY(180deg);align-items:center;text-align:center;background:var(--accent);color:var(--bg)}.flip-card-back p{color:var(--bg)!important;opacity:1!important}.variant-music .highlight.flip-card,.variant-music .showcase-item.flip-card{padding:0;background:transparent}.variant-music .highlight.flip-card .flip-card-front,.variant-music .showcase-item.flip-card .flip-card-front{background:var(--bg)}@media (prefers-reduced-motion:reduce){.flip-card-inner{transition:none!important}}
 ${extraCss}
-@media (prefers-reduced-motion:reduce){.music-logo-layer{opacity:1;transform:none;animation:none}}
+@media (prefers-reduced-motion:reduce){.music-logo-layer{opacity:0;transform:none;animation:none}.music-logo-final-frame{opacity:1;animation:none}}
 </style>
 </head>
 <body data-variant="${escapeHtml(variant)}">

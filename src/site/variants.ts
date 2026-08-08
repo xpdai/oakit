@@ -25,6 +25,7 @@ export const renderMusicLogoAnimation = (layers: MusicLogoLayers, fallbackLogo: 
     ${layers.notes}
     ${layers.microphone}
     ${layers.bird}
+    <div class="music-logo-final-frame">${fallbackLogo}</div>
   </div>
   <noscript>${fallbackLogo}</noscript>
 </div>`;
