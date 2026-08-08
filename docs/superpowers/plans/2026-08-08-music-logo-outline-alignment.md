@@ -424,3 +424,51 @@ Expected: 素材、render、完整測試與部署均通過；手機頁面根節�
 git add scripts/generate-music-logo-assets.mjs src/site/render.ts tests/music-logo-assets.test.ts tests/site-render.test.ts assets/music-logo/combined.png dist/demo-music/index.html
 git commit -m "fix: align music logo composition"
 ```
+
+### Task 9: 將麥克風縮入圓圈內
+
+**Files:**
+- Modify: `scripts/generate-music-logo-assets.mjs`
+- Modify: `src/site/render.ts`
+- Modify: `tests/music-logo-assets.test.ts`
+- Modify: `tests/site-render.test.ts`
+- Verify: `assets/music-logo/combined.png`, `dist/demo-music/index.html`
+
+**Interfaces:**
+- Consumes: 目前獨立 `microphone.png`、透明 `ring.png` 與 Task 8 合成構圖。
+- Produces: 麥克風等比例縮放、置中於圓圈內，與圓圈內框保留明顯間距；動畫與最後合成一致。
+
+- [ ] **Step 1: 先增加會失敗的麥克風內縮測試**
+
+測試合成時麥克風使用固定等比例縮放，且麥克風可見 alpha 不與圓圈 alpha 重疊；同時鎖定完成動畫使用相同比例。
+
+- [ ] **Step 2: 將麥克風等比例縮放並置中**
+
+在生成器的 758 × 758 合成畫布中以中心為基準將麥克風縮放至 `0.9`，不拉伸、不裁切、不改寫獨立來源 PNG；保留既有圖層順序。
+
+- [ ] **Step 3: 對齊動畫完成狀態**
+
+將麥克風完成 keyframe 的 scale 改為 `0.9`，中段動畫也不得在完成前超過最後尺寸；確保淡出前與 `combined.png` 完全一致。
+
+- [ ] **Step 4: 驗證、建置與部署**
+
+Run: `node scripts/generate-music-logo-assets.mjs`
+
+Run: `npx vitest run tests/music-logo-assets.test.ts tests/site-render.test.ts`
+
+Run: `npm test`
+
+Run: `npm run typecheck`
+
+Run: `npm run build`
+
+Run: `git diff --check`
+
+Expected: 麥克風與圓圈沒有 alpha 重疊，所有測試與 GitHub Pages 部署通過，其他 demo dist 差異還原。
+
+- [ ] **Step 5: 提交麥克風比例修正**
+
+```bash
+git add scripts/generate-music-logo-assets.mjs src/site/render.ts tests/music-logo-assets.test.ts tests/site-render.test.ts assets/music-logo/combined.png dist/demo-music/index.html
+git commit -m "fix: fit music microphone inside ring"
+```
