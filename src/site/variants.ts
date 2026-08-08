@@ -20,9 +20,9 @@ export type MusicLogoLayers = {
 export const renderMusicLogoAnimation = (layers: MusicLogoLayers, fallbackLogo: string): string => `<div class="music-logo-animation">
   <div class="music-logo-composite" aria-hidden="true">
     <div class="music-logo-layer-stack">
-      ${layers.ring}
       ${layers.forestLeft}
       ${layers.forestRight}
+      ${layers.ring}
       ${layers.notes}
       ${layers.microphone}
       ${layers.bird}
