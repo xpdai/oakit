@@ -149,7 +149,7 @@ git add scripts/generate-music-logo-assets.mjs tests/music-logo-assets.test.ts a
 git commit -m "feat: align outlined music logo assets"
 ```
 
-### Task 3: 讓動畫使用校正後音符座標
+### Task 3: 讓動畫使用校正後音符座標與右枝遮擋
 
 **Files:**
 - Modify: `tests/site-render.test.ts`
@@ -194,7 +194,53 @@ git add src/site/render.ts tests/site-render.test.ts dist/demo-music/index.html
 git commit -m "fix: use exact music note placement"
 ```
 
-### Task 4: 完整驗證與部署
+### Task 4: 對調音樂首頁的雲端成發與服務區塊
+
+**Files:**
+- Modify: `tests/site-render.test.ts`
+- Modify: `src/site/render.ts`
+- Modify: `dist/demo-music/index.html`
+
+**Interfaces:**
+- Consumes: 既有 `renderStudentShowcase(t)` 與 `services` HTML。
+- Produces: 音樂首頁 `<section id="services">` 出現在 `<section id="student-showcase">` 之前；其他 demo 區塊順序維持不變。
+
+- [ ] **Step 1: 先增加會失敗的順序測試**
+
+```ts
+const servicesIndex = html.indexOf('<section id="services"');
+const showcaseIndex = html.indexOf('<section id="student-showcase"');
+expect(servicesIndex).toBeGreaterThan(-1);
+expect(showcaseIndex).toBeGreaterThan(-1);
+expect(servicesIndex).toBeLessThan(showcaseIndex);
+```
+
+- [ ] **Step 2: 確認舊順序測試失敗**
+
+Run: `npx vitest run tests/site-render.test.ts`
+
+Expected: FAIL，因為目前雲端成發先於服務區塊輸出。
+
+- [ ] **Step 3: 調整音樂版 main 區塊輸出順序**
+
+在 `src/site/render.ts` 將音樂版的 `services` section 移到 `renderStudentShowcase(t)` 之前；保留 `renderVariantSections(t)`、FAQ 與聯絡區塊的既有順序，非音樂 variant 不改變。
+
+- [ ] **Step 4: 驗證並重建網站**
+
+Run: `npx vitest run tests/site-render.test.ts`
+
+Run: `npm run build`
+
+Expected: 音樂版順序測試通過，其他 render 測試也通過。
+
+- [ ] **Step 5: 提交區塊順序更新**
+
+```bash
+git add src/site/render.ts tests/site-render.test.ts dist/demo-music/index.html
+git commit -m "fix: reorder music showcase and services"
+```
+
+### Task 5: 完整驗證與部署
 
 **Files:**
 - Verify: `assets/music-logo/*.png`
