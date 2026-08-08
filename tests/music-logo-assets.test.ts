@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import path from 'node:path';
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
@@ -19,9 +20,21 @@ const readRawAsset = async (file: string): Promise<RawAsset> => {
 const pixelOffset = (x: number, y: number, width: number) => (y * width + x) * 4;
 
 const isColoredBody = (data: Buffer, offset: number) => {
-  const distanceFromWarmWhite = Math.hypot(data[offset] - warmWhite[0], data[offset + 1] - warmWhite[1], data[offset + 2] - warmWhite[2]);
-  return data[offset + 3] > 20 && distanceFromWarmWhite > 30;
+  const isWarmWhite = data[offset] === warmWhite[0] && data[offset + 1] === warmWhite[1] && data[offset + 2] === warmWhite[2];
+  return data[offset + 3] > 20 && !isWarmWhite;
 };
+
+const coloredBodyMask = (data: Buffer, width: number, height: number) => {
+  const mask = new Uint8Array(width * height);
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      if (isColoredBody(data, pixelOffset(x, y, width))) mask[y * width + x] = 1;
+    }
+  }
+  return mask;
+};
+
+const maskDigest = (mask: Uint8Array) => crypto.createHash('sha256').update(mask).digest('hex');
 
 const maskBounds = (mask: Uint8Array, width: number, height: number): Bounds & { count: number } => {
   let minX = width;
@@ -40,34 +53,6 @@ const maskBounds = (mask: Uint8Array, width: number, height: number): Bounds & {
     }
   }
   return { minX, maxX, minY, maxY, count };
-};
-
-const distanceFromMask = (mask: Uint8Array, width: number, height: number) => {
-  const distances = new Int16Array(width * height);
-  distances.fill(-1);
-  const queue: number[] = [];
-  for (let index = 0; index < mask.length; index += 1) {
-    if (mask[index] === 1) {
-      distances[index] = 0;
-      queue.push(index);
-    }
-  }
-  for (let head = 0; head < queue.length; head += 1) {
-    const index = queue[head];
-    const x = index % width;
-    const y = Math.floor(index / width);
-    for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) {
-      const nextX = x + dx;
-      const nextY = y + dy;
-      if (nextX < 0 || nextX >= width || nextY < 0 || nextY >= height) continue;
-      const next = nextY * width + nextX;
-      if (distances[next] === -1) {
-        distances[next] = distances[index] + 1;
-        queue.push(next);
-      }
-    }
-  }
-  return distances;
 };
 
 const tealComponentBounds = async (file: string): Promise<Bounds[]> => {
@@ -125,38 +110,38 @@ const tealComponentBounds = async (file: string): Promise<Bounds[]> => {
   return components.sort((a, b) => a.minX - b.minX);
 };
 
-const outlineDistanceStats = async (file: string) => {
+const outlineMaskDiff = async (file: string) => {
   const { data, width, height } = await readRawAsset(file);
-  const body = new Uint8Array(width * height);
+  const body = coloredBodyMask(data, width, height);
+  const expectedOutline = new Uint8Array(width * height);
   const outline = new Uint8Array(width * height);
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       const index = y * width + x;
       const offset = pixelOffset(x, y, width);
-      if (isColoredBody(data, offset)) body[index] = 1;
       if (data[offset + 3] > 20 && data[offset] === warmWhite[0] && data[offset + 1] === warmWhite[1] && data[offset + 2] === warmWhite[2]) outline[index] = 1;
+      if (body[index] === 1) {
+        for (let dy = -6; dy <= 6; dy += 1) {
+          for (let dx = -6; dx <= 6; dx += 1) {
+            const nextX = x + dx;
+            const nextY = y + dy;
+            if (nextX >= 0 && nextX < width && nextY >= 0 && nextY < height) {
+              const next = nextY * width + nextX;
+              if (body[next] === 0) expectedOutline[next] = 1;
+            }
+          }
+        }
+      }
     }
   }
 
-  const bodyDistances = distanceFromMask(body, width, height);
-  const outlineDistances = distanceFromMask(outline, width, height);
-  const whiteDistances: number[] = [];
+  let missing = 0;
+  let extra = 0;
   for (let index = 0; index < outline.length; index += 1) {
-    if (outline[index] === 1) whiteDistances.push(bodyDistances[index]);
+    if (expectedOutline[index] === 1 && outline[index] === 0) missing += 1;
+    if (expectedOutline[index] === 0 && outline[index] === 1) extra += 1;
   }
-  const boundaryCoverage = [];
-  for (let index = 0; index < body.length; index += 1) {
-    if (body[index] !== 1) continue;
-    const x = index % width;
-    const y = Math.floor(index / width);
-    const hasNonBodyNeighbor = [[-1, 0], [1, 0], [0, -1], [0, 1]].some(([dx, dy]) => {
-      const nextX = x + dx;
-      const nextY = y + dy;
-      return nextX < 0 || nextX >= width || nextY < 0 || nextY >= height || body[nextY * width + nextX] === 0;
-    });
-    if (hasNonBodyNeighbor) boundaryCoverage.push(outlineDistances[index]);
-  }
-  return { whiteDistances, boundaryCoverage };
+  return { missing, extra, expectedCount: expectedOutline.reduce((sum, value) => sum + value, 0), actualCount: outline.reduce((sum, value) => sum + value, 0) };
 };
 
 describe('music logo assets', () => {
@@ -167,14 +152,9 @@ describe('music logo assets', () => {
 
   it('keeps the independent right branch complete', async () => {
     const { data, width, height } = await readRawAsset(asset('forest-right.png'));
-    const body = new Uint8Array(width * height);
-    for (let y = 0; y < height; y += 1) {
-      for (let x = 0; x < width; x += 1) {
-        const index = y * width + x;
-        if (isColoredBody(data, pixelOffset(x, y, width))) body[index] = 1;
-      }
-    }
+    const body = coloredBodyMask(data, width, height);
     expect(maskBounds(body, width, height)).toEqual({ minX: 439, maxX: 658, minY: 187, maxY: 605, count: 27178 });
+    expect(maskDigest(body)).toBe('d251a1760d08d768b8f118257319744f90e77257f7851d7ca15e0455465acfdd');
   });
 
   it('places the three teal note bodies at the reference bounds', async () => {
@@ -186,13 +166,10 @@ describe('music logo assets', () => {
   });
 
   it.each(assetNames)('%s contains a six-pixel warm white outline around its colored body', async (name) => {
-    const { whiteDistances, boundaryCoverage } = await outlineDistanceStats(asset(name));
-    expect(whiteDistances.length).toBeGreaterThan(0);
-    expect(Math.min(...whiteDistances)).toBe(1);
-    expect(Math.max(...whiteDistances)).toBe(6);
-    for (let distance = 1; distance <= 6; distance += 1) {
-      expect(whiteDistances.filter((value) => value === distance).length).toBeGreaterThan(0);
-    }
-    expect(Math.max(...boundaryCoverage)).toBeLessThanOrEqual(6);
+    const { missing, extra, expectedCount, actualCount } = await outlineMaskDiff(asset(name));
+    expect(expectedCount).toBeGreaterThan(0);
+    expect(actualCount).toBe(expectedCount);
+    expect(missing).toBe(0);
+    expect(extra).toBe(0);
   });
 });
