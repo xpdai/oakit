@@ -9,35 +9,11 @@ export const renderMusicAmbient = (): string =>
   '<div class="music-ambient" aria-hidden="true"><span>♪</span><span>♫</span><span>♩</span></div>';
 
 export const renderMusicLogoAnimation = (finalLogo: string): string => `<div class="music-logo-animation">
-  <div class="music-logo-scene" aria-hidden="true">
-    <div class="music-logo-forest music-logo-forest-back"><svg viewBox="0 0 200 200" aria-hidden="true">
-      <path d="M31 198C33 153 41 101 65 46M170 198C166 146 157 100 138 47" fill="none" stroke="#5a3927" stroke-width="5" stroke-linecap="round"/>
-      <g fill="#889b4e">
-        <ellipse cx="49" cy="137" rx="17" ry="8" transform="rotate(-35 49 137)"/><ellipse cx="42" cy="111" rx="16" ry="8" transform="rotate(28 42 111)"/>
-        <ellipse cx="55" cy="83" rx="15" ry="7" transform="rotate(-36 55 83)"/><ellipse cx="61" cy="59" rx="13" ry="7" transform="rotate(24 61 59)"/>
-        <ellipse cx="151" cy="137" rx="17" ry="8" transform="rotate(35 151 137)"/><ellipse cx="158" cy="111" rx="16" ry="8" transform="rotate(-28 158 111)"/>
-        <ellipse cx="145" cy="83" rx="15" ry="7" transform="rotate(36 145 83)"/><ellipse cx="139" cy="59" rx="13" ry="7" transform="rotate(-24 139 59)"/>
-      </g>
-    </svg></div>
-    <div class="music-logo-forest music-logo-forest-near"><svg viewBox="0 0 200 200" aria-hidden="true">
-      <path d="M20 205C23 151 31 112 58 67M180 205C177 151 169 112 142 67" fill="none" stroke="#5a3927" stroke-width="7" stroke-linecap="round"/>
-      <g fill="#718c42">
-        <ellipse cx="42" cy="153" rx="23" ry="10" transform="rotate(-35 42 153)"/><ellipse cx="34" cy="126" rx="21" ry="10" transform="rotate(28 34 126)"/>
-        <ellipse cx="49" cy="99" rx="20" ry="9" transform="rotate(-36 49 99)"/><ellipse cx="57" cy="73" rx="18" ry="9" transform="rotate(24 57 73)"/>
-        <ellipse cx="158" cy="153" rx="23" ry="10" transform="rotate(35 158 153)"/><ellipse cx="166" cy="126" rx="21" ry="10" transform="rotate(-28 166 126)"/>
-        <ellipse cx="151" cy="99" rx="20" ry="9" transform="rotate(36 151 99)"/><ellipse cx="143" cy="73" rx="18" ry="9" transform="rotate(-24 143 73)"/>
-      </g>
-    </svg></div>
-    <div class="music-logo-bird"><svg viewBox="0 0 90 60" aria-hidden="true">
-      <path d="M8 34C17 17 41 11 59 23C66 28 72 36 80 35C72 48 54 50 39 43C28 38 20 32 8 34Z" fill="#e88432"/>
-      <path d="M39 26C48 7 67 7 78 15C67 20 62 29 57 36C50 31 46 28 39 26Z" fill="#f4aa41"/>
-      <circle cx="64" cy="24" r="3" fill="#5a3927"/><path d="M78 35L88 30L82 41Z" fill="#e88432"/>
-    </svg></div>
-    <div class="music-logo-microphone"><svg viewBox="0 0 100 140" aria-hidden="true">
-      <rect x="31" y="12" width="38" height="76" rx="19" fill="#d49a58" stroke="#5a3927" stroke-width="6"/>
-      <path d="M20 68V81C20 111 80 111 80 81V68M50 111V130M31 130H69" fill="none" stroke="#5a3927" stroke-width="7" stroke-linecap="round"/>
-      <path d="M39 30V55M50 25V60M61 30V55" fill="none" stroke="#8d5a35" stroke-width="5" stroke-linecap="round"/>
-    </svg></div>
+  <div class="music-logo-slices" aria-hidden="true">
+    <div class="music-logo-slice music-logo-slice-forest-left">${finalLogo}</div>
+    <div class="music-logo-slice music-logo-slice-forest-right">${finalLogo}</div>
+    <div class="music-logo-slice music-logo-slice-bird">${finalLogo}</div>
+    <div class="music-logo-slice music-logo-slice-microphone">${finalLogo}</div>
   </div>
   <div class="music-logo-final">${finalLogo}</div>
 </div>`;
