@@ -133,6 +133,7 @@ describe('renderSite variants', () => {
   it('notes 完成後才以不透明的完成圖交接', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
 
+    expect(musicHtml).toContain('.music-logo-layer-notes{z-index:2;animation:music-logo-notes 1s ease-out 3.2s both}');
     expect(musicHtml).toMatch(/@keyframes music-logo-notes\{0%\{opacity:0;transform:translateY\(1\.85%\) scale\(\.78\)\}100%\{opacity:1;transform:translateY\(0\) scale\(1\)\}\}/);
     expect(musicHtml).toMatch(/\.music-logo-layer-stack\{position:absolute;inset:0;animation:music-logo-layers-exit 620ms ease-out 4\.25s both\}/);
     expect(musicHtml).toMatch(/\.music-logo-final-frame\{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;animation:music-logo-final 620ms ease-out 4\.25s both\}/);
