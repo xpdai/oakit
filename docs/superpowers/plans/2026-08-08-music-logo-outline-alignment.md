@@ -13,7 +13,8 @@
 - 所有素材使用 758 × 758 透明 PNG。
 - `forest-right.png` 與 `combined.png` 都必須保留完整樹枝，不能預先或合成時裁掉上半部；完成圖由圓環圖層遮擋上半部。
 - `forest-left.png`、`forest-right.png`、`bird.png`、`notes.png` 使用 6px、`#fff7e8` 暖白外框。
-- 音符色塊邊界依序為 `199–248 / 313–379`、`566–630 / 137–218`、`633–694 / 195–278`。
+- `ring.png` 內圈必須透明，不得保留白色填色。
+- 音符色塊邊界依序為 `62–111 / 166–233`、`565–629 / 44–125`、`666–727 / 176–259`，且不得與其他 Logo 元件重疊。
 - 音符維持最高圖層；完成畫面只顯示 `combined.png`。
 - 只修改 `demo-music`，不改其他 demo。
 
@@ -240,7 +241,60 @@ git add src/site/render.ts tests/site-render.test.ts dist/demo-music/index.html
 git commit -m "fix: reorder music showcase and services"
 ```
 
-### Task 5: 完整驗證與部署
+### Task 5: 圓環內圈去背與外圍音符定位
+
+**Files:**
+- Create: `assets/music-logo/source/ring.png`
+- Modify: `tests/music-logo-assets.test.ts`
+- Modify: `scripts/generate-music-logo-assets.mjs`
+- Modify: `assets/music-logo/ring.png`
+- Modify: `assets/music-logo/notes.png`
+- Modify: `assets/music-logo/combined.png`
+
+**Interfaces:**
+- Consumes: 完整未加工 `ring.png` 與目前三顆音符來源。
+- Produces: 透明內圈的圓環、位於圓環外且不與主體重疊的三顆音符，以及同步更新的完成合成圖。
+
+- [ ] **Step 1: 先增加會失敗的素材測試**
+
+```ts
+expect(await innerRingOpaquePixels(asset('ring.png'))).toBe(0);
+expect(await tealComponentBounds(asset('notes.png'))).toEqual([
+  { minX: 62, maxX: 111, minY: 166, maxY: 233 },
+  { minX: 565, maxX: 629, minY: 44, maxY: 125 },
+  { minX: 666, maxX: 727, minY: 176, maxY: 259 },
+]);
+expect(await noteBodyOverlapCount(asset('notes.png'), asset('ring.png'))).toBe(0);
+```
+
+- [ ] **Step 2: 確認舊素材測試失敗**
+
+Run: `npx vitest run tests/music-logo-assets.test.ts`
+
+Expected: FAIL，因為目前圓環內圈仍有不透明填色，音符仍在舊座標。
+
+- [ ] **Step 3: 生成透明內圈與外圍音符**
+
+在生成器中保存未加工 `ring.png`，以圓環內徑遮罩清除內圈 alpha；將 `NOTE_TARGETS` 更新為新的三組外圍座標，重新生成音符、所有描邊素材與 `combined.png`。保留完整右枝位於圓環後方的合成順序。
+
+- [ ] **Step 4: 執行素材測試與完整測試**
+
+Run: `node scripts/generate-music-logo-assets.mjs`
+
+Run: `npx vitest run tests/music-logo-assets.test.ts`
+
+Run: `npm test`
+
+Expected: 素材測試與完整測試全部通過。
+
+- [ ] **Step 5: 提交 Logo 素材校正**
+
+```bash
+git add tests/music-logo-assets.test.ts scripts/generate-music-logo-assets.mjs assets/music-logo/source/ring.png assets/music-logo/ring.png assets/music-logo/notes.png assets/music-logo/combined.png
+git commit -m "fix: clear logo center and move notes outside"
+```
+
+### Task 6: 完整驗證與部署
 
 **Files:**
 - Verify: `assets/music-logo/*.png`
