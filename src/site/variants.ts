@@ -74,7 +74,7 @@ export const renderStudentShowcase = (t: Tenant): string => {
           </article>`;
         })
         .join('')}</div>`
-    : `<div class="student-showcase-empty"><p class="student-showcase-kicker">第一首作品準備中</p><div class="student-work-placeholder" aria-hidden="true"><span class="student-work-placeholder-note">♪</span><div class="student-work-placeholder-copy"><strong>學生演奏紀錄</strong><small>完成第一首曲子後，將在這裡留下成長足跡</small></div></div><p>每一段練習都會留下足跡，之後在這裡看見從第一次彈奏到完整演出的成長幅度。</p></div>`;
+    : `<div class="student-showcase-empty"><p class="student-showcase-kicker">第一首作品準備中</p><div class="student-work-placeholder" aria-hidden="true"><span class="student-work-placeholder-note">♪</span><div class="student-work-placeholder-copy"><strong>學生演奏紀錄</strong><small>完成第一首曲子後，將在這裡留下成長足跡</small></div></div></div>`;
 
   return `<section id="student-showcase" class="student-showcase music-motion-section"><h2>雲 端 成 發</h2><p class="student-showcase-intro">記錄成長,督促自己,也激勵別人!</p>${renderMusicNoteBurst('showcase')}${content}</section>`;
 };

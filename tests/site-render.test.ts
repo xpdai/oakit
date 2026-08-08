@@ -263,6 +263,7 @@ describe('renderSite variants', () => {
     expect(html).toContain('第一首作品準備中');
     expect(html).toContain('class="student-work-placeholder"');
     expect(html).toContain('aria-hidden="true"');
+    expect(html).not.toContain('每一段練習都會留下足跡，之後在這裡看見從第一次彈奏到完整演出的成長幅度。');
     expect(html).not.toContain('學生作品整理中');
   });
 
