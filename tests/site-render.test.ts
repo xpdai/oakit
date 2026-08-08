@@ -73,6 +73,21 @@ describe('renderSite variants', () => {
     expect(html).toContain('alt="那莫好聽 Logo');
   });
 
+  it('音樂版 Logo 會輸出森林、飛鳥與麥克風的開場動畫', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+    const defaultHtml = renderSite(makeTenant());
+
+    expect(musicHtml).toContain('class="music-logo-animation"');
+    expect(musicHtml).toContain('class="music-logo-forest music-logo-forest-back"');
+    expect(musicHtml).toContain('class="music-logo-bird"');
+    expect(musicHtml).toContain('class="music-logo-microphone"');
+    expect(musicHtml).toContain('@keyframes music-logo-bird-flight');
+    expect(musicHtml).toContain('@keyframes music-logo-microphone-arrive');
+    expect(musicHtml).toContain('@keyframes music-logo-scene-fade');
+    expect(musicHtml).toContain('prefers-reduced-motion:reduce');
+    expect(defaultHtml).not.toContain('music-logo-animation');
+  });
+
   it('FAQ summary 至少有 44px 互動高度', () => {
     const html = renderSite(makeTenant('pet'));
     expect(html).toMatch(/summary\{[^}]*min-height:44px/);
