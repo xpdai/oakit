@@ -78,14 +78,16 @@ describe('renderSite variants', () => {
     const defaultHtml = renderSite(makeTenant());
 
     expect(musicHtml).toContain('class="music-logo-animation"');
-    expect(musicHtml).toContain('class="music-logo-slices"');
-    expect(musicHtml).toContain('class="music-logo-slice music-logo-slice-forest-left"');
-    expect(musicHtml).toContain('class="music-logo-slice music-logo-slice-forest-right"');
-    expect(musicHtml).toContain('class="music-logo-slice music-logo-slice-bird"');
-    expect(musicHtml).toContain('class="music-logo-slice music-logo-slice-microphone"');
+    for (const layer of ['ring', 'forest-left', 'forest-right', 'microphone', 'bird', 'notes']) {
+      expect(musicHtml).toContain(`class="music-logo-layer music-logo-layer-${layer}"`);
+      expect(musicHtml).toContain('src="data:image/png;base64,');
+    }
+    expect(musicHtml).toContain('@keyframes music-logo-forest-left');
+    expect(musicHtml).toContain('@keyframes music-logo-forest-right');
     expect(musicHtml).toContain('@keyframes music-logo-bird-flight');
     expect(musicHtml).toContain('@keyframes music-logo-microphone-arrive');
-    expect(musicHtml).toContain('@keyframes music-logo-slices-fade');
+    expect(musicHtml).not.toContain('music-logo-slices');
+    expect(musicHtml).not.toContain('clip-path:');
     expect(musicHtml).not.toContain('<svg');
     expect(musicHtml).toContain('prefers-reduced-motion:reduce');
     expect(defaultHtml).not.toContain('music-logo-animation');
