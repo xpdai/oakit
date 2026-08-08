@@ -13,6 +13,7 @@ const NOTE_TARGETS = [
 const COMPOSITION = {
   forestLeft: { scale: 0.75, left: -130, top: 13 },
   forestRight: { scale: 0.7, left: 124, top: 70 },
+  microphone: { scale: 0.9, left: 0, top: 0 },
   bird: { scale: 1.05, left: 70, top: 28 },
 };
 
@@ -173,12 +174,13 @@ export async function buildCombined(layers) {
     return { input: normalized, left: offset + transform.left, top: offset + transform.top };
   };
 
-  const [forestRight, bird, forestLeft] = await Promise.all([
+  const [forestRight, microphone, bird, forestLeft] = await Promise.all([
     resizeAndPlace(layers.forestRight, COMPOSITION.forestRight),
+    resizeAndPlace(layers.microphone, COMPOSITION.microphone),
     resizeAndPlace(layers.bird, COMPOSITION.bird),
     resizeAndPlace(layers.forestLeft, COMPOSITION.forestLeft),
   ]);
-  const orderedLayers = [forestRight, layers.ring, layers.microphone, bird, forestLeft, layers.notes]
+  const orderedLayers = [forestRight, layers.ring, microphone, bird, forestLeft, layers.notes]
     .map((layer) => (typeof layer === 'object' && !Buffer.isBuffer(layer) && 'input' in layer
       ? layer
       : { input: layer, left: 0, top: 0 }));

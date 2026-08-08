@@ -100,6 +100,8 @@ describe('renderSite variants', () => {
     expect(musicHtml).toContain('translate(-17.15%,1.72%) scale(.75)');
     expect(musicHtml).toContain('translate(16.36%,9.23%) scale(.7)');
     expect(musicHtml).toContain('translate(9.23%,3.69%) rotate(0) scale(1.05)');
+    expect(musicHtml).toContain('100%{opacity:1;transform:translate(0,0) scale(.9)}');
+    expect(musicHtml).not.toContain('100%{opacity:1;transform:translate(0,0) scale(1)}');
     expect(musicHtml).toContain('music-logo-layer-notes{z-index:8;');
     expect(musicHtml).toContain('@keyframes music-logo-notes');
     expect(musicHtml).toContain('transform:translateY(0) scale(1)');
@@ -128,6 +130,12 @@ describe('renderSite variants', () => {
 
     expect(musicHtml).toMatch(/@keyframes music-logo-forest-left\{0%\{opacity:0;transform:translate\(-15\.83%,2\.37%\) scale\(\.48\) rotate\(-12deg\)\}22%\{opacity:1\}100%\{opacity:1;transform:translate\(-17\.15%,1\.72%\) scale\(\.75\)\}\}/);
     expect(musicHtml).toMatch(/@keyframes music-logo-forest-right\{0%\{opacity:0;transform:translate\(15\.83%,2\.37%\) scale\(\.48\) rotate\(12deg\)\}22%\{opacity:1\}100%\{opacity:1;transform:translate\(16\.36%,9\.23%\) scale\(\.7\)\}\}/);
+  });
+
+  it('麥克風完成前不會放大超過 combined 的九成比例', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+
+    expect(musicHtml).toMatch(/@keyframes music-logo-microphone-arrive\{0%,42%\{opacity:0;transform:translate\(0,2\.37%\) scale\(\.15\)\}72%\{opacity:1;transform:translate\(0,\.40%\) scale\(\.9\)\}100%\{opacity:1;transform:translate\(0,0\) scale\(\.9\)\}\}/);
   });
 
   it('notes 完成後才以不透明的完成圖交接', () => {

@@ -3,6 +3,8 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
+// @ts-expect-error The production generator is JavaScript without a declaration file.
+import { buildCombined } from '../scripts/generate-music-logo-assets.mjs';
 
 const asset = (name: string) => path.resolve('assets/music-logo', name);
 const source = (name: string) => path.resolve('assets/music-logo/source', name);
@@ -16,10 +18,11 @@ const warmWhite = [255, 247, 232] as const;
 const composition = {
   forestLeft: { scale: 0.75, left: -130, top: 13 },
   forestRight: { scale: 0.7, left: 124, top: 70 },
+  microphone: { scale: 0.9, left: 0, top: 0 },
   bird: { scale: 1.05, left: 70, top: 28 },
 } as const;
 
-const readRawAsset = async (file: string): Promise<RawAsset> => {
+const readRawAsset = async (file: string | Buffer): Promise<RawAsset> => {
   const { data, info } = await sharp(file).raw().toBuffer({ resolveWithObject: true });
   return { data, width: info.width, height: info.height };
 };
@@ -36,6 +39,16 @@ const coloredBodyMask = (data: Buffer, width: number, height: number) => {
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
       if (isColoredBody(data, pixelOffset(x, y, width))) mask[y * width + x] = 1;
+    }
+  }
+  return mask;
+};
+
+const visibleAlphaMask = (data: Buffer, width: number, height: number) => {
+  const mask = new Uint8Array(width * height);
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      if (data[pixelOffset(x, y, width) + 3] > 20) mask[y * width + x] = 1;
     }
   }
   return mask;
@@ -79,7 +92,7 @@ const expectedCombined = async () => sharp({
 }).composite([
   await resizedLayer('forest-right.png', composition.forestRight),
   { input: asset('ring.png'), left: 0, top: 0 },
-  { input: asset('microphone.png'), left: 0, top: 0 },
+  await resizedLayer('microphone.png', composition.microphone),
   await resizedLayer('bird.png', composition.bird),
   await resizedLayer('forest-left.png', composition.forestLeft),
   { input: asset('notes.png'), left: 0, top: 0 },
@@ -183,6 +196,25 @@ const noteBodyOverlapCount = async (notesFile: string, componentFile: string) =>
   return overlap;
 };
 
+const visibleAlphaOverlapCount = async (
+  layer: Awaited<ReturnType<typeof resizedLayer>>,
+  componentFile: string,
+) => {
+  const transformed = await readRawAsset(layer.input);
+  const component = await readRawAsset(componentFile);
+  let overlap = 0;
+  for (let y = 0; y < transformed.height; y += 1) {
+    for (let x = 0; x < transformed.width; x += 1) {
+      const targetX = x + layer.left;
+      const targetY = y + layer.top;
+      if (targetX < 0 || targetX >= component.width || targetY < 0 || targetY >= component.height) continue;
+      if (transformed.data[pixelOffset(x, y, transformed.width) + 3] > 20
+        && component.data[pixelOffset(targetX, targetY, component.width) + 3] > 20) overlap += 1;
+    }
+  }
+  return overlap;
+};
+
 const changedDeepInnerRingBorderPixels = async () => {
   const original = await readRawAsset(source('ring.png'));
   const generated = await readRawAsset(asset('ring.png'));
@@ -266,9 +298,46 @@ describe('music logo assets', () => {
     expect(await changedVisibleSourcePixels(name)).toBe(0);
   });
 
-  it('composites the complete right branch behind the ring', async () => {
+  it('composites the complete right branch behind the ring with the centered 90% microphone', async () => {
+    const transparentLayer = await sharp({
+      create: { width: 758, height: 758, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } },
+    }).png().toBuffer();
+    const generated = await buildCombined({
+      ring: transparentLayer,
+      microphone: asset('microphone.png'),
+      bird: transparentLayer,
+      forestLeft: transparentLayer,
+      forestRight: transparentLayer,
+      notes: transparentLayer,
+    });
+    const { data, info } = await sharp(generated).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+
+    expect(maskBounds(visibleAlphaMask(data, info.width, info.height), info.width, info.height)).toMatchObject({
+      minX: 244,
+      maxX: 513,
+      minY: 163,
+      maxY: 561,
+    });
+  });
+
+  it('writes the expected complete right-branch composition to combined.png', async () => {
     const { data } = await readRawAsset(asset('combined.png'));
     expect(data).toEqual(await expectedCombined());
+  });
+
+  it('centers the 90% microphone inside the ring without visible alpha overlap', async () => {
+    const microphone = await resizedLayer('microphone.png', composition.microphone);
+    const { data, width, height } = await readRawAsset(microphone.input);
+    const bounds = maskBounds(visibleAlphaMask(data, width, height), width, height);
+
+    expect(composition.microphone).toEqual({ scale: 0.9, left: 0, top: 0 });
+    expect({
+      minX: bounds.minX + microphone.left,
+      maxX: bounds.maxX + microphone.left,
+      minY: bounds.minY + microphone.top,
+      maxY: bounds.maxY + microphone.top,
+    }).toEqual({ minX: 244, maxX: 513, minY: 163, maxY: 561 });
+    expect(await visibleAlphaOverlapCount(microphone, asset('ring.png'))).toBe(0);
   });
 
   it('uses the reference bounds for the uniformly transformed branches and bird', async () => {
