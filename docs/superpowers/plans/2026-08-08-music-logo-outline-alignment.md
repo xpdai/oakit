@@ -330,3 +330,49 @@ gh run watch "$logo_deploy_run_id" --exit-status
 - [ ] **Step 4: 驗證線上版本**
 
 以 cache-busted GitHub Pages URL 檢查桌機及手機版，確認最後圖層 opacity、音符 z-index、頁面 overflow 與 console logs。
+
+### Task 7: 對齊動畫與最後合成圖比例
+
+**Files:**
+- Modify: `src/site/render.ts`
+- Modify: `tests/site-render.test.ts`
+- Verify: `dist/demo-music/index.html`
+
+**Interfaces:**
+- Consumes: 動畫元件目前的 CSS transform 與 `combined.png` 最後定格圖。
+- Produces: 動畫最後圓環與合成圖保持一致比例，不在切換時縮小或跳動。
+
+- [ ] **Step 1: 先增加會失敗的比例回歸測試**
+
+確認最後合成圖的 CSS 必須沿用圓環動畫完成時的 `scale(1.05)`，並保留動畫層淡出與最後圖層淡入的行為。
+
+- [ ] **Step 2: 確認舊 CSS 測試失敗**
+
+Run: `npx vitest run tests/site-render.test.ts`
+
+Expected: FAIL，因為 `.music-logo-final` 目前沒有與圓環動畫一致的完成比例。
+
+- [ ] **Step 3: 對齊最後定格比例**
+
+在最後合成圖套用與圓環完成狀態相同的 `scale(1.05)`，以同一個中心點縮放，不改變音符與其他元件在合成圖內的相對位置；同步確認手機版不產生頁面橫向溢出。
+
+- [ ] **Step 4: 驗證與部署**
+
+Run: `npx vitest run tests/site-render.test.ts`
+
+Run: `npm test`
+
+Run: `npm run typecheck`
+
+Run: `npm run build`
+
+Run: `git diff --check`
+
+Expected: 全部通過，只有 `dist/demo-music/index.html` 需要同步時保留，其他 demo 輸出還原；推送後 GitHub Pages 部署成功。
+
+- [ ] **Step 5: 提交比例修正**
+
+```bash
+git add src/site/render.ts tests/site-render.test.ts dist/demo-music/index.html
+git commit -m "fix: keep final music logo scale"
+```
