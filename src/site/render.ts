@@ -17,15 +17,15 @@ import {
   renderMusicNoteBurst,
   renderStudentShowcase,
   renderVariantSections,
+  type MusicLogoLayers,
 } from './variants.js';
 
 const HEX_COLOR = /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i;
 const ASSET_ROOT = new URL('../../assets/', import.meta.url);
 
-function embedBrandLogo(logo: Tenant['brand']['logo']): string {
-  if (!logo || !/^[a-z0-9._/-]+$/i.test(logo.src) || logo.src.includes('..')) return '';
+function embedAsset(relativeAsset: string, className: string, alt: string): string {
+  if (!/^[a-z0-9._/-]+$/i.test(relativeAsset) || relativeAsset.includes('..')) return '';
 
-  const relativeAsset = logo.src.replace(/^assets\//, '');
   const assetPath = resolve(ASSET_ROOT.pathname, relativeAsset);
   const rootPath = resolve(ASSET_ROOT.pathname);
   const relativePath = relative(rootPath, assetPath);
@@ -34,10 +34,39 @@ function embedBrandLogo(logo: Tenant['brand']['logo']): string {
   const mime = relativeAsset.toLowerCase().endsWith('.png') ? 'image/png' : 'image/jpeg';
   try {
     const data = readFileSync(assetPath).toString('base64');
-    return `<img class="brand-logo" src="data:${mime};base64,${data}" alt="${escapeHtml(logo.alt ?? '品牌 Logo')}">`;
+    return `<img class="${escapeHtml(className)}" src="data:${mime};base64,${data}" alt="${escapeHtml(alt)}">`;
   } catch {
     return '';
   }
+}
+
+function embedBrandLogo(logo: Tenant['brand']['logo']): string {
+  if (!logo || !/^[a-z0-9._/-]+$/i.test(logo.src) || logo.src.includes('..')) return '';
+
+  const relativeAsset = logo.src.replace(/^assets\//, '');
+  return embedAsset(relativeAsset, 'brand-logo', logo.alt ?? '品牌 Logo');
+}
+
+const MUSIC_LOGO_ASSETS = {
+  ring: 'music-logo/ring.png',
+  forestLeft: 'music-logo/forest-left.png',
+  forestRight: 'music-logo/forest-right.png',
+  microphone: 'music-logo/microphone.png',
+  bird: 'music-logo/bird.png',
+  notes: 'music-logo/notes.png',
+} as const;
+
+function embedMusicLogoLayers(): MusicLogoLayers | null {
+  const layers = {
+    ring: embedAsset(MUSIC_LOGO_ASSETS.ring, 'music-logo-layer music-logo-layer-ring', ''),
+    forestLeft: embedAsset(MUSIC_LOGO_ASSETS.forestLeft, 'music-logo-layer music-logo-layer-forest-left', ''),
+    forestRight: embedAsset(MUSIC_LOGO_ASSETS.forestRight, 'music-logo-layer music-logo-layer-forest-right', ''),
+    microphone: embedAsset(MUSIC_LOGO_ASSETS.microphone, 'music-logo-layer music-logo-layer-microphone', ''),
+    bird: embedAsset(MUSIC_LOGO_ASSETS.bird, 'music-logo-layer music-logo-layer-bird', ''),
+    notes: embedAsset(MUSIC_LOGO_ASSETS.notes, 'music-logo-layer music-logo-layer-notes', ''),
+  };
+
+  return Object.values(layers).every(Boolean) ? layers : null;
 }
 
 function safeColor(value: string, fallback: string): string {
@@ -61,7 +90,8 @@ export function renderSite(t: Tenant): string {
   const variant = getRenderVariant(t);
   const brandLogo = embedBrandLogo(t.brand.logo);
   const musicMotionEnabled = variant === 'music';
-  const heroLogo = musicMotionEnabled ? renderMusicLogoAnimation(brandLogo) : brandLogo;
+  const musicLogoLayers = musicMotionEnabled ? embedMusicLogoLayers() : null;
+  const heroLogo = musicLogoLayers ? renderMusicLogoAnimation(musicLogoLayers, brandLogo) : brandLogo;
   const about = renderAbout(t);
 
   const notices = t.notices?.length
@@ -113,7 +143,7 @@ export function renderSite(t: Tenant): string {
   const studentShowcaseNav = variant === 'music' ? '<a href="#student-showcase">雲端成發</a>' : '';
   const musicAmbient = musicMotionEnabled ? renderMusicAmbient() : '';
   const musicLogoCss = musicMotionEnabled
-    ? `.music-logo-animation{position:relative;display:block;width:min(190px,45vw);aspect-ratio:1;margin:0 auto 24px}.music-logo-slices{position:absolute;inset:0;overflow:hidden;border-radius:50%;background:var(--bg);animation:music-logo-slices-fade 1.1s ease 4.9s forwards}.music-logo-slice{position:absolute;inset:0;opacity:0;transform-origin:center}.music-logo-slice .brand-logo{position:absolute;inset:0;width:100%;height:100%;margin:0;border:0;border-radius:0;box-shadow:none;object-fit:cover}.music-logo-slice-forest-left{clip-path:polygon(3% 24%,22% 22%,25% 34%,21% 44%,25% 56%,22% 69%,28% 79%,17% 83%,9% 79%,4% 83%,2% 68%,5% 52%,2% 39%);animation:music-logo-forest-left 5.1s cubic-bezier(.2,.8,.2,1) both}.music-logo-slice-forest-right{clip-path:polygon(97% 24%,78% 22%,75% 34%,79% 44%,75% 56%,78% 69%,72% 79%,83% 83%,91% 79%,96% 83%,98% 68%,95% 52%,98% 39%);animation:music-logo-forest-right 5.1s cubic-bezier(.2,.8,.2,1) both}.music-logo-slice-bird{clip-path:polygon(66% 39%,79% 38%,96% 42%,99% 56%,90% 65%,75% 63%,65% 54%);animation:music-logo-bird-flight 5.2s cubic-bezier(.2,.75,.25,1) .2s both}.music-logo-slice-microphone{clip-path:polygon(35% 24%,65% 24%,66% 30%,66% 54%,62% 60%,58% 64%,58% 83%,42% 83%,42% 64%,38% 60%,34% 54%,34% 30%);animation:music-logo-microphone-arrive 5s cubic-bezier(.2,.85,.25,1) .25s both}.music-logo-final{position:absolute;inset:0;opacity:0;transform:scale(.88);animation:music-logo-final 1.1s cubic-bezier(.2,.75,.2,1) 4.9s forwards}.music-logo-final .brand-logo{position:absolute;inset:0;width:100%;height:100%;margin:0;object-fit:cover}@keyframes music-logo-slices-fade{0%{opacity:1}100%{opacity:0}}@keyframes music-logo-forest-left{0%{opacity:0;transform:translate(-18px,24px) scale(.62) rotate(-6deg)}18%{opacity:1}100%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}}@keyframes music-logo-forest-right{0%{opacity:0;transform:translate(18px,24px) scale(.62) rotate(6deg)}18%{opacity:1}100%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}}@keyframes music-logo-bird-flight{0%{opacity:0;transform:translate(-46px,48px) rotate(-12deg) scale(.7)}12%{opacity:1}38%{transform:translate(10px,-8px) rotate(8deg) scale(.82)}63%{transform:translate(92px,28px) rotate(-4deg) scale(.94)}100%{opacity:0;transform:translate(230px,-20px) rotate(8deg) scale(1)}}@keyframes music-logo-microphone-arrive{0%,42%{opacity:0;transform:translate(0,18px) scale(.16)}68%{opacity:1;transform:translate(0,6px) scale(.62)}100%{opacity:1;transform:translate(0,0) scale(1)}}@keyframes music-logo-final{0%{opacity:0;transform:scale(.88)}100%{opacity:1;transform:scale(1)}}`
+    ? `.music-logo-animation{position:relative;display:block;width:min(190px,45vw);aspect-ratio:1;margin:0 auto 24px}.music-logo-composite{position:absolute;inset:0}.music-logo-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform-origin:center;pointer-events:none}.music-logo-layer-ring{animation:music-logo-ring 1.1s ease-out .05s both}.music-logo-layer-forest-left{animation:music-logo-forest-left 1.3s cubic-bezier(.2,.8,.2,1) both}.music-logo-layer-forest-right{animation:music-logo-forest-right 1.3s cubic-bezier(.2,.8,.2,1) both}.music-logo-layer-bird{animation:music-logo-bird-flight 2.9s cubic-bezier(.2,.75,.25,1) .7s both}.music-logo-layer-microphone{animation:music-logo-microphone-arrive 2s cubic-bezier(.2,.85,.25,1) 1.8s both}.music-logo-layer-notes{animation:music-logo-notes 1s ease-out 3.2s both}@keyframes music-logo-ring{0%{opacity:0;transform:scale(.72) rotate(-5deg)}100%{opacity:1;transform:scale(.88) rotate(0)}}@keyframes music-logo-forest-left{0%{opacity:0;transform:translate(-145px,18px) scale(.48) rotate(-12deg)}22%{opacity:1}100%{opacity:1;transform:translate(-100px,0) scale(.64) rotate(-3deg)}}@keyframes music-logo-forest-right{0%{opacity:0;transform:translate(145px,18px) scale(.48) rotate(12deg)}22%{opacity:1}100%{opacity:1;transform:translate(100px,0) scale(.64) rotate(3deg)}}@keyframes music-logo-bird-flight{0%{opacity:0;transform:translate(-140px,44px) rotate(-10deg) scale(.58)}22%{opacity:1}52%{transform:translate(-32px,-10px) rotate(6deg) scale(.8)}78%{transform:translate(14px,2px) rotate(-2deg) scale(.95)}100%{opacity:1;transform:translate(0,0) rotate(0) scale(.95)}}@keyframes music-logo-microphone-arrive{0%,42%{opacity:0;transform:translate(0,18px) scale(.15)}72%{opacity:1;transform:translate(0,3px) scale(.85)}100%{opacity:1;transform:translate(0,0) scale(.85)}}@keyframes music-logo-notes{0%{opacity:0;transform:translateY(14px) scale(.78)}100%{opacity:.88;transform:translateY(0) scale(.92)}}`
     : '';
   const musicMobileLayoutCss = musicMotionEnabled
     ? '@media (max-width:767px){#services .svc{position:relative;z-index:1;background:var(--bg);padding-left:14px;padding-right:14px;border-radius:12px}#services .music-note-burst[data-note-burst=services] span:first-child{top:5%;right:4%;bottom:auto;font-size:26px}#services .music-note-burst[data-note-burst=services] span:last-child{top:13%;right:11%;bottom:auto;font-size:20px}}'
@@ -253,7 +283,7 @@ footer{padding:54px 0 64px;text-align:center;font-size:13px;color:var(--ink);opa
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.music-ambient span,.music-note-burst,.music-note-burst span{animation:none!important;transition:none!important;transform:none!important}.music-ambient span{opacity:.48}.music-motion-section .music-note-burst{opacity:1}.music-note-burst span{opacity:.72}}
 .flip-card{position:relative;min-height:180px;perspective:1000px;cursor:pointer}.flip-card:focus-visible{outline:3px solid var(--ink);outline-offset:5px}.flip-card-inner{position:relative;min-height:180px;height:100%;transform-style:preserve-3d;transition:transform 520ms cubic-bezier(.2,.7,.2,1)}.flip-card.is-flipped .flip-card-inner{transform:rotateY(180deg)}.flip-card-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;backface-visibility:hidden;padding:20px}.flip-card-back{transform:rotateY(180deg);align-items:center;text-align:center;background:var(--accent);color:var(--bg)}.flip-card-back p{color:var(--bg)!important;opacity:1!important}.variant-music .highlight.flip-card,.variant-music .showcase-item.flip-card{padding:0;background:transparent}.variant-music .highlight.flip-card .flip-card-front,.variant-music .showcase-item.flip-card .flip-card-front{background:var(--bg)}@media (prefers-reduced-motion:reduce){.flip-card-inner{transition:none!important}}
 ${extraCss}
-@media (prefers-reduced-motion:reduce){.music-logo-slices{display:none}.music-logo-final{opacity:1;transform:none;animation:none}.music-logo-final .brand-logo{opacity:1}}
+@media (prefers-reduced-motion:reduce){.music-logo-layer{opacity:1;transform:none;animation:none}}
 </style>
 </head>
 <body data-variant="${escapeHtml(variant)}">

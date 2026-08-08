@@ -8,14 +8,25 @@ export function getRenderVariant(t: Tenant): BusinessType | 'default' {
 export const renderMusicAmbient = (): string =>
   '<div class="music-ambient" aria-hidden="true"><span>♪</span><span>♫</span><span>♩</span></div>';
 
-export const renderMusicLogoAnimation = (finalLogo: string): string => `<div class="music-logo-animation">
-  <div class="music-logo-slices" aria-hidden="true">
-    <div class="music-logo-slice music-logo-slice-forest-left">${finalLogo}</div>
-    <div class="music-logo-slice music-logo-slice-forest-right">${finalLogo}</div>
-    <div class="music-logo-slice music-logo-slice-bird">${finalLogo}</div>
-    <div class="music-logo-slice music-logo-slice-microphone">${finalLogo}</div>
+export type MusicLogoLayers = {
+  ring: string;
+  forestLeft: string;
+  forestRight: string;
+  microphone: string;
+  bird: string;
+  notes: string;
+};
+
+export const renderMusicLogoAnimation = (layers: MusicLogoLayers, fallbackLogo: string): string => `<div class="music-logo-animation">
+  <div class="music-logo-composite" aria-hidden="true">
+    ${layers.ring}
+    ${layers.forestLeft}
+    ${layers.forestRight}
+    ${layers.notes}
+    ${layers.microphone}
+    ${layers.bird}
   </div>
-  <div class="music-logo-final">${finalLogo}</div>
+  <noscript>${fallbackLogo}</noscript>
 </div>`;
 
 export const renderMusicNoteBurst = (label: string): string => {
