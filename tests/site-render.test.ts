@@ -95,8 +95,8 @@ describe('renderSite variants', () => {
     expect(musicHtml).toContain('scale(1) rotate(0)');
     expect(musicHtml).toContain('.music-logo-final{display:block;width:100%;height:100%;margin:0;object-fit:contain;transform:none;transform-origin:center;');
     expect(musicHtml).not.toContain('music-logo-final{display:block;width:100%;height:100%;margin:0;object-fit:contain;transform:scale(1.05)');
-    expect(musicHtml).toContain('.music-logo-layer-stack{position:absolute;inset:0;animation:music-logo-layers-exit 620ms ease-out 4.15s both}');
-    expect(musicHtml).toContain('.music-logo-final-frame{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;animation:music-logo-final 620ms ease-out 4.15s both}');
+    expect(musicHtml).toContain('.music-logo-layer-stack{position:absolute;inset:0;animation:music-logo-layers-exit 620ms ease-out 4.25s both}');
+    expect(musicHtml).toContain('.music-logo-final-frame{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;animation:music-logo-final 620ms ease-out 4.25s both}');
     expect(musicHtml).toContain('translate(-17.15%,1.72%) scale(.75)');
     expect(musicHtml).toContain('translate(16.36%,9.23%) scale(.7)');
     expect(musicHtml).toContain('translate(9.23%,3.69%) rotate(0) scale(1.05)');
@@ -121,6 +121,21 @@ describe('renderSite variants', () => {
     expect(musicHtml).not.toContain('<svg');
     expect(musicHtml).toContain('prefers-reduced-motion:reduce');
     expect(defaultHtml).not.toContain('music-logo-animation');
+  });
+
+  it('樹枝完成影格只使用與 combined 相同的等比例平移', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+
+    expect(musicHtml).toMatch(/@keyframes music-logo-forest-left\{0%\{opacity:0;transform:translate\(-15\.83%,2\.37%\) scale\(\.48\) rotate\(-12deg\)\}22%\{opacity:1\}100%\{opacity:1;transform:translate\(-17\.15%,1\.72%\) scale\(\.75\)\}\}/);
+    expect(musicHtml).toMatch(/@keyframes music-logo-forest-right\{0%\{opacity:0;transform:translate\(15\.83%,2\.37%\) scale\(\.48\) rotate\(12deg\)\}22%\{opacity:1\}100%\{opacity:1;transform:translate\(16\.36%,9\.23%\) scale\(\.7\)\}\}/);
+  });
+
+  it('notes 完成後才以不透明的完成圖交接', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+
+    expect(musicHtml).toMatch(/@keyframes music-logo-notes\{0%\{opacity:0;transform:translateY\(1\.85%\) scale\(\.78\)\}100%\{opacity:1;transform:translateY\(0\) scale\(1\)\}\}/);
+    expect(musicHtml).toMatch(/\.music-logo-layer-stack\{position:absolute;inset:0;animation:music-logo-layers-exit 620ms ease-out 4\.25s both\}/);
+    expect(musicHtml).toMatch(/\.music-logo-final-frame\{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;animation:music-logo-final 620ms ease-out 4\.25s both\}/);
   });
 
   it('FAQ summary 至少有 44px 互動高度', () => {
