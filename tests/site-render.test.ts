@@ -97,6 +97,10 @@ describe('renderSite variants', () => {
     expect(musicHtml).toContain('translate(124px,70px) scale(.7)');
     expect(musicHtml).toContain('translate(24px,0) rotate(0) scale(1.05)');
     expect(musicHtml).toContain('music-logo-layer-notes{z-index:8;');
+    expect(musicHtml).toContain('@keyframes music-logo-notes');
+    expect(musicHtml).toContain('transform:translateY(0) scale(1)');
+    expect(musicHtml).not.toContain('transform:translateY(0) scale(.92)');
+    expect(musicHtml).toContain('.music-logo-layer-forest-right{z-index:0;');
     const forestLeftIndex = musicHtml.indexOf('class="music-logo-layer music-logo-layer-forest-left"');
     const forestRightIndex = musicHtml.indexOf('class="music-logo-layer music-logo-layer-forest-right"');
     const ringIndex = musicHtml.indexOf('class="music-logo-layer music-logo-layer-ring"');
