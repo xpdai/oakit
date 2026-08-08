@@ -97,6 +97,7 @@ export function renderSite(t: Tenant): string {
     rows.push(['Email', `<a href="mailto:${escapeHtml(t.contact.email)}">${escapeHtml(t.contact.email)}</a>`]);
   }
   const contactRows = rows.map(([label, value]) => `<div class="row"><dt>${label}</dt><dd>${value}</dd></div>`).join('');
+  const contactNote = t.contact.note ? `<p class="contact-note">${escapeHtml(t.contact.note)}</p>` : '';
 
   // LINE 才是主要轉換點 —— 台灣的店家幾乎都是靠 LINE 收單，不是靠表單。
   const lineAddUrl = safeExternalUrl(t.contact.lineAddUrl);
@@ -109,6 +110,10 @@ export function renderSite(t: Tenant): string {
   const heroNote = t.site?.heroNote ? `<p class="hero-note">${escapeHtml(t.site.heroNote)}</p>` : '';
   const studentShowcaseNav = variant === 'music' ? '<a href="#student-showcase">雲端成發</a>' : '';
   const musicAmbient = musicMotionEnabled ? renderMusicAmbient() : '';
+  const musicMobileLayoutCss = musicMotionEnabled
+    ? '@media (max-width:767px){#services .svc{position:relative;z-index:1;background:var(--bg);padding-left:14px;padding-right:14px;border-radius:12px}#services .music-note-burst[data-note-burst=services] span:first-child{top:5%;right:4%;bottom:auto;font-size:26px}#services .music-note-burst[data-note-burst=services] span:last-child{top:13%;right:11%;bottom:auto;font-size:20px}}'
+    : '';
+  const extraCss = `.contact-note{margin:20px 0 0;padding:14px 16px;border-left:3px solid var(--accent);background:var(--surface);color:var(--ink);font-size:14px;line-height:1.7;opacity:.86}${musicMobileLayoutCss}`;
   const scrollRestorationHeadScript = `<script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>`;
   const reloadScrollScript = `<script>(() => {
   const reset = () => {
@@ -241,8 +246,9 @@ footer{padding:54px 0 64px;text-align:center;font-size:13px;color:var(--ink);opa
 @media (min-width:768px){.wrap{padding:0 36px}.hero{padding-top:104px}.site-nav{margin:0 -36px;padding-left:36px;padding-right:36px}.highlight-list{grid-template-columns:repeat(3,minmax(0,1fr))}.student-showcase-list{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-restaurant .showcase,.variant-interior .showcase{grid-template-columns:repeat(3,minmax(0,1fr))}.variant-pet .showcase{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.variant-pet .showcase h3{grid-column:1/-1}.variant-music .highlight-list{grid-template-columns:repeat(4,minmax(0,1fr))}.variant-music .showcase{grid-template-columns:repeat(2,minmax(0,1fr))}.variant-interior .process{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}.variant-interior .process h3{grid-column:1/-1}}
 @media (max-width:767px){.wrap{padding:0 18px}.hero{padding-top:56px}.site-nav{margin:0 -18px;padding-left:18px;padding-right:18px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}.site-nav a{flex:0 0 auto}.variant{margin:16px 0;padding:26px 20px}.student-showcase{padding:48px 0}.student-showcase-list,.highlight-list,.variant-restaurant .showcase,.variant-interior .showcase,.variant-pet .showcase,.variant-music .showcase,.variant-interior .process{grid-template-columns:1fr}.variant-interior{border-left-width:6px;padding:28px 22px}.variant-interior .showcase-item{border-left:0;border-top:1px solid var(--line)}.variant-music{padding:28px 20px}.variant-music::before{font-size:30px;top:18px;right:18px}.variant-pet{padding:26px 20px}.row{align-items:flex-start}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}.music-ambient span,.music-note-burst,.music-note-burst span{animation:none!important;transition:none!important;transform:none!important}.music-ambient span{opacity:.48}.music-motion-section .music-note-burst{opacity:1}.music-note-burst span{opacity:.72}}
- .flip-card{position:relative;min-height:180px;perspective:1000px;cursor:pointer}.flip-card:focus-visible{outline:3px solid var(--ink);outline-offset:5px}.flip-card-inner{position:relative;min-height:180px;height:100%;transform-style:preserve-3d;transition:transform 520ms cubic-bezier(.2,.7,.2,1)}.flip-card.is-flipped .flip-card-inner{transform:rotateY(180deg)}.flip-card-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;backface-visibility:hidden;padding:20px}.flip-card-back{transform:rotateY(180deg);align-items:center;text-align:center;background:var(--accent);color:var(--bg)}.flip-card-back p{color:var(--bg)!important;opacity:1!important}.variant-music .highlight.flip-card,.variant-music .showcase-item.flip-card{padding:0;background:transparent}.variant-music .highlight.flip-card .flip-card-front,.variant-music .showcase-item.flip-card .flip-card-front{background:var(--bg)}@media (prefers-reduced-motion:reduce){.flip-card-inner{transition:none!important}}
- </style>
+.flip-card{position:relative;min-height:180px;perspective:1000px;cursor:pointer}.flip-card:focus-visible{outline:3px solid var(--ink);outline-offset:5px}.flip-card-inner{position:relative;min-height:180px;height:100%;transform-style:preserve-3d;transition:transform 520ms cubic-bezier(.2,.7,.2,1)}.flip-card.is-flipped .flip-card-inner{transform:rotateY(180deg)}.flip-card-face{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;backface-visibility:hidden;padding:20px}.flip-card-back{transform:rotateY(180deg);align-items:center;text-align:center;background:var(--accent);color:var(--bg)}.flip-card-back p{color:var(--bg)!important;opacity:1!important}.variant-music .highlight.flip-card,.variant-music .showcase-item.flip-card{padding:0;background:transparent}.variant-music .highlight.flip-card .flip-card-front,.variant-music .showcase-item.flip-card .flip-card-front{background:var(--bg)}@media (prefers-reduced-motion:reduce){.flip-card-inner{transition:none!important}}
+${extraCss}
+</style>
 </head>
 <body data-variant="${escapeHtml(variant)}">
 <div class="wrap">
@@ -264,7 +270,7 @@ ${renderVariantSections(t)}
 ${renderStudentShowcase(t)}
     <section id="services"${musicMotionSectionClass}><h2>服 務 與 價 格</h2>${musicServicesBurst}${services}</section>
 ${faq ? `<section id="faq"><h2>常 見 問 題</h2>${faq}</section>` : ''}
-    <section id="contact"${musicMotionSectionClass}><h2>聯 絡 我 們</h2>${musicContactBurst}${contactRows ? `<dl>${contactRows}</dl>` : ''}${cta}</section>
+    <section id="contact"${musicMotionSectionClass}><h2>聯 絡 我 們</h2>${musicContactBurst}${contactRows ? `<dl>${contactRows}</dl>` : ''}${contactNote}${cta}</section>
   </main>
 
   <footer>${escapeHtml(t.brand.name)}</footer>

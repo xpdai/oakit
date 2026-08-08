@@ -168,6 +168,22 @@ describe('renderSite variants', () => {
     expect(defaultHtml).toContain('href="#contact">聯絡／預約</a>');
   });
 
+  it('音樂首頁移除 Hero 類別文案並顯示到府上課說明', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
+    expect(html).not.toContain('一對一與團體音樂課');
+    expect(html).toContain('class="contact-note">到府上課需另外酌收相對應距離的交通津貼，歡迎其他區域留言詢問！</p>');
+  });
+
+  it('手機版試上課文字會被獨立背景與音符分開', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
+    expect(html).toContain('#services .svc{position:relative;z-index:1;background:var(--bg)');
+    expect(html).toContain('#services .music-note-burst[data-note-burst=services] span:first-child');
+    expect(html).toContain('#services .music-note-burst[data-note-burst=services] span:last-child');
+    expect(html).not.toContain('opacity:.86}}@media');
+  });
+
   it('音樂課程將價格與堂數時長分成不同資訊層級', () => {
     const tenant = makeTenant('music');
     tenant.services = [
