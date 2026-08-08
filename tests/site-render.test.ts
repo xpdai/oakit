@@ -69,7 +69,7 @@ describe('renderSite variants', () => {
     const html = renderSite(loadTenant('demo-music'));
 
     expect(html).toContain('class="music-logo-final"');
-    expect(html).toContain('src="data:image/jpeg;base64,');
+    expect(html).toMatch(/class="music-logo-final" src="data:image\/png;base64,/);
     expect(html).toContain('alt="那莫好聽 Logo');
   });
 
@@ -88,7 +88,7 @@ describe('renderSite variants', () => {
     expect(musicHtml).toContain('@keyframes music-logo-microphone-arrive');
     expect(musicHtml).toContain('class="music-logo-final-frame"');
     expect(musicHtml).toContain('class="music-logo-final"');
-    expect(musicHtml).toContain('src="data:image/jpeg;base64,');
+    expect(musicHtml).toMatch(/class="music-logo-final" src="data:image\/png;base64,/);
     expect(musicHtml).toContain('@keyframes music-logo-final');
     expect(musicHtml).not.toContain('music-logo-slices');
     expect(musicHtml).not.toContain('clip-path:');
