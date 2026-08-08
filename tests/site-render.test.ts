@@ -102,10 +102,10 @@ describe('renderSite variants', () => {
     const microphoneIndex = musicHtml.indexOf('class="music-logo-layer music-logo-layer-microphone"');
     const birdIndex = musicHtml.indexOf('class="music-logo-layer music-logo-layer-bird"');
     expect(forestLeftIndex).toBeLessThan(ringIndex);
-    expect(forestRightIndex).toBeLessThan(ringIndex);
     expect(ringIndex).toBeLessThan(notesIndex);
     expect(notesIndex).toBeLessThan(microphoneIndex);
     expect(microphoneIndex).toBeLessThan(birdIndex);
+    expect(birdIndex).toBeLessThan(forestRightIndex);
     expect(musicHtml).not.toContain('music-logo-slices');
     expect(musicHtml).not.toContain('clip-path:');
     expect(musicHtml).not.toContain('<svg');

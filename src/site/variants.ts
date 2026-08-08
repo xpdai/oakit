@@ -21,11 +21,11 @@ export const renderMusicLogoAnimation = (layers: MusicLogoLayers, fallbackLogo: 
   <div class="music-logo-composite" aria-hidden="true">
     <div class="music-logo-layer-stack">
       ${layers.forestLeft}
-      ${layers.forestRight}
       ${layers.ring}
       ${layers.notes}
       ${layers.microphone}
       ${layers.bird}
+      ${layers.forestRight}
     </div>
     <div class="music-logo-final-frame">${fallbackLogo}</div>
   </div>
