@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
@@ -164,6 +165,38 @@ const noteBodyOverlapCount = async (notesFile: string, componentFile: string) =>
   return overlap;
 };
 
+const changedDeepInnerRingBorderPixels = async () => {
+  const original = await readRawAsset(source('ring.png'));
+  const generated = await readRawAsset(asset('ring.png'));
+  expect(generated).toMatchObject({ width: original.width, height: original.height });
+  let border = 0;
+  let changed = 0;
+  for (let y = 0; y < original.height; y += 1) {
+    for (let x = 0; x < original.width; x += 1) {
+      if (Math.hypot(x - 379, y - 363) >= 204) continue;
+      const offset = pixelOffset(x, y, original.width);
+      const [red, green, blue, alpha] = original.data.subarray(offset, offset + 4);
+      if (alpha <= 20 || red >= 160 || green >= 120 || blue >= 100) continue;
+      border += 1;
+      for (let channel = 0; channel < 4; channel += 1) {
+        if (original.data[offset + channel] !== generated.data[offset + channel]) {
+          changed += 1;
+          break;
+        }
+      }
+    }
+  }
+  return { border, changed };
+};
+
+const embeddedMusicLogoAsset = async (name: 'ring' | 'notes' | 'combined') => {
+  const html = await readFile(path.resolve('dist/demo-music/index.html'), 'utf8');
+  const className = name === 'combined' ? 'music-logo-final' : `music-logo-layer music-logo-layer-${name}`;
+  const match = html.match(new RegExp(`<img class="${className}" src="data:image/png;base64,([^\"]+)"`));
+  expect(match).not.toBeNull();
+  return Buffer.from(match![1], 'base64');
+};
+
 const outlineMaskDiff = async (file: string) => {
   const { data, width, height } = await readRawAsset(file);
   const body = coloredBodyMask(data, width, height);
@@ -232,8 +265,16 @@ describe('music logo assets', () => {
     expect(await innerRingOpaquePixels(asset('ring.png'))).toBe(0);
   });
 
+  it('preserves every deep inner-ring border pixel from the raw ring', async () => {
+    expect(await changedDeepInnerRingBorderPixels()).toEqual({ border: 953, changed: 0 });
+  });
+
   it('keeps note bodies separate from every ring pixel', async () => {
     expect(await noteBodyOverlapCount(asset('notes.png'), asset('ring.png'))).toBe(0);
+  });
+
+  it.each(['ring', 'notes', 'combined'] as const)('embeds the current %s asset in the music demo build', async (name) => {
+    expect((await embeddedMusicLogoAsset(name)).equals(await readFile(asset(`${name}.png`)))).toBe(true);
   });
 
   it.each(assetNames)('%s contains a six-pixel warm white outline around its colored body', async (name) => {

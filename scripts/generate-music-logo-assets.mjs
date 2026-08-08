@@ -77,8 +77,10 @@ export async function clearRingInterior(input) {
   const { data, info } = await sharp(input).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   for (let y = 0; y < info.height; y += 1) {
     for (let x = 0; x < info.width; x += 1) {
-      if (Math.hypot(x - INNER_RING.centerX, y - INNER_RING.centerY) < INNER_RING.radius) {
-        data[(y * info.width + x) * 4 + 3] = 0;
+      const offset = (y * info.width + x) * 4;
+      const isLightInnerFill = data[offset] >= 210 && data[offset + 1] >= 180 && data[offset + 2] >= 150;
+      if (Math.hypot(x - INNER_RING.centerX, y - INNER_RING.centerY) < INNER_RING.radius && isLightInnerFill) {
+        data[offset + 3] = 0;
       }
     }
   }
