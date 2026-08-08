@@ -88,8 +88,10 @@ describe('renderSite variants', () => {
     expect(musicHtml).toContain('@keyframes music-logo-microphone-arrive');
     expect(musicHtml).toContain('class="music-logo-final-frame"');
     expect(musicHtml).toContain('class="music-logo-final"');
+    expect(musicHtml).toContain('class="music-logo-layer-stack"');
     expect(musicHtml).toMatch(/class="music-logo-final" src="data:image\/png;base64,/);
     expect(musicHtml).toContain('@keyframes music-logo-final');
+    expect(musicHtml).toContain('@keyframes music-logo-layers-exit');
     expect(musicHtml).not.toContain('music-logo-slices');
     expect(musicHtml).not.toContain('clip-path:');
     expect(musicHtml).not.toContain('<svg');
