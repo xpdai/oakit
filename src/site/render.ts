@@ -117,6 +117,7 @@ export function renderSite(t: Tenant): string {
     .join('');
 
   const mapUrl = safeExternalUrl(t.contact.mapUrl);
+  const lineAddUrl = safeExternalUrl(t.contact.lineAddUrl);
   const rows: Array<[string, string]> = [];
   if (t.contact.address) {
     rows.push([
@@ -129,6 +130,15 @@ export function renderSite(t: Tenant): string {
   if (t.contact.phone) {
     rows.push(['電話', `<a href="tel:${escapeHtml(t.contact.phone)}">${escapeHtml(t.contact.phone)}</a>`]);
   }
+  if (t.contact.lineId) {
+    const lineId = escapeHtml(t.contact.lineId);
+    rows.push([
+      'LINE ID',
+      lineAddUrl
+        ? `<a href="${escapeHtml(lineAddUrl)}" target="_blank" rel="noopener">${lineId}</a>`
+        : lineId,
+    ]);
+  }
   if (t.contact.email) {
     rows.push(['Email', `<a href="mailto:${escapeHtml(t.contact.email)}">${escapeHtml(t.contact.email)}</a>`]);
   }
@@ -136,7 +146,6 @@ export function renderSite(t: Tenant): string {
   const contactNote = t.contact.note ? `<p class="contact-note">${escapeHtml(t.contact.note)}</p>` : '';
 
   // LINE 才是主要轉換點 —— 台灣的店家幾乎都是靠 LINE 收單，不是靠表單。
-  const lineAddUrl = safeExternalUrl(t.contact.lineAddUrl);
   const ctaLabel = musicMotionEnabled ? '試上一堂 NT$100' : '聯絡／預約';
   const cta = lineAddUrl
     ? `<a class="cta" href="${escapeHtml(lineAddUrl)}" target="_blank" rel="noopener">${musicMotionEnabled ? '試上一堂 NT$100' : '加 LINE 詢問 / 預約'}</a>`

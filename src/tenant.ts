@@ -88,6 +88,7 @@ export interface Tenant {
   };
   contact: {
     phone?: string;
+    lineId?: string;
     address?: string;
     /** 聯絡區補充說明，例如到府服務的交通費提醒 */
     note?: string;

@@ -8,7 +8,8 @@
   },
   "contact": {
     "address": "新北市新莊區西盛里新樹路295-3號",
-    "phone": "0907459987",
+    "lineId": "@780fstli",
+    "lineAddUrl": "https://line.me/R/ti/p/@780fstli",
     "note": "到府上課需另外酌收相對應距離的交通津貼，歡迎其他區域留言詢問！"
   },
   "hours": [
@@ -56,5 +57,5 @@
       { "label": "教室地址", "action": { "type": "message", "text": "地址" } }
     ]
   },
-  "fallbackReply": "這個問題我還需要替你確認，已經記下來了，會在教室營業時間內回覆。也可以直接來電 0907459987。"
+  "fallbackReply": "這個問題我還需要替你確認，已經記下來了，會在教室營業時間內回覆。也可以直接透過 LINE ID @780fstli 聯絡我們。"
 }

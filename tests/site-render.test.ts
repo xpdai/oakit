@@ -247,7 +247,11 @@ describe('renderSite variants', () => {
 
     expect(heroMarkup).not.toContain('class="cta"');
     expect(musicCtas).toHaveLength(1);
+    expect(musicCtas[0]).toContain('href="https://line.me/R/ti/p/@780fstli"');
     expect(musicHtml).toContain('id="contact"');
+    expect(musicHtml).toContain('<dt>LINE ID</dt><dd><a href="https://line.me/R/ti/p/@780fstli" target="_blank" rel="noopener">@780fstli</a></dd>');
+    expect(musicHtml).not.toContain('<dt>電話</dt>');
+    expect(musicHtml).not.toContain('0907459987');
     expect(defaultHtml).toContain('href="#contact">聯絡／預約</a>');
   });
 

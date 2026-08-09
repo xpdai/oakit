@@ -22,10 +22,11 @@ export function buildKnowledge(t: Tenant): string {
   lines.push(formatHours(t));
   lines.push('');
 
-  if (t.contact.address || t.contact.phone) {
+  if (t.contact.address || t.contact.phone || t.contact.lineId || t.contact.email) {
     lines.push('## 聯絡方式');
     if (t.contact.address) lines.push(`地址：${t.contact.address}`);
     if (t.contact.phone) lines.push(`電話：${t.contact.phone}`);
+    if (t.contact.lineId) lines.push(`LINE ID：${t.contact.lineId}`);
     if (t.contact.email) lines.push(`Email：${t.contact.email}`);
     lines.push('');
   }
@@ -99,9 +100,15 @@ export function ruleReply(text: string, t: Tenant): string | null {
     return `我們的地址：${t.contact.address}${map}`;
   }
 
-  if (has('電話', '聯絡', '打給')) {
+  if (has('電話', '打給')) {
     if (!t.contact.phone) return null;
     return `電話：${t.contact.phone}\n營業時間內都可以直接打給我們。`;
+  }
+
+  if (has('聯絡', 'line', '加好友')) {
+    if (t.contact.lineId) return `LINE ID：${t.contact.lineId}\n歡迎直接加 LINE 聯絡我們。`;
+    if (t.contact.phone) return `電話：${t.contact.phone}\n營業時間內都可以直接打給我們。`;
+    return null;
   }
 
   if (has('價格', '價錢', '多少錢', '學費', '費用', '收費', '報價')) {

@@ -16,6 +16,13 @@ describe('site content knowledge', () => {
     expect(reply).toContain('NT$');
   });
 
+  it('音樂教室聯絡問題改回覆 LINE ID', () => {
+    const reply = ruleReply('要怎麼聯絡？', loadTenant('demo-music'));
+
+    expect(reply).toContain('LINE ID：@780fstli');
+    expect(reply).not.toContain('0907459987');
+  });
+
   it('那莫好聽只保留目前提供的課程與新價格', () => {
     const tenant = loadTenant('demo-music');
     const knowledge = buildKnowledge(tenant);
@@ -28,6 +35,8 @@ describe('site content knowledge', () => {
     expect(knowledge).toContain('團班類別｜流行與古典');
     expect(knowledge).toContain('NT$450／人／堂');
     expect(knowledge).toContain('每堂 50 分鐘');
+    expect(knowledge).toContain('LINE ID：@780fstli');
+    expect(knowledge).not.toContain('0907459987');
     expect(tenant.services.find((service) => service.name.startsWith('團班類別'))?.duration).toBe('每堂 50 分鐘');
     expect(tenant.site?.showcase?.find((item) => item.title === '團班類別')?.meta).toContain('每堂 50 分鐘');
     expect(tenant.services.find((service) => service.name === '試上一堂課')?.duration).toBe('每堂 30 分鐘');
