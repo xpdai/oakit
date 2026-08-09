@@ -160,13 +160,16 @@ describe('renderSite variants', () => {
     expect(html).toContain('第一首作品準備中');
   });
 
-  it('音樂首頁服務區塊會排在雲端成發之前', () => {
+  it('音樂首頁課程區塊會排在雲端成發之前且不渲染服務區塊', () => {
     const html = renderSite(makeTenant('music'));
-    const servicesIndex = html.indexOf('<section id="services"');
+    const courseIndex = html.indexOf('<section class="variant variant-music');
     const showcaseIndex = html.indexOf('<section id="student-showcase"');
-    expect(servicesIndex).toBeGreaterThan(-1);
+    expect(courseIndex).toBeGreaterThan(-1);
     expect(showcaseIndex).toBeGreaterThan(-1);
-    expect(servicesIndex).toBeLessThan(showcaseIndex);
+    expect(courseIndex).toBeLessThan(showcaseIndex);
+    expect(html).not.toContain('<section id="services"');
+    expect(html).toContain('href="#courses">課程</a>');
+    expect(html).not.toContain('href="#services">服務</a>');
   });
 
   it('音樂版移除示意作品後回到雲端成發空狀態', () => {
@@ -212,7 +215,7 @@ describe('renderSite variants', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
     const petHtml = renderSite(makeTenant('pet'));
 
-    expect(musicHtml).toContain('<h3>年齡分班</h3>');
+    expect(musicHtml).toContain('<h3>年齡分班與價格</h3>');
     expect(musicHtml).toContain('<h3>課程方式</h3>');
     expect(musicHtml).not.toContain('精 選 特 色');
     expect(musicHtml).not.toContain('精 選 展 示');
@@ -220,23 +223,28 @@ describe('renderSite variants', () => {
     expect(petHtml).toContain('精 選 展 示');
   });
 
-  it('年齡分班與課程方式會翻卡，課程方式正面不列價格', () => {
+  it('課程方式與年齡分班價格會依序翻卡', () => {
     const html = renderSite(loadTenant('demo-music'));
     const courseSectionStart = html.indexOf('<section class="variant variant-music');
-    const courseSectionEnd = html.indexOf('<section id="services"');
+    const courseSectionEnd = html.indexOf('<section id="student-showcase"');
     const courseSection = html.slice(courseSectionStart, courseSectionEnd);
 
     expect(html.match(/class="highlight flip-card"/g)).toHaveLength(4);
-    expect(html.match(/class="showcase-item flip-card"/g)).toHaveLength(2);
+    expect(html.match(/class="showcase-item flip-card"/g)).toHaveLength(3);
+    expect(courseSection).toContain('<h3>課程方式</h3>');
+    expect(courseSection).toContain('<h3>年齡分班與價格</h3>');
+    expect(courseSection.indexOf('<h3>課程方式</h3>')).toBeLessThan(courseSection.indexOf('<h3>年齡分班與價格</h3>'));
     expect(html).toContain('aria-expanded="false"');
     expect(html).toContain('rotateY(180deg)');
     expect(html).toContain("event.key !== 'Enter'");
     expect(html).toContain("event.key !== ' '");
     expect(html).toContain('能鞏固基礎和提升程度。每一次都比上一次厲害');
-    expect(courseSection).not.toContain('NT$900');
-    expect(courseSection).not.toContain('NT$450');
-    expect(html).toContain('<span class="svc-price">初階 NT$900／堂');
-    expect(html).toContain('<span class="svc-price">NT$450／人／堂</span>');
+    expect(courseSection).toContain('試上一堂');
+    expect(courseSection).toContain('NT$100／堂');
+    expect(courseSection).toContain('每堂 30 分鐘');
+    expect(courseSection).toContain('初階 NT$900／堂');
+    expect(courseSection).toContain('NT$450／人／堂');
+    expect(html).not.toContain('<section id="services"');
   });
 
   it('音樂首頁 CTA 直接說明試上一堂 NT$100', () => {
@@ -262,45 +270,38 @@ describe('renderSite variants', () => {
     expect(html).toContain('class="contact-note">到府上課需另外酌收相對應距離的交通津貼，歡迎其他區域留言詢問！</p>');
   });
 
-  it('手機版試上課文字會被獨立背景與音符分開', () => {
+  it('音樂首頁移除獨立服務與價格區塊', () => {
     const html = renderSite(loadTenant('demo-music'));
 
-    expect(html).toContain('#services .svc{position:relative;z-index:1;background:var(--bg)');
-    expect(html).toContain('#services .music-note-burst[data-note-burst=services] span:first-child');
-    expect(html).toContain('#services .music-note-burst[data-note-burst=services] span:last-child');
-    expect(html).not.toContain('opacity:.86}}@media');
+    expect(html).not.toContain('<section id="services"');
+    expect(html).not.toContain('data-note-burst="services"');
+    expect(html).not.toContain('#services .svc');
   });
 
-  it('音樂課程將價格與堂數時長分成不同資訊層級', () => {
-    const tenant = makeTenant('music');
-    tenant.services = [
-      { name: '鋼琴一對一', desc: '課程說明', price: 'NT$3,600／4 堂', duration: '每堂 50 分鐘' },
-    ];
-
-    const html = renderSite(tenant);
-
-    expect(html).toContain('<span class="svc-price">NT$3,600／4 堂</span>');
-    expect(html).toContain('<span class="svc-duration">每堂 50 分鐘</span>');
-    expect(html).toContain('body[data-variant=music] .svc-price{');
-  });
-
-  it('音樂版團班顯示 50 分鐘，級別價格以換行呈現', () => {
+  it('音樂課程翻面將價格與堂數時長分成不同資訊層級', () => {
     const html = renderSite(loadTenant('demo-music'));
 
-    expect(html).toContain('<span class="svc-duration">每堂 50 分鐘</span>');
-    expect(html).toContain('<span class="svc-duration">每堂 30 分鐘</span>');
+    expect(html).toContain('<p class="music-card-price">初階 NT$900／堂\n進階 NT$1,200／堂\n高階 NT$1,500／堂</p>');
+    expect(html).toContain('<p class="music-card-duration">每堂 50 分鐘</p>');
+    expect(html).toContain('<p class="music-card-price">NT$450／人／堂</p>');
+    expect(html).toContain('.music-card-price{');
+  });
+
+  it('音樂版價格以換行呈現且不影響 LINE 知識庫資料', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
     expect(html).toContain('初階 NT$900／堂\n進階 NT$1,200／堂\n高階 NT$1,500／堂');
-    expect(html.slice(html.indexOf('</style>'))).not.toContain('showcase-meta');
-    expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*white-space:pre-line/);
+    expect(html).toContain('每堂 30 分鐘');
+    expect(html).toMatch(/\.music-card-price\{[^}]*white-space:pre-line/);
     expect(html).toContain('.variant-music .showcase-meta{white-space:pre-line');
   });
 
-  it('音樂版價格不使用深色橢圓背景', () => {
+  it('音樂版翻面價格不使用深色橢圓背景', () => {
     const html = renderSite(loadTenant('demo-music'));
 
-    expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*background:transparent/);
-    expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*border-radius:0/);
-    expect(html).toMatch(/body\[data-variant=music\] \.svc-price\{[^}]*padding:0/);
+    expect(html).toMatch(/\.music-card-price\{[^}]*background:transparent/);
+    expect(html).toMatch(/\.music-card-price\{[^}]*border-radius:0/);
+    expect(html).toMatch(/\.music-card-price\{[^}]*padding:0/);
   });
 
   it('音樂版 sticky 導覽會依目前區段標記 active', () => {

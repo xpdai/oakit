@@ -37,6 +37,7 @@ describe('site content knowledge', () => {
     expect(knowledge).toContain('每堂 50 分鐘');
     expect(knowledge).toContain('LINE ID：@780fstli');
     expect(knowledge).not.toContain('0907459987');
+    expect(knowledge).toContain('試上一堂課｜價格 NT$100／堂｜約 每堂 30 分鐘');
     expect(tenant.services.find((service) => service.name.startsWith('團班類別'))?.duration).toBe('每堂 50 分鐘');
     expect(tenant.site?.showcase?.find((item) => item.title === '團班類別')?.meta).toContain('每堂 50 分鐘');
     expect(tenant.services.find((service) => service.name === '試上一堂課')?.duration).toBe('每堂 30 分鐘');
