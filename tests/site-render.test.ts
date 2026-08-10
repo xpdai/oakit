@@ -296,6 +296,20 @@ describe('renderSite variants', () => {
     expect(html).toContain('.variant-music .showcase-meta{white-space:pre-line');
   });
 
+  it('音樂版價格卡片在窄欄位縮小字級避免切到底部', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
+    expect(html).toMatch(/\.music-card-price\{[^}]*font-size:clamp\(14px,1\.8vw,22px\)[^}]*line-height:1\.4/);
+    expect(html).toMatch(/\.music-card-duration\{[^}]*margin-top:4px[^}]*font-size:13px[^}]*line-height:1\.35/);
+    expect(html).toContain('@media (max-width:767px){.music-card-price{font-size:16px;line-height:1.4}');
+  });
+
+  it('音樂版桌面年齡分班價格使用田字排列', () => {
+    const html = renderSite(loadTenant('demo-music'));
+
+    expect(html).toContain('.variant-music .highlight-list{grid-template-columns:repeat(2,minmax(0,1fr))}');
+  });
+
   it('音樂版翻面價格不使用深色橢圓背景', () => {
     const html = renderSite(loadTenant('demo-music'));
 
