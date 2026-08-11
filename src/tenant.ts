@@ -60,6 +60,19 @@ export interface Service {
   duration?: string;
 }
 
+export interface PaymentPlan {
+  level: string;
+  periodPrice: string;
+  lessonPrice: string;
+}
+
+export interface PaymentPolicy {
+  method: string;
+  cycleNote: string;
+  plans: PaymentPlan[];
+  enrollmentNotes: string[];
+}
+
 export interface Faq {
   q: string;
   a: string;
@@ -99,7 +112,10 @@ export interface Tenant {
   };
   hours: Hours[];
   services: Service[];
+  payment?: PaymentPolicy;
   faq: Faq[];
+  /** 只提供給 LINE 知識庫，不渲染到官網 FAQ。 */
+  knowledgeFaq?: Faq[];
   /** 臨時公告（連假、店休、活動）。會同時出現在官網頂部與 AI 客服的知識庫。 */
   notices?: string[];
   theme?: {

@@ -10,6 +10,21 @@ describe('site content knowledge', () => {
     expect(knowledge).toContain('服務與價格');
   });
 
+  it('付款資料與請假補課規則分流到知識庫專用內容', () => {
+    const tenant = loadTenant('demo-music');
+
+    expect(tenant.knowledgeFaq).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ q: '請假時間' }),
+        expect.objectContaining({ q: '補課期限' }),
+        expect.objectContaining({ q: '無故缺席' }),
+      ]),
+    );
+    expect(tenant.faq.map((item) => item.q)).not.toEqual(
+      expect.arrayContaining(['請假時間', '補課期限', '無故缺席']),
+    );
+  });
+
   it('音樂教室價格仍由 ruleReply 精確回覆', () => {
     const reply = ruleReply('學費多少？', loadTenant('demo-music'));
     expect(reply).toContain('鋼琴一對一');
