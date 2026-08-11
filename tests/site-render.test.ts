@@ -262,6 +262,7 @@ describe('renderSite variants', () => {
     expect(courseSection).toContain('試上一堂');
     expect(courseSection).toContain('限時體驗價 100元 （原價250元）');
     expect(courseSection).toContain('30 min 快速診斷+實作體驗');
+    expect(courseSection).not.toContain('用一堂課認識學習方向與課堂方式，再一起討論適合的課程安排。');
     expect(courseSection).toContain('初階 NT$900／堂');
     expect(courseSection).toContain('NT$450／人／堂');
     expect(html).not.toContain('<section id="services"');

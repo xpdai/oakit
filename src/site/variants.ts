@@ -160,7 +160,7 @@ export function renderVariantSections(t: Tenant): string {
         hideMeta: true,
         flipBack: (item) =>
           item.title === '試上一堂'
-            ? `<p>${escapeHtml(item.description)}</p>${renderMusicServiceBack(getMusicService(t, 'trial'))}`
+            ? renderMusicServiceBack(getMusicService(t, 'trial'))
             : `<p>${escapeHtml(item.description)}</p>`,
       }),
       renderHighlights(t),
