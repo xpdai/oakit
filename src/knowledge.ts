@@ -40,6 +40,18 @@ export function buildKnowledge(t: Tenant): string {
   }
   lines.push('');
 
+  if (t.payment) {
+    lines.push('## 付款方式與上課須知');
+    lines.push(`付款方式：${t.payment.method}`);
+    lines.push(t.payment.cycleNote);
+    for (const plan of t.payment.plans) {
+      lines.push(`- ${plan.level}：${plan.periodPrice}／期（${plan.lessonPrice}／堂）`);
+    }
+    lines.push('報名與上課須知：');
+    t.payment.enrollmentNotes.forEach((note, index) => lines.push(`${index + 1}. ${note}`));
+    lines.push('');
+  }
+
   if (t.notices?.length) {
     lines.push('## 目前公告（最優先，若與其他資訊衝突以此為準）');
     for (const n of t.notices) lines.push(`- ${n}`);
@@ -69,6 +81,15 @@ export function buildKnowledge(t: Tenant): string {
   if (t.faq.length) {
     lines.push('## 常見問題');
     for (const f of t.faq) {
+      lines.push(`Q：${f.q}`);
+      lines.push(`A：${f.a}`);
+      lines.push('');
+    }
+  }
+
+  if (t.knowledgeFaq?.length) {
+    lines.push('## 知識庫補充');
+    for (const f of t.knowledgeFaq) {
       lines.push(`Q：${f.q}`);
       lines.push(`A：${f.a}`);
       lines.push('');

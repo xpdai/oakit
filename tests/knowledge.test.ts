@@ -25,6 +25,16 @@ describe('site content knowledge', () => {
     );
   });
 
+  it('把付款方式與請假補課規則放進 LINE 知識庫', () => {
+    const knowledge = buildKnowledge(loadTenant('demo-music'));
+
+    expect(knowledge).toContain('付款方式：轉帳或現金');
+    expect(knowledge).toContain('$3,600／期（$900／堂）');
+    expect(knowledge).toContain('請最晚於課前 2 小時前告知');
+    expect(knowledge).toContain('請於 30 天內完成補課');
+    expect(knowledge).toContain('該堂課將視同已授課');
+  });
+
   it('音樂教室價格仍由 ruleReply 精確回覆', () => {
     const reply = ruleReply('學費多少？', loadTenant('demo-music'));
     expect(reply).toContain('鋼琴一對一');
