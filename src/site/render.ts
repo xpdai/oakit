@@ -15,6 +15,7 @@ import {
   renderMusicAmbient,
   renderMusicLogoAnimation,
   renderMusicNoteBurst,
+  renderMusicPaymentPolicy,
   renderStudentShowcase,
   renderVariantSections,
   type MusicLogoLayers,
@@ -154,6 +155,7 @@ export function renderSite(t: Tenant): string {
   const siteIntro = t.site?.eyebrow ? `<p class="eyebrow">${escapeHtml(t.site.eyebrow)}</p>` : '';
   const heroNote = t.site?.heroNote ? `<p class="hero-note">${escapeHtml(t.site.heroNote)}</p>` : '';
   const studentShowcaseNav = variant === 'music' ? '<a href="#student-showcase">雲端成發</a>' : '';
+  const paymentNav = variant === 'music' ? '<a href="#payment">付款須知</a>' : '';
   const musicAmbient = musicMotionEnabled ? renderMusicAmbient() : '';
   const musicLogoCss = musicMotionEnabled
     ? `.music-logo-animation{position:relative;display:block;width:min(190px,45vw);aspect-ratio:1;margin:0 auto 24px}.music-logo-composite{position:absolute;inset:0}.music-logo-layer-stack{position:absolute;inset:0;animation:music-logo-layers-exit 620ms ease-out 4.25s both}.music-logo-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transform-origin:center;pointer-events:none}.music-logo-layer-ring{z-index:1;animation:music-logo-ring 1.1s ease-out .05s both}.music-logo-layer-forest-left{z-index:4;animation:music-logo-forest-left 1.3s cubic-bezier(.2,.8,.2,1) both}.music-logo-layer-forest-right{z-index:0;animation:music-logo-forest-right 1.3s cubic-bezier(.2,.8,.2,1) both}.music-logo-layer-bird{z-index:5;animation:music-logo-bird-flight 2.9s cubic-bezier(.2,.75,.25,1) .7s both}.music-logo-layer-microphone{z-index:3;animation:music-logo-microphone-arrive 2s cubic-bezier(.2,.85,.25,1) 1.8s both}.music-logo-layer-notes{z-index:2;animation:music-logo-notes 1s ease-out 3.2s both}.music-logo-final-frame{position:absolute;inset:0;z-index:7;opacity:0;pointer-events:none;animation:music-logo-final 620ms ease-out 4.25s both}.music-logo-final{display:block;width:100%;height:100%;margin:0;object-fit:contain;transform:none;transform-origin:center;border:0;border-radius:0;box-shadow:none}@keyframes music-logo-ring{0%{opacity:0;transform:scale(.78) rotate(-5deg)}100%{opacity:1;transform:scale(1) rotate(0)}}@keyframes music-logo-forest-left{0%{opacity:0;transform:translate(-15.83%,2.37%) scale(.48) rotate(-12deg)}22%{opacity:1}100%{opacity:1;transform:translate(-17.15%,1.72%) scale(.75)}}@keyframes music-logo-forest-right{0%{opacity:0;transform:translate(15.83%,2.37%) scale(.48) rotate(12deg)}22%{opacity:1}100%{opacity:1;transform:translate(16.36%,9.23%) scale(.7)}}@keyframes music-logo-bird-flight{0%{opacity:0;transform:translate(-18.47%,5.80%) rotate(-10deg) scale(.62)}22%{opacity:1}52%{transform:translate(-4.22%,-1.32%) rotate(6deg) scale(.92)}78%{transform:translate(2.90%,.26%) rotate(-2deg) scale(1.05)}100%{opacity:1;transform:translate(9.23%,3.69%) rotate(0) scale(1.05)}}@keyframes music-logo-microphone-arrive{0%,42%{opacity:0;transform:translate(0,2.37%) scale(.15)}72%{opacity:1;transform:translate(0,.40%) scale(.9)}100%{opacity:1;transform:translate(0,0) scale(.9)}}@keyframes music-logo-notes{0%{opacity:0;transform:translateY(1.85%) scale(.78)}100%{opacity:1;transform:translateY(0) scale(1)}}@keyframes music-logo-layers-exit{0%{opacity:1}100%{opacity:0}}@keyframes music-logo-final{0%{opacity:0}100%{opacity:1}}`
@@ -161,8 +163,11 @@ export function renderSite(t: Tenant): string {
   const musicCardCss = musicMotionEnabled
     ? '.music-card-price{margin-top:6px;padding:0;background:transparent;color:var(--bg);border-radius:0;font-size:clamp(14px,1.8vw,22px);font-weight:900;line-height:1.4;white-space:pre-line}.music-card-duration{margin-top:4px;color:var(--bg);font-size:13px;line-height:1.35;opacity:.86}@media (max-width:767px){.music-card-price{font-size:16px;line-height:1.4}.music-card-duration{margin-top:6px;font-size:14px;line-height:1.4}}'
     : '';
+  const musicPaymentCss = musicMotionEnabled
+    ? '.music-payment{padding:64px 0;border-top:1px solid var(--line)}.music-payment-method{display:flex;align-items:baseline;gap:14px;font-size:18px}.music-payment-method strong{color:var(--accent)}.music-payment-method span{font-weight:800}.music-payment-cycle{margin-top:10px;color:var(--ink);opacity:.82}.music-payment-plans{display:grid;gap:16px;margin-top:24px}.music-payment-plan{padding:20px;border:1px solid var(--accent);border-radius:12px;background:var(--surface)}.music-payment-plan h3{margin-bottom:8px;font-size:16px;letter-spacing:.08em}.music-payment-prices{font-size:clamp(17px,2vw,22px);font-weight:900;line-height:1.45}.music-payment-notes{margin-top:28px;padding:20px;border-left:4px solid var(--accent);background:var(--surface)}.music-payment-notes h3{margin-bottom:10px;letter-spacing:.08em}.music-payment-notes ol{padding-left:24px}.music-payment-notes li+li{margin-top:8px}@media (min-width:768px){.music-payment-plans{grid-template-columns:repeat(3,minmax(0,1fr))}}@media (max-width:767px){.music-payment{padding:48px 0}.music-payment-method{align-items:flex-start;flex-direction:column;gap:2px}.music-payment-plan{padding:18px}.music-payment-notes{padding:18px 16px}}'
+    : '';
   const musicLogoLayerOrderCss = musicMotionEnabled ? '.music-logo-layer-notes{z-index:8;}' : '';
-  const extraCss = `${musicLogoCss}${musicLogoLayerOrderCss}${musicCardCss}.contact-note{margin:20px 0 0;padding:14px 16px;border-left:3px solid var(--accent);background:var(--surface);color:var(--ink);font-size:14px;line-height:1.7;opacity:.86}`;
+  const extraCss = `${musicLogoCss}${musicLogoLayerOrderCss}${musicCardCss}${musicPaymentCss}.contact-note{margin:20px 0 0;padding:14px 16px;border-left:3px solid var(--accent);background:var(--surface);color:var(--ink);font-size:14px;line-height:1.7;opacity:.86}`;
   const scrollRestorationHeadScript = `<script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>`;
   const reloadScrollScript = `<script>(() => {
   const reset = () => {
@@ -256,7 +261,7 @@ export function renderSite(t: Tenant): string {
   const servicesSection = `<section id="services"${musicMotionSectionClass}><h2>服 務 與 價 格</h2>${services}</section>`;
   const primaryNav = musicMotionEnabled ? '<a href="#courses">課程</a>' : '<a href="#services">服務</a>';
   const navigation = `<nav class="site-nav" aria-label="頁面導覽">
-    <a href="#about">關於</a>${primaryNav}${studentShowcaseNav}${faq ? '<a href="#faq">常見問題</a>' : ''}<a href="#contact">聯絡</a>
+    <a href="#about">關於</a>${primaryNav}${paymentNav}${studentShowcaseNav}${faq ? '<a href="#faq">常見問題</a>' : ''}<a href="#contact">聯絡</a>
   </nav>`;
 
   return `<!doctype html>
@@ -318,6 +323,7 @@ ${musicAmbient}
   <main>
     <section id="about"><h2>關 於</h2><p class="about">${about}</p></section>
 ${renderVariantSections(t)}
+${renderMusicPaymentPolicy(t)}
 ${renderStudentShowcase(t)}
 ${musicMotionEnabled ? '' : servicesSection}
 ${faq ? `<section id="faq"><h2>常 見 問 題</h2>${faq}</section>` : ''}

@@ -124,6 +124,28 @@ export const renderStudentShowcase = (t: Tenant): string => {
   return `<section id="student-showcase" class="student-showcase music-motion-section"><h2>雲 端 成 發</h2><p class="student-showcase-intro">記錄成長,督促自己,也激勵別人!</p>${renderMusicNoteBurst('showcase')}${content}</section>`;
 };
 
+export const renderMusicPaymentPolicy = (t: Tenant): string => {
+  if (t.site?.variant !== 'music' || !t.payment) return '';
+
+  const plans = t.payment.plans
+    .map(
+      (plan) => `<article class="music-payment-plan">
+        <h3>${escapeHtml(plan.level)}</h3>
+        <p class="music-payment-prices">${escapeHtml(plan.periodPrice)}／期（${escapeHtml(plan.lessonPrice)}／堂）</p>
+      </article>`,
+    )
+    .join('');
+  const enrollmentNotes = t.payment.enrollmentNotes.map((note) => `<li>${escapeHtml(note)}</li>`).join('');
+
+  return `<section id="payment" class="music-payment music-motion-section">
+  <h2>付 款 與 上 課 須 知</h2>
+  <div class="music-payment-method"><strong>付款方式</strong><span>${escapeHtml(t.payment.method)}</span></div>
+  <p class="music-payment-cycle">${escapeHtml(t.payment.cycleNote)}</p>
+  <div class="music-payment-plans">${plans}</div>
+  <div class="music-payment-notes"><h3>報名與上課須知</h3><ol>${enrollmentNotes}</ol></div>
+</section>`;
+};
+
 export function renderVariantSections(t: Tenant): string {
   const variant = getRenderVariant(t);
   if (variant === 'default') return '';

@@ -172,6 +172,26 @@ describe('renderSite variants', () => {
     expect(html).not.toContain('href="#services">服務</a>');
   });
 
+  it('音樂版在課程與雲端成發之間顯示付款須知', () => {
+    const musicHtml = renderSite(loadTenant('demo-music'));
+    const petHtml = renderSite(makeTenant('pet'));
+    const courseIndex = musicHtml.indexOf('<section class="variant variant-music');
+    const paymentIndex = musicHtml.indexOf('<section id="payment"');
+    const showcaseIndex = musicHtml.indexOf('<section id="student-showcase"');
+
+    expect(courseIndex).toBeLessThan(paymentIndex);
+    expect(paymentIndex).toBeLessThan(showcaseIndex);
+    expect(musicHtml).toContain('付款方式');
+    expect(musicHtml).toContain('轉帳或現金');
+    expect(musicHtml).toContain('$7,200／期（$1,800／堂）');
+    expect(musicHtml).toContain('報名與上課須知');
+    expect(musicHtml).not.toContain('請最晚於課前 2 小時前告知');
+    expect(musicHtml).not.toContain('補課期限');
+    expect(musicHtml).toContain('href="#payment">付款須知</a>');
+    expect(musicHtml).toContain('.music-payment-plans');
+    expect(petHtml).not.toContain('id="payment"');
+  });
+
   it('音樂版移除示意作品後回到雲端成發空狀態', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
     const musicMarkup = musicHtml.slice(musicHtml.indexOf('</style>'));
