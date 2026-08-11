@@ -260,18 +260,18 @@ describe('renderSite variants', () => {
     expect(html).toContain("event.key !== ' '");
     expect(html).toContain('能鞏固基礎和提升程度。每一次都比上一次厲害');
     expect(courseSection).toContain('試上一堂');
-    expect(courseSection).toContain('NT$100／堂');
-    expect(courseSection).toContain('每堂 30 分鐘');
+    expect(courseSection).toContain('限時體驗價 100元 （原價250元）');
+    expect(courseSection).toContain('30 min 快速診斷+實作體驗');
     expect(courseSection).toContain('初階 NT$900／堂');
     expect(courseSection).toContain('NT$450／人／堂');
     expect(html).not.toContain('<section id="services"');
   });
 
-  it('音樂首頁 CTA 直接說明試上一堂 NT$100', () => {
+  it('音樂首頁 CTA 顯示快速診斷與實作體驗', () => {
     const musicHtml = renderSite(loadTenant('demo-music'));
     const defaultHtml = renderSite(makeTenant());
     const heroMarkup = musicHtml.slice(musicHtml.indexOf('<header'), musicHtml.indexOf('</header>'));
-    const musicCtas = musicHtml.match(/<a class="cta"[^>]*>試上一堂 NT\$100<\/a>/g) ?? [];
+    const musicCtas = musicHtml.match(/<a class="cta"[^>]*>30 min 快速診斷\+實作體驗<\/a>/g) ?? [];
 
     expect(heroMarkup).not.toContain('class="cta"');
     expect(musicCtas).toHaveLength(1);
@@ -311,7 +311,7 @@ describe('renderSite variants', () => {
     const html = renderSite(loadTenant('demo-music'));
 
     expect(html).toContain('初階 NT$900／堂\n進階 NT$1,200／堂\n高階 NT$1,500／堂');
-    expect(html).toContain('每堂 30 分鐘');
+    expect(html).toContain('30 min 快速診斷+實作體驗');
     expect(html).toMatch(/\.music-card-price\{[^}]*white-space:pre-line/);
     expect(html).toContain('.variant-music .showcase-meta{white-space:pre-line');
   });
