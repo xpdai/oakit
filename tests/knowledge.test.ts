@@ -30,6 +30,7 @@ describe('site content knowledge', () => {
 
     expect(knowledge).toContain('付款方式：轉帳或現金');
     expect(knowledge).toContain('$3,600／期（$900／堂）');
+    expect(knowledge).toContain('團班課程 1,800/期 (450/堂）');
     expect(knowledge).toContain('請最晚於課前 2 小時前告知');
     expect(knowledge).toContain('請於 30 天內完成補課');
     expect(knowledge).toContain('該堂課將視同已授課');

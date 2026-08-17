@@ -136,12 +136,14 @@ export const renderMusicPaymentPolicy = (t: Tenant): string => {
     )
     .join('');
   const enrollmentNotes = t.payment.enrollmentNotes.map((note) => `<li>${escapeHtml(note)}</li>`).join('');
+  const groupCourse = t.payment.groupCourse ? `<p class="music-payment-group">${escapeHtml(t.payment.groupCourse)}</p>` : '';
 
   return `<section id="payment" class="music-payment music-motion-section">
   <h2>付 款 與 上 課 須 知</h2>
   <div class="music-payment-method"><strong>付款方式</strong><span>${escapeHtml(t.payment.method)}</span></div>
   <p class="music-payment-cycle">${escapeHtml(t.payment.cycleNote)}</p>
   <div class="music-payment-plans">${plans}</div>
+  ${groupCourse}
   <div class="music-payment-notes"><h3>報名與上課須知</h3><ol>${enrollmentNotes}</ol></div>
 </section>`;
 };

@@ -184,6 +184,7 @@ describe('renderSite variants', () => {
     expect(musicHtml).toContain('付款方式');
     expect(musicHtml).toContain('轉帳或現金');
     expect(musicHtml).toContain('$7,200／期（$1,800／堂）');
+    expect(musicHtml).toContain('團班課程 1,800/期 (450/堂）');
     expect(musicHtml).toContain('報名與上課須知');
     expect(musicHtml).not.toContain('請最晚於課前 2 小時前告知');
     expect(musicHtml).not.toContain('補課期限');

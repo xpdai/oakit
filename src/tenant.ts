@@ -70,6 +70,7 @@ export interface PaymentPolicy {
   method: string;
   cycleNote: string;
   plans: PaymentPlan[];
+  groupCourse?: string;
   enrollmentNotes: string[];
 }
 

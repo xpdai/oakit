@@ -47,6 +47,7 @@ export function buildKnowledge(t: Tenant): string {
     for (const plan of t.payment.plans) {
       lines.push(`- ${plan.level}：${plan.periodPrice}／期（${plan.lessonPrice}／堂）`);
     }
+    if (t.payment.groupCourse) lines.push(`- ${t.payment.groupCourse}`);
     lines.push('報名與上課須知：');
     t.payment.enrollmentNotes.forEach((note, index) => lines.push(`${index + 1}. ${note}`));
     lines.push('');

@@ -46,6 +46,7 @@ describe('Tenant site content', () => {
         { level: '進階課程', periodPrice: '$4,800', lessonPrice: '$1,200' },
         { level: '高階課程', periodPrice: '$7,200', lessonPrice: '$1,800' },
       ],
+      groupCourse: '團班課程 1,800/期 (450/堂）',
       enrollmentNotes: [
         '為維護教學品質與權益，本院採預付報名制，請於開課前完成全額繳費。',
         '每次繳費以 4 堂課為一期，於第 4 堂課結束時續繳下一期學費。',
