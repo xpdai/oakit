@@ -136,9 +136,12 @@ export const renderMusicPaymentPolicy = (t: Tenant): string => {
     )
     .join('');
   const enrollmentNotes = t.payment.enrollmentNotes.map((note) => `<li>${escapeHtml(note)}</li>`).join('');
-  const groupCourse = t.payment.groupCourse
-    ? `<article class="music-payment-plan music-payment-group"><p class="music-payment-prices">${escapeHtml(t.payment.groupCourse)}</p></article>`
-    : '';
+  const groupCourseParts = t.payment.groupCourse?.trim().split(/\s+/) ?? [];
+  const groupCourse = groupCourseParts.length > 1
+    ? `<article class="music-payment-plan music-payment-group"><h3>${escapeHtml(groupCourseParts[0])}</h3><p class="music-payment-prices">${escapeHtml(groupCourseParts.slice(1).join(' '))}</p></article>`
+    : t.payment.groupCourse
+      ? `<article class="music-payment-plan music-payment-group"><p class="music-payment-prices">${escapeHtml(t.payment.groupCourse)}</p></article>`
+      : '';
 
   return `<section id="payment" class="music-payment music-motion-section">
   <h2>付 款 與 上 課 須 知</h2>
