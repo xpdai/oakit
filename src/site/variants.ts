@@ -136,7 +136,9 @@ export const renderMusicPaymentPolicy = (t: Tenant): string => {
     )
     .join('');
   const enrollmentNotes = t.payment.enrollmentNotes.map((note) => `<li>${escapeHtml(note)}</li>`).join('');
-  const groupCourse = t.payment.groupCourse ? `<p class="music-payment-group">${escapeHtml(t.payment.groupCourse)}</p>` : '';
+  const groupCourse = t.payment.groupCourse
+    ? `<article class="music-payment-plan music-payment-group"><p class="music-payment-prices">${escapeHtml(t.payment.groupCourse)}</p></article>`
+    : '';
 
   return `<section id="payment" class="music-payment music-motion-section">
   <h2>付 款 與 上 課 須 知</h2>
