@@ -111,6 +111,14 @@ describe('site content knowledge', () => {
     expect(tenant.faq.find((item) => item.q === '團體班怎麼開班？')?.a).toContain('兒童班、成人班、樂齡班');
   });
 
+  it('年齡 FAQ 使用最新課程安排說明', () => {
+    const tenant = loadTenant('demo-music');
+    const ageFaq = tenant.faq.find((item) => item.q === '適合什麼年齡開始上課？');
+
+    expect(ageFaq?.a).toBe('課程是依照學習者的年齡及程度安排，歡迎各個年齡層報名體驗及上課！');
+    expect(buildKnowledge(tenant)).toContain('課程是依照學習者的年齡及程度安排，歡迎各個年齡層報名體驗及上課！');
+  });
+
   it('那莫好聽使用最新品牌標語與首頁說明', () => {
     const tenant = loadTenant('demo-music');
 
