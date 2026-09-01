@@ -50,6 +50,10 @@
   "site": {
     "variant": "music",
     "heroNote": "不論初學或進階、不論古典或流行、不論學齡或樂齡",
+    "lessonModes": [
+      { "title": "家教到府授課" },
+      { "title": "前去音樂教室" }
+    ],
     "highlights": [
       { "label": "個別（18歲以下）", "value": "鋼琴一對一", "description": "能鞏固基礎和提升程度。每一次都比上一次厲害" },
       { "label": "兒童（5~10歲）", "value": "啟蒙小團班", "description": "讓小孩與好友一同學習" },

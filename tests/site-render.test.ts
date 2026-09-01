@@ -246,6 +246,21 @@ describe('renderSite variants', () => {
     expect(petHtml).toContain('精 選 展 示');
   });
 
+  it('音樂版在課程方式前顯示兩種上課模式', () => {
+    const html = renderSite(loadTenant('demo-music'));
+    const courseSectionStart = html.indexOf('<section class="variant variant-music');
+    const courseSectionEnd = html.indexOf('<section id="payment"');
+    const courseSection = html.slice(courseSectionStart, courseSectionEnd);
+
+    expect(courseSection).toContain('<h3>上課模式</h3>');
+    expect(courseSection).toContain('<p>家教到府授課</p>');
+    expect(courseSection).toContain('<p>前去音樂教室</p>');
+    expect(courseSection.match(/class="music-lesson-mode"/g)).toHaveLength(2);
+    expect(courseSection.indexOf('<h3>上課模式</h3>')).toBeLessThan(courseSection.indexOf('<h3>課程方式</h3>'));
+    expect(html).toContain('.music-lesson-mode-list{display:grid;grid-template-columns:1fr;');
+    expect(html).toContain('.music-lesson-mode-list{grid-template-columns:repeat(2,minmax(0,1fr))}');
+  });
+
   it('課程方式與年齡分班價格會依序翻卡', () => {
     const html = renderSite(loadTenant('demo-music'));
     const courseSectionStart = html.indexOf('<section class="variant variant-music');

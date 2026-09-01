@@ -36,6 +36,7 @@ export interface SiteContent {
   variant: BusinessType;
   eyebrow?: string;
   heroNote?: string;
+  lessonModes?: Array<{ title: string }>;
   highlights?: Array<{ label: string; value: string; description?: string }>;
   showcase?: ShowcaseItem[];
   studentShowcase?: StudentShowcaseItem[];

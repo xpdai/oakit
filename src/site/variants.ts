@@ -52,6 +52,14 @@ const getMusicService = (t: Tenant, kind: 'individual' | 'group' | 'trial'): Ser
 const renderMusicServiceBack = (service?: Service): string =>
   `${service?.price ? `<p class="music-card-price">${escapeHtml(service.price)}</p>` : '<p>價格準備中</p>'}${service?.duration ? `<p class="music-card-duration">${escapeHtml(service.duration)}</p>` : ''}`;
 
+const renderMusicLessonModes = (items?: Array<{ title: string }>): string => {
+  if (!items?.length) return '';
+
+  return `<div class="variant-block music-lesson-modes"><h3>上課模式</h3><div class="music-lesson-mode-list">${items
+    .map((item) => `<article class="music-lesson-mode"><p>${escapeHtml(item.title)}</p></article>`)
+    .join('')}</div></div>`;
+};
+
 const renderHighlights = (t: Tenant): string => {
   const highlights = t.site?.highlights;
   if (!highlights?.length) return '';
@@ -162,6 +170,7 @@ export function renderVariantSections(t: Tenant): string {
     interior: [renderShowcase(t.site?.showcase), renderProcess(t.site?.process)],
     pet: [renderHighlights(t), renderShowcase(t.site?.showcase), renderProcess(t.site?.process)],
     music: [
+      renderMusicLessonModes(t.site?.lessonModes),
       renderShowcase(t.site?.showcase, '課程方式', {
         flip: true,
         hideMeta: true,
