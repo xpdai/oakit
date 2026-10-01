@@ -7,6 +7,7 @@
  */
 
 import { readFileSync } from 'node:fs';
+import { renderDemoDesign } from './demo-designs.js';
 import { isAbsolute, relative, resolve } from 'node:path';
 import { theme, type Tenant } from '../tenant.js';
 import { escapeHtml, safeExternalUrl } from './html.js';
@@ -83,6 +84,8 @@ function renderAbout(t: Tenant): string {
 }
 
 export function renderSite(t: Tenant): string {
+  const demo = renderDemoDesign(t);
+  if (demo !== undefined) return demo;
   const { accent, bg, ink } = theme(t);
   const colors = {
     accent: safeColor(accent, '#1f6f5c'),
