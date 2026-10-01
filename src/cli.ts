@@ -7,7 +7,7 @@
  *   npm run serve                   啟動 webhook 伺服器
  */
 
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, cpSync } from 'node:fs';
 import { join } from 'node:path';
 import { listTenants, loadTenant } from './tenant.js';
 import { renderSite } from './site/render.js';
@@ -37,6 +37,9 @@ async function main() {
         mkdirSync(dir, { recursive: true });
         const file = join(dir, 'index.html');
         writeFileSync(file, renderSite(tenant), 'utf8');
+        if ((id === 'demo-interior' && tenant.site?.variant === 'interior') || (id === 'demo-bistro' && tenant.site?.variant === 'restaurant') || (id === 'demo-pet' && tenant.site?.variant === 'pet')) {
+          cpSync(new URL('./site/demo-assets/' + id + '/', import.meta.url), join(dir, 'assets'), { recursive: true });
+        }
         console.log(`✓ 官網  ${file}`);
       }
       break;

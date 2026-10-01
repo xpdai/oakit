@@ -6,7 +6,8 @@ describe('Public industry design concepts', () => {
   it.each([['demo-bistro','restaurant'],['demo-interior','interior'],['demo-pet','pet']])('renders %s without live customer contact', (id, design) => {
     const html=renderSite(loadTenant(id));
     expect(html).toContain(`data-design="${design}"`);
-    expect(html).toContain('<svg');
+    expect(html).toContain('./assets/');
+    expect(html).toContain('AI 原創視覺');
     expect(html).not.toMatch(/href="(?:tel:|https:\/\/line\.me)|<form|<input/);
     expect(html).not.toContain(loadTenant(id).contact.address ?? 'never');
   });
