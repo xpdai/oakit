@@ -7,7 +7,7 @@ describe('Public industry design concepts', () => {
     const html=renderSite(loadTenant(id));
     expect(html).toContain(`data-design="${design}"`);
     expect(html).toContain('./assets/');
-    expect(html).toContain('AI 原創視覺');
+    expect(html).toContain('圖片為 AI 生成');
     expect(html).not.toMatch(/href="(?:tel:|https:\/\/line\.me)|<form|<input/);
     expect(html).not.toContain(loadTenant(id).contact.address ?? 'never');
   });
